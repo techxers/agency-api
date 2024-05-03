@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const users = require('./users'); // Import users.js
+const growers = require('./growers'); // Import growers.js
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger'); // Import Swagger specification
 
@@ -109,6 +110,98 @@ app.put('/users/:id', users.updateUser);
  */
 app.delete('/users/:id', users.deleteUser);
 
+// Define the grower routes with JSDoc comments for Swagger
+/**
+ * @swagger
+ * /growers:
+ *   post:
+ *     summary: Create a new grower
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Name of the grower
+ *               location:
+ *                 type: string
+ *                 description: Location of the grower
+ *     responses:
+ *       201:
+ *         description: Grower created successfully
+ *   get:
+ *     summary: Get all growers
+ *     responses:
+ *       200:
+ *         description: List of all growers
+ */
+app.post('/growers', growers.createGrower);
+app.get('/growers', growers.getAllGrowers);
+
+/**
+ * @swagger
+ * /growers/{id}:
+ *   get:
+ *     summary: Get a grower by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Grower ID
+ *     responses:
+ *       200:
+ *         description: Details of the grower
+ *   put:
+ *     summary: Update a grower by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Grower ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Name of the grower
+ *               location:
+ *                 type: string
+ *                 description: Location of the grower
+ *     responses:
+ *       200:
+ *         description: Grower updated successfully
+ */
+app.get('/growers/:id', growers.getGrowerById);
+app.put('/growers/:id', growers.updateGrower);
+
+/**
+ * @swagger
+ * /growers/{id}:
+ *   delete:
+ *     summary: Delete a grower by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Grower ID
+ *     responses:
+ *       204:
+ *         description: Grower deleted successfully
+ */
+app.delete('/growers/:id', growers.deleteGrower);
 // Start the server
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
