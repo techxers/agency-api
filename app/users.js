@@ -1,30 +1,5 @@
 const pool = require('./connection'); // Import the database connection pool
 
-// exports.createUser = async (req, res) => {
-//   try {
-//     const { name, Username,password, email, IsActive,CreatedOn, EmployeeNumber, WorkExtension, GenderID, DepartmentId,email_verified_at,created_at,updated_at,FullName,...otherFields } = req.body;
-
-//     // Include all fields (excluding "id") in the insert statement
-//     const insertFields = Object.keys(otherFields).concat([
-
-//     ]);
-
-//     const [result] = await pool.query('INSERT INTO users (?) VALUES (?, ?)', [
-//       insertFields, // Array of all field names
-//       name, Username, email, IsActive, EmployeeNumber, WorkExtension, GenderID, DepartmentId,
-//       ...Object.values(otherFields) // All field values
-//     ]);
-
-//     const newUserId = result.insertId;
-//     const newUser = await pool.query('SELECT * FROM users WHERE id = ?', [newUserId]);
-
-//     res.status(201).json(newUser[0]);
-//   } catch (err) {
-//     console.error('Error creating user:', err);
-//     res.status(500).send('Error creating user');
-//   }
-// };
-
 exports.createUser = async (req, res) => {
   try {
     // Extract all fields from the request body
