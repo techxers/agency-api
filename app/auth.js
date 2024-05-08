@@ -91,7 +91,7 @@ exports.login = async (req, res) => {
       if (!passwordMatch) {
         return res.status(401).json({ message: 'Invalid username or password' });
       }
-      console.log(`jwtSecret: ${process.env.JWT_SECRET}`);
+      console.log(`jwtSecret: ${jwtSecret}`);
       // Generate a JWT token
       const token = jwt.sign({ userId: user.id, username: user.Username }, process.env.JWT_SECRET, {
         expiresIn: '1h', // Token expiration time
