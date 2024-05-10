@@ -5,7 +5,47 @@ const swaggerDefinition = {
   info: {
     title: 'My API',
     version: '1.0.0',
-    description: 'A simple Express API',
+    description: 'Web Api for Agency Management System',
+    //add tags here   
+    tags:  [
+      {
+        "name": "Users",
+        "description": "Everything about your Agency"
+      },
+      {
+        "name": "Auth",
+        "description": "User authentication and authorization"
+      },
+      {
+        "name": "Growers",
+        "description": "All operations related to growers"
+      },
+      {
+        "name": "Roles",
+        "description": "Role management and operations"
+      },
+      {
+        "name": "Auction Sale",
+        "description": "Manage auction sales"
+      },
+      {
+        "name": "Departments",
+        "description": "Manage departments"
+      },
+      {
+        "name": "Gender",
+        "description": "Operations related to gender information"
+      },
+      {
+        "name": "Location",
+        "description": "Country and county management"
+      },
+      {
+        "name": "Grades",
+        "description": "Coffee Grades"
+      }
+    ]
+    
   },
   servers: [
     {

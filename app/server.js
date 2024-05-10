@@ -11,10 +11,14 @@ const { check } = require('express-validator'); // Correct import
 const departments = require('./departments'); // Import CRUD routes
 const gender = require('./gender'); // Import CRUD routes
 const location = require('./location'); // Import CRUD routes
-
+const grades = require('./grades'); // Import CRUD routes
+const coffeeSeason = require('./season'); // Import CRUD routes
 
 const app = express();
 const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
 
 
 
@@ -29,6 +33,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
  *   post:
  *     summary: Register a new user
  *     description: Creates a new user account with all necessary fields.
+ *     tags:
+ *       - User
  *     requestBody:
  *       required: true
  *       content:
@@ -113,6 +119,8 @@ app.post('/register', [
  * /login:
  *   post:
  *     summary: User login
+  *     tags:
+ *       - User
  *     requestBody:
  *       content:
  *         application/json:
@@ -151,6 +159,8 @@ app.get('/users', users.getAllUsers);
  * /users/{id}:
  *   get:
  *     summary: Get a user by ID
+ *     tags:
+ *       - User
  *     parameters:
  *       - in: path
  *         name: id
@@ -195,6 +205,8 @@ app.put('/users/:id', users.updateUser);
  * /users/{id}:
  *   delete:
  *     summary: Delete a user by ID
+ *     tags:
+ *       - User
  *     parameters:
  *       - in: path
  *         name: id
@@ -214,6 +226,8 @@ app.delete('/users/:id', users.deleteUser);
  * /growers:
  *   post:
  *     summary: Create a new grower
+ *     tags:
+ *       - Growers
  *     requestBody:
  *       required: true
  *       content:
@@ -249,6 +263,8 @@ app.delete('/growers/:id', growers.deleteGrower);
  * /growers/{id}:
  *   get:
  *     summary: Get a grower by ID
+ *     tags:
+ *       - Growers
  *     parameters:
  *       - in: path
  *         name: id
@@ -295,6 +311,8 @@ app.delete('/growers/:id', growers.deleteGrower);
  * @swagger
  * /growers/{id}:
  *   delete:
+ *     tags:
+ *       - Growers
  *     summary: Delete a grower by ID
  *     parameters:
  *       - in: path
@@ -315,6 +333,8 @@ app.delete('/growers/:id', growers.deleteGrower);
  * /roles:
  *   get:
  *     summary: Get all roles
+ *     tags:
+ *       - Growers
  *     responses:
  *       200:
  *         description: List of roles
@@ -343,6 +363,8 @@ app.get('/roles', roles.getAllRoles);
  * /roles/{id}:
  *   get:
  *     summary: Get a role by ID
+ *     tags:
+ *       - Roles
  *     parameters:
  *       - in: path
  *         name: id
@@ -385,6 +407,8 @@ app.get('/roles/:id', roles.getRoleById);
  * /roles:
  *   post:
  *     summary: Create a new role
+ *     tags:
+ *       - Roles
  *     requestBody:
  *       required: true
  *       content:
@@ -418,6 +442,8 @@ app.post('/roles', roles.createRole);
  * /roles/{id}:
  *   put:
  *     summary: Update a role by ID
+ *     tags:
+ *       - Roles
  *     parameters:
  *       - in: path
  *         name: id
@@ -466,6 +492,8 @@ app.put('/roles/:id', roles.updateRole);
  * /roles/{id}:
  *   delete:
  *     summary: Delete a role by ID
+ *     tags:
+ *       - Roles
  *     parameters:
  *       - in: path
  *         name: id
@@ -486,6 +514,8 @@ app.delete('/roles/:id', roles.deleteRole);
  * /auctionsale:
  *   get:
  *     summary: Get all auctions
+ *     tags:
+ *       - Roles
  *     responses:
  *       200:
  *         description: List of all auctions
@@ -497,6 +527,8 @@ app.get('/auctionsale', auctionsale.getAllAuctions);
  * /auctionsale:
  *   post:
  *     summary: Create a new auction
+ *     tags:
+ *       - Auction Sale
  *     requestBody:
  *       content:
  *         application/json:
@@ -532,6 +564,8 @@ app.post('/auctionsale', auctionsale.createAuction);
  * /auctionsale/{id}:
  *   get:
  *     summary: Get an auction by ID
+ *     tags:
+ *       - Auction Sale
  *     parameters:
  *       - in: path
  *         name: id
@@ -551,6 +585,8 @@ app.get('/auctionsale/:id', auctionsale.getAuctionById);
  * /auctionsale/{id}:
  *   put:
  *     summary: Update an auction by ID
+ *     tags:
+ *       - Auction Sale
  *     parameters:
  *       - in: path
  *         name: id
@@ -594,6 +630,8 @@ app.put('/auctionsale/:id', auctionsale.updateAuction);
  * /auctionsale/{id}:
  *   delete:
  *     summary: Delete an auction by ID
+ *     tags:
+ *       - Auction Sale
  *     parameters:
  *       - in: path
  *         name: id
@@ -612,6 +650,8 @@ app.delete('/auctionsale/:id', auctionsale.deleteAuction);
  * /departments:
  *   get:
  *     summary: Fetch all departments
+ *     tags:
+ *       - Auction Sale
  *     responses:
  *       200:
  *         description: A list of all departments
@@ -633,6 +673,8 @@ app.get('/departments', departments.getAllDepartments);
  * /departments/{id}:
  *   get:
  *     summary: Retrieve a department by ID
+ *     tags:
+ *       - Departments
  *     parameters:
  *       - in: path
  *         name: id
@@ -653,6 +695,8 @@ app.get('/departments/:id', departments.getDepartmentById);
  * /departments:
  *   post:
  *     summary: Create a new department
+ *     tags:
+ *       - Departments
  *     requestBody:
  *       required: true
  *       content:
@@ -675,6 +719,8 @@ app.post('/departments', departments.createDepartment);
  * /departments/{id}:
  *   put:
  *     summary: Update an existing department
+ *     tags:
+ *       - Departments
  *     parameters:
  *       - in: path
  *         name: id
@@ -706,6 +752,8 @@ app.put('/departments/:id', departments.updateDepartment);
  * /departments/{id}:
  *   delete:
  *     summary: Delete a department by ID
+ *     tags:
+ *       - Departments
  *     parameters:
  *       - in: path
  *         name: id
@@ -728,6 +776,8 @@ app.delete('/departments/:id', departments.deleteDepartment);
  * /gender:
  *   get:
  *     summary: Get all genders
+ *     tags:
+ *       - Gender
  *     description: Retrieve a list of all genders in the database.
  *     responses:
  *       200:
@@ -759,6 +809,8 @@ app.get('/gender', gender.getAllGenders); // Get all genders
  *   get:
  *     summary: Get gender by ID
  *     description: Retrieve a specific gender by its ID.
+ *     tags:
+ *       - Gender
  *     parameters:
  *       - in: path
  *         name: id
@@ -796,6 +848,8 @@ app.get('/gender/:id', gender.getGenderById); // Get gender by ID
  *   post:
  *     summary: Create a new gender
  *     description: Create a new gender record in the database.
+ *     tags:
+ *       - Gender
  *     requestBody:
  *       required: true
  *       content:
@@ -831,6 +885,8 @@ app.post('/gender', [
  *   put:
  *     summary: Update a gender by ID
  *     description: Update an existing gender by its ID.
+ *     tags:
+ *       - Gender
  *     parameters:
  *       - in: path
  *         name: id
@@ -870,6 +926,8 @@ app.put('/gender/:id', gender.updateGender); // Update a gender by ID
  *   delete:
  *     summary: Delete a gender by ID
  *     description: Delete a gender record by its ID.
+ *     tags:
+ *       - Gender
  *     parameters:
  *       - in: path
  *         name: id
@@ -890,6 +948,8 @@ app.delete('/gender/:id', gender.deleteGender); // Delete a gender by ID
  *   get:
  *     summary: Get all countries
  *     description: Retrieve a list of all countries.
+ *     tags:
+ *       - Gender
  *     responses:
  *       200:
  *         description: A list of countries
@@ -917,6 +977,8 @@ app.get('/countries', location.getAllCountries); // Get all countrys
  *   get:
  *     summary: Get country by ID
  *     description: Retrieve a specific country by its ID.
+ *     tags:
+ *       - Location
  *     parameters:
  *       - in: path
  *         name: id
@@ -954,6 +1016,8 @@ app.get('/country/:id', location.getCountyById); // Get country by ID
  *   post:
  *     summary: Create a new country
  *     description: Create a new country record in the database.
+ *     tags:
+ *       - Location
  *     requestBody:
  *       required: true
  *       content:
@@ -989,6 +1053,8 @@ app.post('/country', [
  *   put:
  *     summary: Update a country by ID
  *     description: Update an existing country by its ID.
+ *     tags:
+ *       - Location
  *     parameters:
  *       - in: path
  *         name: id
@@ -1028,6 +1094,8 @@ app.put('/country/:id', location.updateCountry); // Update a country by ID
  *   delete:
  *     summary: Delete a country by ID
  *     description: Delete a country record by its ID.
+ *     tags:
+ *       - Location
  *     parameters:
  *       - in: path
  *         name: id
@@ -1052,6 +1120,8 @@ app.delete('/country/:id', location.deleteCountry); // Delete a country by ID
  *   get:
  *     summary: Get all counties
  *     description: Retrieve all counties from the database.
+ *     tags:
+ *       - Location
  *     responses:
  *       200:
  *         description: A list of all counties
@@ -1084,6 +1154,8 @@ app.delete('/country/:id', location.deleteCountry); // Delete a country by ID
  *   get:
  *     summary: Get all counties
  *     description: Retrieve a list of all counties.
+ *     tags:
+ *       - Location
  *     responses:
  *       200:
  *         description: A list of all counties
@@ -1117,6 +1189,8 @@ app.get('/counties', location.getAllCounties); // Get all counties
  *   get:
  *     summary: Get county by ID
  *     description: Retrieve a specific county by its ID.
+ *     tags:
+ *       - Location
  *     parameters:
  *       - in: path
  *         name: id
@@ -1157,6 +1231,8 @@ app.get('/counties/:id', location.getCountyById); // Get county by ID
  *   post:
  *     summary: Create a new county
  *     description: Create a new county in the database.
+ *     tags:
+ *       - Location
  *     requestBody:
  *       required: true
  *       content:
@@ -1197,6 +1273,8 @@ app.post('/counties', [
  *   put:
  *     summary: Update a county by ID
  *     description: Update an existing county by its ID.
+ *     tags:
+ *       - Location
  *     parameters:
  *       - in: path
  *         name: id
@@ -1236,6 +1314,8 @@ app.put('/counties/:id', location.updateCounty); // Update a county by ID
  *   delete:
  *     summary: Delete a county by ID
  *     description: Delete a county by its ID.
+ *     tags:
+ *       - Location
  *     parameters:
  *       - in: path
  *         name: id
@@ -1251,6 +1331,445 @@ app.put('/counties/:id', location.updateCounty); // Update a county by ID
  */
 app.delete('/counties/:id', location.deleteCounty); // Delete a county by ID
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+/**
+ * @swagger
+ * /grades:
+ *   get:
+ *     summary: Get all grades
+ *     description: Retrieve a list of all grades.
+ *     tags:
+ *       - Grades
+ *     responses:
+ *       200:
+ *         description: List of all grades
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   GradeID:
+ *                     type: integer
+ *                     description: The ID of the grade
+ *                   Grade:
+ *                     type: string
+ *                     description: The grade name
+ *                   CreatedON:
+ *                     type: string
+ *                     format: date-time
+ *                   Remarks:
+ *                     type: string
+ *                     description: Remarks about the grade
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error fetching grades"
+ */
+app.get('/grades', grades.getAllGrades); // Get all grades
+/**
+ * @swagger
+ * /grades/{id}:
+ *   get:
+ *     summary: Get a grade by ID
+ *     description: Retrieve a specific grade by its ID.
+ *     tags:
+ *       - Grades
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the grade to retrieve
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Grade details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 GradeID:
+ *                   type: integer
+ *                 Grade:
+ *                   type: string
+ *                 CreatedON:
+ *                   type: string
+ *                   format: date-time
+ *                 Remarks:
+ *                   type: string
+ *       404:
+ *         description: Grade not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Grade not found"
+ *       500:
+ *         description: Internal server error
+ */
+app.get('/grades/:id', grades.getGradeById); // Get grade by ID
+
+/**
+ * @swagger
+ * /grades:
+ *   post:
+ *     summary: Create a new grade
+ *     description: Create a new grade in the database.
+ *     tags:
+ *       - Grades
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - Grade
+ *             properties:
+ *               Grade:
+ *                 type: string
+ *               Remarks:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Grade created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Grade created"
+ *                 GradeID:
+ *                   type: integer
+ *                   example: 1
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       param:
+ *                         type: string
+ *                       msg:
+ *                         type: string
+ *       500:
+ *         description: Error creating grade
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+app.post('/grades', grades.createGrade); // Get grade by ID
+
+/**
+ * @swagger
+ * /grades/{id}:
+ *   delete:
+ *     summary: Delete a grade by ID
+ *     description: Delete a grade by its ID.
+ *     tags:
+ *       - Grades
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the grade to delete
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Grade deleted successfully
+ *       404:
+ *         description: Grade not found
+ *       500:
+ *         description: Internal server error
+ */
+
+app.delete('/grades/:id', grades.deleteGrade); // Get grade by ID
+/**
+ * @swagger
+ * /coffeeseasons:
+ *   get:
+ *     summary: Get all coffee seasons
+ *     description: Retrieve a list of all coffee seasons.
+ *     tags:
+ *       - Coffee Seasons
+ *     responses:
+ *       200:
+ *         description: List of all coffee seasons
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   SeasonID:
+ *                     type: integer
+ *                     description: Season identifier
+ *                   Year:
+ *                     type: string
+ *                     description: Year of the season
+ *                   StartDate:
+ *                     type: string
+ *                     format: date
+ *                   EndDate:
+ *                     type: string
+ *                     format: date
+ *                   Description:
+ *                     type: string
+ *                     description: Description of the season
+ *                   CreatedOn:
+ *                     type: string
+ *                     format: date-time
+ *                   IsCurrentSeason:
+ *                     type: boolean
+ *                     description: Whether this is the current season
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error fetching coffee seasons"
+ */
+
+// Define routes for coffee seasons
+app.get('/coffeeseasons', coffeeSeason.getAllCoffeeSeasons); // Get all coffee seasons
+/**
+ * @swagger
+ * /coffeeseasons/{id}:
+ *   get:
+ *     summary: Get a coffee season by ID
+ *     description: Retrieve a specific coffee season by its ID.
+ *     tags:
+ *       - Coffee Seasons
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the coffee season
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Coffee season details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 SeasonID:
+ *                   type: integer
+ *                   description: Season identifier
+ *                 Year:
+ *                   type: string
+ *                   description: Year of the season
+ *                 StartDate:
+ *                   type: string
+ *                   format: date
+ *                 EndDate:
+ *                   type: string
+ *                   format: date
+ *                 Description:
+ *                   type: string
+ *                   description: Description of the season
+ *                 CreatedOn:
+ *                   type: string
+ *                   format: date-time
+ *                 IsCurrentSeason:
+ *                   type: boolean
+ *                   description: Whether this is the current season
+ *       404:
+ *         description: Coffee season not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Coffee season not found"
+ *       500:
+ *         description: Internal server error
+ */
+
+app.get('/coffeeseasons/:id', coffeeSeason.getCoffeeSeasonById); // Get coffee season by ID
+/**
+ * @swagger
+ * /coffeeseasons:
+ *   post:
+ *     summary: Create a new coffee season
+ *     description: Create a new coffee season in the database.
+ *     tags:
+ *       - Coffee Seasons
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - Year
+ *               - StartDate
+ *             properties:
+ *               Year:
+ *                 type: string
+ *               StartDate:
+ *                 type: string
+ *                 format: date
+ *               EndDate:
+ *                 type: string
+ *                 format: date
+ *               Description:
+ *                 type: string
+ *               IsCurrentSeason:
+ *                 type: boolean
+ *     responses:
+ *       201:
+ *         description: Coffee season created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Coffee season created"
+ *                 SeasonID:
+ *                   type: integer
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       msg:
+ *                         type: string
+ *                       param:
+ *                         type: string
+ *       500:
+ *         description: Internal server error
+ */
+
+app.post('/coffeeseasons', coffeeSeason.createCoffeeSeason); // Create a new coffee season
+/**
+ * @swagger
+ * /coffeeseasons/{id}:
+ *   put:
+ *     summary: Update a coffee season by ID
+ *     description: Update an existing coffee season by its ID.
+ *     tags:
+ *       - Coffee Seasons
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the coffee season to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - Year
+ *               - StartDate
+ *             properties:
+ *               Year:
+ *                 type: string
+ *               StartDate:
+ *                 type: string
+ *                 format: date
+ *               EndDate:
+ *                 type: string
+ *                 format: date
+ *               Description:
+ *                 type: string
+ *               IsCurrentSeason:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Coffee season updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Coffee season updated successfully"
+ *       404:
+ *         description: Coffee season not found
+ *       500:
+ *         description: Internal server error
+ */
+
+app.put('/coffeeseasons/:id', coffeeSeason.updateCoffeeSeason); // Update coffee season by ID
+/**
+ * @swagger
+ * /coffeeseasons/{id}:
+ *   delete:
+ *     summary: Delete a coffee season by ID
+ *     description: Delete a coffee season by its ID.
+ *     tags:
+ *       - Coffee Seasons
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the coffee season to delete
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Coffee season deleted successfully
+ *       404:
+ *         description: Coffee season not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error deleting coffee season"
+ */
+
+app.delete('/coffeeseasons/:id', coffeeSeason.deleteCoffeeSeason); // Delete coffee season by ID
+
