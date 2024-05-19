@@ -64,43 +64,41 @@ exports.register = async (req, res) => {
   }
 }
 };
-
-  
 // User Login
 exports.login = async (req, res) => {
-    // Validate input
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+  // Validate input
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { username, password } = req.body;
+  try {
+    // Find the user by username
+    const [users] = await pool.query('SELECT * FROM users WHERE Username = ?', [username]);
+    if (users.length === 0) {
+      return res.status(401).json({ message: 'Invalid username or password' });
     }
-  
-    const { username, password } = req.body;
-    console.log(`username : ${username} password : ${password}`);
-    try {
-      // Find the user by username
-      const [users] = await pool.query('SELECT * FROM users WHERE Username = ?', [username]);
-      if (users.length === 0) {
-        return res.status(401).json({ message: 'Invalid username or password' });
-      }
-  
-      const user = users[0];
-  
-      // Compare the provided password with the hashed password in the database
-        const passwordMatch = await bcrypt.compare(password, user.Password);
-        console.log(`passwordMatch: ${passwordMatch}`);
-      if (!passwordMatch) {
-        return res.status(401).json({ message: 'Invalid username or password' });
-      }
-      console.log(`jwtSecret: ${jwtSecret}`);
-      // Generate a JWT token
-      const token = jwt.sign({ userId: user.id, username: user.Username }, process.env.JWT_SECRET, {
-        expiresIn: '1h', // Token expiration time
-      });
-  
-      // Return the token
-      res.status(200).json({ token });
-    } catch (err) {
-      console.error('Error during login:', err);
-      res.status(500).json({ message: 'Error during login' });
+
+    const user = users[0];
+    console.log(`user: ${user.Username}`);
+
+    // Compare the provided password with the hashed password in the database
+    const passwordMatch = await bcrypt.compare(password, user.Password);
+    console.log(`passwordMatch: ${passwordMatch}`);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Invalid username or password' });
     }
-  };
+
+    // Generate a JWT token
+    const token = jwt.sign({ userId: user.id, username: user.Username }, process.env.JWT_SECRET, {
+      expiresIn: '1h', // Token expiration time
+    });
+
+    // Return the token
+    res.status(200).json({ token });
+  } catch (err) {
+    console.error('Error during login:', err);
+    res.status(500).json({ message: 'Error during login' });
+  }
+};

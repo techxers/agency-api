@@ -244,13 +244,19 @@ app.delete('/users/:id', users.deleteUser);
  *     responses:
  *       201:
  *         description: Grower created successfully
- *   get:
- *     summary: Get all growers
- *     responses:
- *       200:
- *         description: List of all growers
  */
 app.post('/growers', growers.createGrower);
+/**
+ * @swagger
+ * /growers:
+ *   get:
+ *     summary: Get all growers
+ *     tags:
+ *       - Growers
+ *     responses:
+ *       200:
+ *         description: List of growers
+ */
 app.get('/growers', growers.getAllGrowers);
 app.get('/growers/:id', growers.getGrowerById);
 app.put('/growers/:id', growers.updateGrower);
@@ -334,7 +340,7 @@ app.delete('/growers/:id', growers.deleteGrower);
  *   get:
  *     summary: Get all roles
  *     tags:
- *       - Growers
+ *       - Roles
  *     responses:
  *       200:
  *         description: List of roles
