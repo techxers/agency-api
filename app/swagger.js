@@ -43,6 +43,10 @@ const swaggerDefinition = {
       {
         "name": "Grades",
         "description": "Coffee Grades"
+      },
+      {
+        "name": "Agents Information",
+        "description": "The agents managing API"
       }
     ]
     

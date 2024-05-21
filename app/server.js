@@ -13,8 +13,13 @@ const gender = require('./gender'); // Import CRUD routes
 const location = require('./location'); // Import CRUD routes
 const grades = require('./grades'); // Import CRUD routes
 const coffeeSeason = require('./season'); // Import CRUD routes
+const agentsinfomation = require('./agentinfomation');
+const bags = require('./bags');
 
 const app = express();
+// Use CORS middleware
+app.use(cors());
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
@@ -173,6 +178,8 @@ app.get('/users', users.getAllUsers);
  *         description: Details of the user
  *   put:
  *     summary: Update a user by ID
+ *     tags:
+ *      - User
  *     parameters:
  *       - in: path
  *         name: id
@@ -283,12 +290,13 @@ app.delete('/growers/:id', growers.deleteGrower);
  *         description: Details of the grower
  *   put:
  *     summary: Update a grower by ID
+ *     tags:
+ *      - Growers
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: integer
  *         description: Grower ID
  *     requestBody:
  *       required: true
@@ -1778,4 +1786,311 @@ app.put('/coffeeseasons/:id', coffeeSeason.updateCoffeeSeason); // Update coffee
  */
 
 app.delete('/coffeeseasons/:id', coffeeSeason.deleteCoffeeSeason); // Delete coffee season by ID
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Agent:
+ *       type: object
+ *       required:
+ *         - AgentID
+ *       properties:
+ *         agentsinfomationInfomationID:
+ *           type: integer
+ *           description: The auto-generated id of the agent
+ *         BusinessLocation:
+ *           type: integer
+ *           description: The business location id
+ *         BoxOfficeNo:
+ *           type: string
+ *           description: The box office number
+ *         PrimaryMobile:
+ *           type: integer
+ *           description: The primary mobile number
+ *         Mobile:
+ *           type: string
+ *           description: The mobile number
+ *         PrimaryLandline:
+ *           type: integer
+ *           description: The primary landline number
+ *         LandLine:
+ *           type: integer
+ *           description: The landline number
+ *         PhoneNumber:
+ *           type: integer
+ *           description: The phone number
+ *         FaxNo:
+ *           type: string
+ *           description: The fax number
+ *         PrimaryEmailAddress:
+ *           type: string
+ *           description: The primary email address
+ *         SecondaryEmailAdress:
+ *           type: string
+ *           description: The secondary email address
+ *         ContactPerson:
+ *           type: string
+ *           description: The contact person
+ *         AgentID:
+ *           type: integer
+ *           description: The agent ID
+ *         BoxCode:
+ *           type: string
+ *           description: The box code
+ *       example:
+ *         BusinessLocation: 1
+ *         BoxOfficeNo: "123"
+ *         PrimaryMobile: 1234567890
+ *         Mobile: "0987654321"
+ *         PrimaryLandline: 123456
+ *         LandLine: 654321
+ *         PhoneNumber: 789123
+ *         FaxNo: "123-456-789"
+ *         PrimaryEmailAddress: "primary@example.com"
+ *         SecondaryEmailAdress: "secondary@example.com"
+ *         ContactPerson: "John Doe"
+ *         AgentID: 1
+ *         BoxCode: "ABC123"
+ */
 
+/**
+ * @swagger
+ * /agentsinfomation:
+ *   get:
+ *     summary: Returns the list of all the agentsinfomation
+ *     tags: [agentsinfomation]
+ *     responses:
+ *       200:
+ *         description: The list of the agentsinfomation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Agent'
+ */
+app.get('/agentsinfomation', agentsinfomation.getAllAgents);
+
+/**
+ * @swagger
+ * /agentsinfomation/{id}:
+ *   get:
+ *     summary: Get the agent by id
+ *     tags: [agentsinfomation]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The agent id
+ *     responses:
+ *       200:
+ *         description: The agent description by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       404:
+ *         description: The agent was not found
+ */
+app.get('/agentsinfomation/:id', agentsinfomation.getAgentById);
+
+/**
+ * @swagger
+ * /agentsinfomation:
+ *   post:
+ *     summary: Create a new agent
+ *     tags: [agentsinfomation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Agent'
+ *     responses:
+ *       201:
+ *         description: The agent was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       500:
+ *         description: Some server error
+ */
+app.post('/agentsinfomation', agentsinfomation.createAgent);
+
+/**
+ * @swagger
+ * /agentsinfomation/{id}:
+ *   put:
+ *     summary: Update the agent by the id
+ *     tags: [agentsinfomation]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The agent id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Agent'
+ *     responses:
+ *       200:
+ *         description: The agent was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       404:
+ *         description: The agent was not found
+ *       500:
+ *         description: Some error happened
+ */
+app.put('/agentsinfomation/:id', agentsinfomation.updateAgent);
+
+/**
+ * @swagger
+ * /agentsinfomation/{id}:
+ *   delete:
+ *     summary: Remove the agent by id
+ *     tags: [agentsinfomation]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The agent id
+ *     responses:
+ *       200:
+ *         description: The agent was deleted
+ *       404:
+ *         description: The agent was not found
+ */
+app.delete('/agentsinfomation/:id', agentsinfomation.deleteAgent);
+
+/**
+ * @swagger
+ * /bags:
+ *   get:
+ *     summary: Returns the list of all the bags
+ *     tags: [Bags]
+ *     responses:
+ *       200:
+ *         description: The list of the bags
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Bag'
+ */
+app.get('/bags', bags.getAllBags);
+
+/**
+ * @swagger
+ * /bags/{id}:
+ *   get:
+ *     summary: Get the bag by id
+ *     tags: [Bags]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The bag id
+ *     responses:
+ *       200:
+ *         description: The bag description by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bag'
+ *       404:
+ *         description: The bag was not found
+ */
+app.get('/bags/:id', bags.getBagById);
+
+/**
+ * @swagger
+ * /bags:
+ *   post:
+ *     summary: Create a new bag
+ *     tags: [Bags]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Bag'
+ *     responses:
+ *       201:
+ *         description: The bag was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bag'
+ *       500:
+ *         description: Some server error
+ */
+app.post('/bags', bags.createBag);
+
+/**
+ * @swagger
+ * /bags/{id}:
+ *   put:
+ *     summary: Update the bag by the id
+ *     tags: [Bags]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The bag id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Bag'
+ *     responses:
+ *       200:
+ *         description: The bag was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bag'
+ *       404:
+ *         description: The bag was not found
+ *       500:
+ *         description: Some error happened
+ */
+app.put('/bags/:id', bags.updateBag);
+
+/**
+ * @swagger
+ * /bags/{id}:
+ *   delete:
+ *     summary: Remove the bag by id
+ *     tags: [Bags]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The bag id
+ *     responses:
+ *       200:
+ *         description: The bag was deleted
+ *       404:
+ *         description: The bag was not found
+ */
+app.delete('/bags/:id', bags.deleteBag);
