@@ -15,6 +15,7 @@ const grades = require('./grades'); // Import CRUD routes
 const coffeeSeason = require('./season'); // Import CRUD routes
 const agentsinfomation = require('./agentinfomation');
 const bags = require('./bags');
+const cors = require('cors');
 
 const app = express();
 // Use CORS middleware
