@@ -2451,20 +2451,13 @@ app.delete('/certifications/:id', certification.deleteCertification);
 
 /**
  * @swagger
- * tags:
- *   - name: ContactPersons
- *     description: The contact persons managing API
- */
-
-/**
- * @swagger
- * /contactpersons/{growerId}:
+ * /contactpersons/{ContactPersons}:
  *   get:
  *     summary: Returns the list of all contact persons for a grower
  *     tags: [ContactPersons]
  *     parameters:
  *       - in: path
- *         name: growerId
+ *         name: ContactPersonID
  *         required: true
  *         schema:
  *           type: integer
@@ -2472,20 +2465,14 @@ app.delete('/certifications/:id', certification.deleteCertification);
  *       200:
  *         description: The list of contact persons
  */
-app.get('/contactpersons/:growerId', contactperson.getAllContactPersons);
+app.get('/contactpersons', contactperson.getAllContactPersons);
 
 /**
  * @swagger
- * /contactpersons/{id}:
+ * /contactperson:
  *   get:
- *     summary: Get a contact person by ID
+ *     summary: Get all contact persons
  *     tags: [ContactPersons]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
  *     responses:
  *       200:
  *         description: The contact person
@@ -2819,23 +2806,24 @@ app.put('/factories/:id', factories.updateFactory);
  */
 app.delete('/factories/:id', factories.deleteFactory);
 
-// Set up routes for GRN outturns
+// Set up routes for Factories
 /**
  * @swagger
- * /grnoutturns:
+ * /factories:
  *   get:
- *     summary: Retrieve all GRN outturns
+ *     summary: Retrieve all Factories ?
+ *     tags: [Factories]
  *     responses:
  *       200:
- *         description: A list of GRN outturns
+ *         description: A list of GRN Factories
  *   post:
- *     summary: Create a new GRN outturn
+ *     summary: Create a new Factories
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/GRNOutturn'
+ *             $ref: '#/components/schemas/factories'
  *     responses:
  *       200:
  *         description: Successfully created

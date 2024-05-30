@@ -4,7 +4,8 @@ const pool = require('./connection');
 // Retrieve all GRN outturns
 exports.getAllGRNOutturns = async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM grn_outturns');
+    console.log('============Fetching GRN outturns===========');
+    const [rows] = await pool.query('SELECT name FROM grn_outturns');
     res.json(rows);
   } catch (err) {
     console.error('Error fetching GRN outturns:', err);
