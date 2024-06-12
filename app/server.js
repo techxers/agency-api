@@ -5265,10 +5265,106 @@ app.get('/stocks/:id', stocks.getStockById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Stock'
+ *             type: object
+ *             properties:
+ *               cleanTypeID:
+ *                 type: integer
+ *                 example: 1
+ *               OutturnNo:
+ *                 type: string
+ *                 example: "36NG0003"
+ *               Bags:
+ *                 type: number
+ *                 format: double
+ *                 example: 100.5
+ *               GrossWeight:
+ *                 type: number
+ *                 format: double
+ *                 example: 6000.0
+ *               Pkts:
+ *                 type: string
+ *                 example: "20"
+ *               receivedDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2023-01-01"
+ *               ReceivedBy:
+ *                 type: string
+ *                 example: "John Doe"
+ *               PartialDelivery:
+ *                 type: boolean
+ *                 example: false
+ *               CreatedON:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2023-01-01"
+ *               weightOfBags:
+ *                 type: number
+ *                 format: double
+ *                 example: 50.0
+ *               millingLoss:
+ *                 type: number
+ *                 format: double
+ *                 example: 1.5
+ *               pTypeID:
+ *                 type: integer
+ *                 example: 1
+ *               classID:
+ *                 type: integer
+ *                 example: 222
+ *               warehouseID:
+ *                 type: integer
+ *                 example: 1
+ *               GradeID:
+ *                 type: integer
+ *                 example: 1
+ *               SeasonID:
+ *                 type: integer
+ *                 example: 1
+ *               WLocationID:
+ *                 type: integer
+ *                 example: 1
+ *               GrowerRefferance:
+ *                 type: integer
+ *                 example: 11
+ *               TypeOfBag:
+ *                 type: integer
+ *                 example: 1
+ *               MillerID:
+ *                 type: integer
+ *                 example: 1
+ *               Moisture:
+ *                 type: number
+ *                 format: double
+ *                 example: 12.5
+ *               StockIDLink:
+ *                 type: integer
+ *                 example: 1
+ *             required:
+ *               - cleanTypeID
+ *               - OutturnNo
+ *               - Bags
+ *               - pTypeID
+ *               - classID
+ *               - warehouseID
+ *               - GradeID
+ *               - SeasonID
+ *               - WLocationID
+ *               - GrowerRefferance
+ *               - TypeOfBag
+ *               - MillerID
+ *               - PartialDelivery
  *     responses:
  *       201:
  *         description: New stock created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 StocksID:
+ *                   type: integer
+ *                   example: 1
  *       400:
  *         description: Invalid request body
  *     security:
