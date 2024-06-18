@@ -81,7 +81,6 @@ exports.login = async (req, res) => {
     }
 
     const user = users[0];
-    console.log(`user: ${user.Username}`);
 
     // Compare the provided password with the hashed password in the database
     const passwordMatch = await bcrypt.compare(password, user.Password);
@@ -93,10 +92,9 @@ exports.login = async (req, res) => {
     // Generate a JWT token
     const token = jwt.sign({ userId: user.id, username: user.Username }, process.env.JWT_SECRET, {
       expiresIn: '1h', // Token expiration time
-    });
+    });  
 
-    // Return the token
-    res.status(200).json({ token });
+    res.status(200).json({ token, user: user });
   } catch (err) {
     console.error('Error during login:', err);
     res.status(500).json({ message: 'Error during login' });
