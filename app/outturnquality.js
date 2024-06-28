@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all outturn quality records
 async function getAllOutturnQuality(req, res) {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM outturnquality');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM outturnquality');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 }
 
@@ -16,16 +16,16 @@ async function getAllOutturnQuality(req, res) {
 async function getOutturnQualityById(req, res) {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM outturnquality WHERE OutturnQualityID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM outturnquality WHERE OutturnQualityID = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Outturn quality record not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 }
 
@@ -33,12 +33,12 @@ async function getOutturnQualityById(req, res) {
 async function createOutturnQuality(req, res) {
   const newOutturnQuality = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO outturnquality SET ?', newOutturnQuality);
-    await connection.end();
-    res.status(201).json({ OutturnQualityID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO outturnquality SET ?', newOutturnQuality);
+    
+    res.status(201).json({ OutturnQualityID: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 }
 
@@ -47,16 +47,16 @@ async function updateOutturnQuality(req, res) {
   const { id } = req.params;
   const updatedOutturnQuality = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE outturnquality SET ? WHERE OutturnQualityID = ?', [updatedOutturnQuality, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE outturnquality SET ? WHERE OutturnQualityID = ?', [updatedOutturnQuality, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Outturn quality record not found');
     } else {
       res.send('Outturn quality record updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 }
 
@@ -64,16 +64,16 @@ async function updateOutturnQuality(req, res) {
 async function deleteOutturnQuality(req, res) {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM outturnquality WHERE OutturnQualityID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM outturnquality WHERE OutturnQualityID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Outturn quality record not found');
     } else {
       res.send('Outturn quality record deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 }
 

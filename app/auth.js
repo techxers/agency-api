@@ -40,7 +40,7 @@ exports.register = async (req, res) => {
       );
   
       res.status(201).json({ message: 'User registered successfully', userId: result.insertId });
-    } catch (err) {
+    } catch (error) {
  // Check for specific database error codes and return appropriate status
  if (err.code === 'ER_DUP_ENTRY') {
     res.status(409).json({
@@ -95,7 +95,7 @@ exports.login = async (req, res) => {
     });  
 
     res.status(200).json({ token, user: user });
-  } catch (err) {
+  } catch (error) {
     console.error('Error during login:', err);
     res.status(500).json({ message: 'Error during login' });
   }

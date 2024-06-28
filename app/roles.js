@@ -6,7 +6,7 @@ async function getAllRoles(req, res) {
   try {
     const [rows] = await pool.query('SELECT * FROM roles');
     res.status(200).json(rows);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching roles:', err);
     res.status(500).json({
       error: 'Internal Server Error',
@@ -30,7 +30,7 @@ async function getRoleById(req, res) {
     }
 
     res.status(200).json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching role:', err);
     res.status(500).json({
       error: 'Internal Server Error',
@@ -53,7 +53,7 @@ async function createRole(req, res) {
       message: 'Role created successfully',
       id: result.insertId,
     });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating role:', err);
     res.status(500).json({
       error: 'Internal Server Error',
@@ -83,7 +83,7 @@ async function updateRole(req, res) {
     res.status(200).json({
       message: 'Role updated successfully',
     });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating role:', err);
     res.status(500).json({
       error: 'Internal Server Error',
@@ -109,7 +109,7 @@ async function deleteRole(req, res) {
     res.status(204).json({
       message: 'Role deleted successfully',
     });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting role:', err);
     res.status(500).json({
       error: 'Internal Server Error',

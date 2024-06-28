@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all region counties
 const getAllRegionCounties = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM regioncounty');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM regioncounty');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -16,16 +16,16 @@ const getAllRegionCounties = async (req, res) => {
 const getRegionCountyById = async (req, res) => {
   const { countyId, regionId } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM regioncounty WHERE CountyID = ? AND RegionID = ?', [countyId, regionId]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM regioncounty WHERE CountyID = ? AND RegionID = ?', [countyId, regionId]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Region county not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -33,12 +33,12 @@ const getRegionCountyById = async (req, res) => {
 const createRegionCounty = async (req, res) => {
   const { countyId, regionId } = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO regioncounty (CountyID, RegionID) VALUES (?, ?)', [countyId, regionId]);
-    await connection.end();
+    
+    const [rows] = await pool.query('INSERT INTO regioncounty (CountyID, RegionID) VALUES (?, ?)', [countyId, regionId]);
+    
     res.status(201).json({ CountyID: countyId, RegionID: regionId });
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -46,16 +46,16 @@ const createRegionCounty = async (req, res) => {
 const deleteRegionCounty = async (req, res) => {
   const { countyId, regionId } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM regioncounty WHERE CountyID = ? AND RegionID = ?', [countyId, regionId]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM regioncounty WHERE CountyID = ? AND RegionID = ?', [countyId, regionId]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Region county not found');
     } else {
       res.send('Region county deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

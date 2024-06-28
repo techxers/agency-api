@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all sample types
 const getAllSampleTypes = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM sampletype');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM sampletype');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -16,16 +16,16 @@ const getAllSampleTypes = async (req, res) => {
 const getSampleTypeById = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM sampletype WHERE SampleTypeID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM sampletype WHERE SampleTypeID = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Sample type not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -33,12 +33,12 @@ const getSampleTypeById = async (req, res) => {
 const createSampleType = async (req, res) => {
   const newSampleType = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO sampletype SET ?', newSampleType);
-    await connection.end();
-    res.status(201).json({ SampleTypeID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO sampletype SET ?', newSampleType);
+    
+    res.status(201).json({ SampleTypeID: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,16 +47,16 @@ const updateSampleType = async (req, res) => {
   const { id } = req.params;
   const updatedSampleType = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE sampletype SET ? WHERE SampleTypeID = ?', [updatedSampleType, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE sampletype SET ? WHERE SampleTypeID = ?', [updatedSampleType, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Sample type not found');
     } else {
       res.send('Sample type updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -64,16 +64,16 @@ const updateSampleType = async (req, res) => {
 const deleteSampleType = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM sampletype WHERE SampleTypeID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM sampletype WHERE SampleTypeID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Sample type not found');
     } else {
       res.send('Sample type deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

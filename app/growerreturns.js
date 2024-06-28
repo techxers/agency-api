@@ -4,11 +4,11 @@ const pool = require('./connection');
 
 // Get all grower returns
 exports.getAllGrowerReturns = (req, res) => {
-  pool.query('SELECT * FROM growerreturns', (error, results) => {
+  pool.query('SELECT * FROM growerreturns', (error, rows) => {
     if (error) {
       throw error;
     }
-    res.status(200).json(results.rows);
+    res.status(200).json(rows.rows);
   });
 };
 
@@ -16,14 +16,14 @@ exports.getAllGrowerReturns = (req, res) => {
 exports.getGrowerReturnById = (req, res) => {
   const id = parseInt(req.params.id);
 
-  pool.query('SELECT * FROM growerreturns WHERE GrowerReturnID = $1', [id], (error, results) => {
+  pool.query('SELECT * FROM growerreturns WHERE GrowerReturnID = $1', [id], (error, rows) => {
     if (error) {
       throw error;
     }
-    if (results.rows.length === 0) {
+    if (rows.rows.length === 0) {
       res.status(404).send('Grower return not found');
     } else {
-      res.status(200).json(results.rows[0]);
+      res.status(200).json(rows.rows[0]);
     }
   });
 };
@@ -35,11 +35,11 @@ exports.createGrowerReturn = (req, res) => {
   pool.query(
     'INSERT INTO growerreturns (CoffeeTypeID, OutturnMark, AuctionSaleId, SeasonID, SocietyID, GrowerId, data) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
     [CoffeeTypeID, OutturnMark, AuctionSaleId, SeasonID, SocietyID, GrowerId, data],
-    (error, results) => {
+    (error, rows) => {
       if (error) {
         throw error;
       }
-      res.status(201).json(results.rows[0]);
+      res.status(201).json(rows.rows[0]);
     }
   );
 };
@@ -52,14 +52,14 @@ exports.updateGrowerReturn = (req, res) => {
   pool.query(
     'UPDATE growerreturns SET CoffeeTypeID = $1, OutturnMark = $2, AuctionSaleId = $3, SeasonID = $4, SocietyID = $5, GrowerId = $6, data = $7 WHERE GrowerReturnID = $8 RETURNING *',
     [CoffeeTypeID, OutturnMark, AuctionSaleId, SeasonID, SocietyID, GrowerId, data, id],
-    (error, results) => {
+    (error, rows) => {
       if (error) {
         throw error;
       }
-      if (results.rows.length === 0) {
+      if (rows.rows.length === 0) {
         res.status(404).send('Grower return not found');
       } else {
-        res.status(200).json(results.rows[0]);
+        res.status(200).json(rows.rows[0]);
       }
     }
   );
@@ -69,11 +69,11 @@ exports.updateGrowerReturn = (req, res) => {
 exports.deleteGrowerReturn = (req, res) => {
   const id = parseInt(req.params.id);
 
-  pool.query('DELETE FROM growerreturns WHERE GrowerReturnID = $1', [id], (error, results) => {
+  pool.query('DELETE FROM growerreturns WHERE GrowerReturnID = $1', [id], (error, rows) => {
     if (error) {
       throw error;
     }
-    if (results.rowCount === 0) {
+    if (rows.rowCount === 0) {
       res.status(404).send('Grower return not found');
     } else {
       res.status(200).send('Grower return deleted successfully');

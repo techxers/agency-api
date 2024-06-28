@@ -4,9 +4,9 @@ const pool = require('./connection');
 const getAllStocks = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM stocks');
-    res.json(rows);
-  } catch (err) {
-    res.status(500).send(err);
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -20,8 +20,8 @@ const getStockById = async (req, res) => {
     } else {
       res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -31,8 +31,8 @@ const createStock = async (req, res) => {
   try {
     const [result] = await pool.query('INSERT INTO stocks SET ?', newStock);
     res.status(201).json({ StocksID: result.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,8 +47,8 @@ const updateStock = async (req, res) => {
     } else {
       res.send('Stock updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -62,8 +62,8 @@ const deleteStock = async (req, res) => {
     } else {
       res.send('Stock deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

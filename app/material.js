@@ -2,12 +2,14 @@ const pool = require('./connection');
 // Get all materials
 async function getAllMaterials(req, res) {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM material');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM material');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error('Error fetching material:', err);
+    res.status(500).json({ message: 'Error fetching material' });
+
   }
 }
 
@@ -15,16 +17,17 @@ async function getAllMaterials(req, res) {
 async function getMaterialById(req, res) {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM material WHERE MaterialID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
-      res.status(404).send('Material not found');
-    } else {
-      res.json(results[0]);
+    
+    const [rows] = await pool.query('SELECT * FROM material WHERE MaterialID = ?', [id]);
+    
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Material not found' });
     }
-  } catch (err) {
-    res.status(500).send(err);
+
+    res.status(200).json(rows[0]);
+  } catch (error) {
+    console.error('Error fetching Material:', error);
+    res.status(500).json({ message: 'Error fetching Material' });
   }
 }
 
@@ -32,30 +35,30 @@ async function getMaterialById(req, res) {
 async function createMaterial(req, res) {
   const newMaterial = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO material SET ?', newMaterial);
-    await connection.end();
-    res.status(201).json({ MaterialID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO material SET ?', newMaterial);
+    
+    res.status(201).json({ message: 'Material created', MaterialID: result.insertId });
+  } catch (error) {
+    console.error('Error creating Material:', error);
+    res.status(500).json({ message: 'Error creating Material' });
   }
 }
-
 // Update a material by ID
 async function updateMaterial(req, res) {
   const { id } = req.params;
   const updatedMaterial = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE material SET ? WHERE MaterialID = ?', [updatedMaterial, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE material SET ? WHERE MaterialID = ?', [updatedMaterial, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Material not found');
     } else {
       res.send('Material updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 }
 
@@ -63,16 +66,16 @@ async function updateMaterial(req, res) {
 async function deleteMaterial(req, res) {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM material WHERE MaterialID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM material WHERE MaterialID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Material not found');
     } else {
       res.send('Material deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting Material' });
   }
 }
 

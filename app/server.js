@@ -553,18 +553,21 @@ app.put('/roles/:id', roles.updateRole);
  */
 app.delete('/roles/:id', roles.deleteRole);
 
+
+app.get('/auctionsale', auctionsale.getAllAuctions);
+
 /**
  * @swagger
  * /auctionsale:
  *   get:
  *     summary: Get all auctions
  *     tags:
- *       - Roles
+ *       - Auction Sale
  *     responses:
  *       200:
  *         description: List of all auctions
  */
-app.get('/auctionsale', auctionsale.getAllAuctions);
+app.post('/auctionsale', auctionsale.createAuction);
 
 /**
  * @swagger
@@ -601,7 +604,7 @@ app.get('/auctionsale', auctionsale.getAllAuctions);
  *       201:
  *         description: Auction created
  */
-app.post('/auctionsale', auctionsale.createAuction);
+app.get('/auctionsale/:id', auctionsale.getAuctionById);
 
 /**
  * @swagger
@@ -622,7 +625,7 @@ app.post('/auctionsale', auctionsale.createAuction);
  *       404:
  *         description: Auction not found
  */
-app.get('/auctionsale/:id', auctionsale.getAuctionById);
+app.put('/auctionsale/:id', auctionsale.updateAuction);
 
 /**
  * @swagger
@@ -667,7 +670,7 @@ app.get('/auctionsale/:id', auctionsale.getAuctionById);
  *       404:
  *         description: Auction not found
  */
-app.put('/auctionsale/:id', auctionsale.updateAuction);
+app.delete('/auctionsale/:id', auctionsale.deleteAuction);
 
 /**
  * @swagger
@@ -688,14 +691,15 @@ app.put('/auctionsale/:id', auctionsale.updateAuction);
  *       404:
  *         description: Auction not found
  */
-app.delete('/auctionsale/:id', auctionsale.deleteAuction);
+app.get('/departments', departments.getAllDepartments);
+
 /**
  * @swagger
  * /departments:
  *   get:
  *     summary: Fetch all departments
  *     tags:
- *       - Auction Sale
+ *       - Departments
  *     responses:
  *       200:
  *         description: A list of all departments
@@ -710,7 +714,7 @@ app.delete('/auctionsale/:id', auctionsale.deleteAuction);
  *       200:
  *         description: A list of departments.
  */
-app.get('/departments', departments.getAllDepartments);
+app.get('/departments/:id', departments.getDepartmentById);
 
 /**
  * @swagger
@@ -732,7 +736,6 @@ app.get('/departments', departments.getAllDepartments);
  *       404:
  *         description: Department not found.
  */
-app.get('/departments/:id', departments.getDepartmentById);
 
 /**
  * @swagger
@@ -986,6 +989,8 @@ app.put('/gender/:id', gender.updateGender); // Update a gender by ID
  *         description: Gender not found
  */
 app.delete('/gender/:id', gender.deleteGender); // Delete a gender by ID
+
+app.get('/countries', location.getAllCountries); // Get all countrys
 /**
  * @swagger
  * /countries:
@@ -1013,7 +1018,9 @@ app.delete('/gender/:id', gender.deleteGender); // Delete a gender by ID
  *                   Remarks:
  *                     type: string
  */
-app.get('/countries', location.getAllCountries); // Get all countrys
+
+
+app.get('/country/:id', location.getCountyById); // Get country by ID
 
 /**
  * @swagger
@@ -1052,7 +1059,10 @@ app.get('/countries', location.getAllCountries); // Get all countrys
  *       404:
  *         description: country not found
  */
-app.get('/country/:id', location.getCountyById); // Get country by ID
+app.post('/country', [
+  check('countryName').isLength({ min: 1 }).withMessage('countryName is required'),
+  check('countryCode').isLength({ min: 1 }).withMessage('countryCode is required'),
+], location.createCountry); // Create a new country
 
 /**
  * @swagger
@@ -1086,10 +1096,7 @@ app.get('/country/:id', location.getCountyById); // Get country by ID
  *       409:
  *         description: country already exists
  */
-app.post('/country', [
-  check('countryName').isLength({ min: 1 }).withMessage('countryName is required'),
-  check('countryCode').isLength({ min: 1 }).withMessage('countryCode is required'),
-], location.createCountry); // Create a new country
+app.put('/country/:id', location.updateCountry); // Update a country by ID
 
 /**
  * @swagger
@@ -1130,7 +1137,7 @@ app.post('/country', [
  *       404:
  *         description: country not found
  */
-app.put('/country/:id', location.updateCountry); // Update a country by ID
+app.delete('/country/:id', location.deleteCountry); // Delete a country by ID
 
 /**
  * @swagger
@@ -1153,44 +1160,10 @@ app.put('/country/:id', location.updateCountry); // Update a country by ID
  *       404:
  *         description: country not found
  */
-app.delete('/country/:id', location.deleteCountry); // Delete a country by ID
 
 
+app.get('/counties', location.getAllCounties); // Get all counties
 
-
-/**
- * @swagger
- * /counties:
- *   get:
- *     summary: Get all counties
- *     description: Retrieve all counties from the database.
- *     tags:
- *       - Location
- *     responses:
- *       200:
- *         description: A list of all counties
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   CountyID:
- *                     type: integer
- *                   CountyName:
- *                     type: string
- *                   CountryID:
- *                     type: integer
- *                   RegionID:
- *                     type: integer
- *                   CreatedOn:
- *                     type: string
- *                     format: date-time
- *                   Remarks:
- *                     type: string
- */
- 
 // Get all counties
 /**
  * @swagger
@@ -1224,7 +1197,7 @@ app.delete('/country/:id', location.deleteCountry); // Delete a country by ID
  *                   Remarks:
  *                     type: string
  */
-app.get('/counties', location.getAllCounties); // Get all counties
+app.get('/counties/:id', location.getCountyById); // Get county by ID
 
 // Get county by ID
 /**
@@ -1266,7 +1239,11 @@ app.get('/counties', location.getAllCounties); // Get all counties
  *       404:
  *         description: County not found
  */
-app.get('/counties/:id', location.getCountyById); // Get county by ID
+app.post('/counties', [
+  check('CountyName').isLength({ min: 1 }).withMessage('CountyName is required'),
+  check('CountryID').isInt().withMessage('CountryID must be an integer'),
+  check('RegionID').isInt().withMessage('RegionID must be an integer'),
+], location.createCounty); // Create a new county
 
 // Create a new county
 /**
@@ -1304,11 +1281,7 @@ app.get('/counties/:id', location.getCountyById); // Get county by ID
  *       409:
  *         description: County already exists
  */
-app.post('/counties', [
-  check('CountyName').isLength({ min: 1 }).withMessage('CountyName is required'),
-  check('CountryID').isInt().withMessage('CountryID must be an integer'),
-  check('RegionID').isInt().withMessage('RegionID must be an integer'),
-], location.createCounty); // Create a new county
+app.put('/counties/:id', location.updateCounty); // Update a county by ID
 
 // Update a county by ID
 /**
@@ -1349,7 +1322,7 @@ app.post('/counties', [
  *       404:
  *         description: County not found
  */
-app.put('/counties/:id', location.updateCounty); // Update a county by ID
+app.delete('/counties/:id', location.deleteCounty); // Delete a county by ID
 
 // Delete a county by ID
 /**
@@ -1373,7 +1346,7 @@ app.put('/counties/:id', location.updateCounty); // Update a county by ID
  *       404:
  *         description: County not found
  */
-app.delete('/counties/:id', location.deleteCounty); // Delete a county by ID
+app.get('/grades', grades.getAllGrades); // Get all grades
 
 /**
  * @swagger
@@ -1416,7 +1389,8 @@ app.delete('/counties/:id', location.deleteCounty); // Delete a county by ID
  *                   type: string
  *                   example: "Error fetching grades"
  */
-app.get('/grades', grades.getAllGrades); // Get all grades
+app.get('/grades/:id', grades.getGradeById); // Get grade by ID
+
 /**
  * @swagger
  * /grades/{id}:
@@ -1462,7 +1436,7 @@ app.get('/grades', grades.getAllGrades); // Get all grades
  *       500:
  *         description: Internal server error
  */
-app.get('/grades/:id', grades.getGradeById); // Get grade by ID
+app.post('/grades', grades.createGrade); // Get grade by ID
 
 /**
  * @swagger
@@ -1525,7 +1499,7 @@ app.get('/grades/:id', grades.getGradeById); // Get grade by ID
  *                 message:
  *                   type: string
  */
-app.post('/grades', grades.createGrade); // Get grade by ID
+app.delete('/grades/:id', grades.deleteGrade); // Get grade by ID
 
 /**
  * @swagger
@@ -1550,8 +1524,8 @@ app.post('/grades', grades.createGrade); // Get grade by ID
  *       500:
  *         description: Internal server error
  */
+app.get('/coffeeseasons', coffeeSeason.getAllCoffeeSeasons); // Get all coffee seasons
 
-app.delete('/grades/:id', grades.deleteGrade); // Get grade by ID
 /**
  * @swagger
  * /coffeeseasons:
@@ -1604,7 +1578,9 @@ app.delete('/grades/:id', grades.deleteGrade); // Get grade by ID
  */
 
 // Define routes for coffee seasons
-app.get('/coffeeseasons', coffeeSeason.getAllCoffeeSeasons); // Get all coffee seasons
+app.get('/coffeeseasons/:id', coffeeSeason.getCoffeeSeasonById); // Get coffee season by ID
+
+
 /**
  * @swagger
  * /coffeeseasons/{id}:
@@ -1662,8 +1638,8 @@ app.get('/coffeeseasons', coffeeSeason.getAllCoffeeSeasons); // Get all coffee s
  *       500:
  *         description: Internal server error
  */
+app.post('/coffeeseasons', coffeeSeason.createCoffeeSeason); // Create a new coffee season
 
-app.get('/coffeeseasons/:id', coffeeSeason.getCoffeeSeasonById); // Get coffee season by ID
 /**
  * @swagger
  * /coffeeseasons:
@@ -1726,8 +1702,8 @@ app.get('/coffeeseasons/:id', coffeeSeason.getCoffeeSeasonById); // Get coffee s
  *       500:
  *         description: Internal server error
  */
+app.put('/coffeeseasons/:id', coffeeSeason.updateCoffeeSeason); // Update coffee season by ID
 
-app.post('/coffeeseasons', coffeeSeason.createCoffeeSeason); // Create a new coffee season
 /**
  * @swagger
  * /coffeeseasons/{id}:
@@ -1782,7 +1758,9 @@ app.post('/coffeeseasons', coffeeSeason.createCoffeeSeason); // Create a new cof
  *         description: Internal server error
  */
 
-app.put('/coffeeseasons/:id', coffeeSeason.updateCoffeeSeason); // Update coffee season by ID
+
+app.delete('/coffeeseasons/:id', coffeeSeason.deleteCoffeeSeason); // Delete coffee season by ID
+
 /**
  * @swagger
  * /coffeeseasons/{id}:
@@ -1815,7 +1793,7 @@ app.put('/coffeeseasons/:id', coffeeSeason.updateCoffeeSeason); // Update coffee
  *                   example: "Error deleting coffee season"
  */
 
-app.delete('/coffeeseasons/:id', coffeeSeason.deleteCoffeeSeason); // Delete coffee season by ID
+
 /**
  * @swagger
  * components:
@@ -1882,6 +1860,7 @@ app.delete('/coffeeseasons/:id', coffeeSeason.deleteCoffeeSeason); // Delete cof
  *         AgentID: 1
  *         BoxCode: "ABC123"
  */
+app.get('/agentsinfomation', agentsinfomation.getAllAgents);
 
 /**
  * @swagger
@@ -1899,7 +1878,7 @@ app.delete('/coffeeseasons/:id', coffeeSeason.deleteCoffeeSeason); // Delete cof
  *               items:
  *                 $ref: '#/components/schemas/Agent'
  */
-app.get('/agentsinfomation', agentsinfomation.getAllAgents);
+app.get('/agentsinfomation/:id', agentsinfomation.getAgentById);
 
 /**
  * @swagger
@@ -1924,7 +1903,7 @@ app.get('/agentsinfomation', agentsinfomation.getAllAgents);
  *       404:
  *         description: The agent was not found
  */
-app.get('/agentsinfomation/:id', agentsinfomation.getAgentById);
+app.post('/agentsinfomation', agentsinfomation.createAgent);
 
 /**
  * @swagger
@@ -1948,7 +1927,7 @@ app.get('/agentsinfomation/:id', agentsinfomation.getAgentById);
  *       500:
  *         description: Some server error
  */
-app.post('/agentsinfomation', agentsinfomation.createAgent);
+app.put('/agentsinfomation/:id', agentsinfomation.updateAgent);
 
 /**
  * @swagger
@@ -1981,8 +1960,7 @@ app.post('/agentsinfomation', agentsinfomation.createAgent);
  *       500:
  *         description: Some error happened
  */
-app.put('/agentsinfomation/:id', agentsinfomation.updateAgent);
-
+/***********************************************************************************/
 /**
  * @swagger
  * /agentsinfomation/{id}:

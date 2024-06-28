@@ -89,7 +89,7 @@ async function createGrower(req, res) {
     );
 
     res.status(201).json({ message: 'Grower created successfully', GrowerId: result.insertId });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating grower:', err);
     res.status(500).json({ message: 'Error creating grower' });
   }
@@ -98,9 +98,9 @@ async function createGrower(req, res) {
 // Get all growers
 async function getAllGrowers(req, res) {
   try {
-    const [results] = await pool.query('SELECT * FROM grower');
-    res.status(200).json(results);
-  } catch (err) {
+    const [rows] = await pool.query('SELECT * FROM grower LIMIT 100');
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching growers:', err);
     res.status(500).json({ message: 'Error fetching growers' });
   }
@@ -110,13 +110,13 @@ async function getAllGrowers(req, res) {
 async function getGrowerById(req, res) {
   const growerId = req.params.id;
   try {
-    const [results] = await pool.query('SELECT * FROM grower WHERE GrowerId = ?', [growerId]);
-    if (results.length === 0) {
+    const [rows] = await pool.query('SELECT * FROM grower WHERE GrowerId = ?', [growerId]);
+    if (rows.length === 0) {
       res.status(404).json({ message: 'Grower not found' });
     } else {
-      res.status(200).json(results[0]);
+      res.status(200).json(rows[0]);
     }
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching grower:', err);
     res.status(500).json({ message: 'Error fetching grower' });
   }
@@ -218,7 +218,7 @@ async function updateGrower(req, res) {
     } else {
       res.status(200).json({ message: 'Grower updated successfully' });
     }
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating grower:', err);
     res.status(500).json({ message: 'Error updating grower' });
   }
@@ -236,7 +236,7 @@ async function deleteGrower(req, res) {
     } else {
       res.status(204).json({ message: 'Grower deleted successfully' });
     }
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting grower:', err);
     res.status(500).json({ message: 'Error deleting grower' });
   }

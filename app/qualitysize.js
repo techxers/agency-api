@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all quality sizes
 const getAllQualitySizes = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM quality_size');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM quality_size');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -16,16 +16,16 @@ const getAllQualitySizes = async (req, res) => {
 const getQualitySizeById = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM quality_size WHERE QualitySizeID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM quality_size WHERE QualitySizeID = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Quality size not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -33,12 +33,12 @@ const getQualitySizeById = async (req, res) => {
 const createQualitySize = async (req, res) => {
   const newQualitySize = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO quality_size SET ?', newQualitySize);
-    await connection.end();
-    res.status(201).json({ QualitySizeID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO quality_size SET ?', newQualitySize);
+    
+    res.status(201).json({ QualitySizeID: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,16 +47,16 @@ const updateQualitySize = async (req, res) => {
   const { id } = req.params;
   const updatedQualitySize = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE quality_size SET ? WHERE QualitySizeID = ?', [updatedQualitySize, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE quality_size SET ? WHERE QualitySizeID = ?', [updatedQualitySize, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Quality size not found');
     } else {
       res.send('Quality size updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -64,16 +64,16 @@ const updateQualitySize = async (req, res) => {
 const deleteQualitySize = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM quality_size WHERE QualitySizeID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM quality_size WHERE QualitySizeID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Quality size not found');
     } else {
       res.send('Quality size deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

@@ -4,8 +4,8 @@ const pool = require('./connection'); // Assume pool is a MySQL connection pool
 exports.getAllAuctions = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM auctionsale');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching auctions:', err);
     res.status(500).send('Error retrieving auctions');
   }
@@ -31,7 +31,7 @@ exports.createAuction = async (req, res) => {
       [SaleDate, SaleNumber, SaleDescription, IsOpen, PromptDate, SeasonID, Weight, TotalLots, Remarks]
     );
     res.status(201).json({ id: result.insertId });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating auction:', err);
     res.status(500).send('Error creating auction');
   }
@@ -46,7 +46,7 @@ exports.getAuctionById = async (req, res) => {
       return res.status(404).send('Auction not found');
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching auction:', err);
     res.status(500).send('Error retrieving auction');
   }
@@ -76,7 +76,7 @@ exports.updateAuction = async (req, res) => {
       return res.status(404).send('Auction not found');
     }
     res.status(200).json({ message: 'Auction updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating auction:', err);
     res.status(500).send('Error updating auction');
   }
@@ -92,7 +92,7 @@ exports.deleteAuction = async (req, res) => {
       return res.status(404).send('Auction not found');
     }
     res.status(200).json({ message: 'Auction deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting auction:', err);
     res.status(500).send('Error deleting auction');
   }

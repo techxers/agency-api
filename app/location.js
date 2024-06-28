@@ -8,7 +8,7 @@ async function getAllCountries(req, res) {
   try {
     const [rows] = await pool.query('SELECT * FROM country');
     res.status(200).json(rows);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching countries:', err);
     res.status(500).json({ message: 'Error fetching countries' });
   }
@@ -24,7 +24,7 @@ async function getCountryById(req, res) {
       return res.status(404).json({ message: 'Country not found' });
     }
     res.status(200).json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching country:', err);
     res.status(500).json({ message: 'Error fetching country' });
   }
@@ -46,7 +46,7 @@ async function createCountry(req, res) {
     );
 
     res.status(201).json({ message: 'Country created', CountryID: result.insertId });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating country:', err);
     res.status(500).json({ message: 'Error creating country' });
   }
@@ -73,7 +73,7 @@ async function updateCountry(req, res) {
     }
 
     res.status(200).json({ message: 'Country updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating country:', err);
     res.status(500).json({ message: 'Error updating country' });
   }
@@ -90,7 +90,7 @@ async function deleteCountry(req, res) {
     }
 
     res.status(200).json({ message: 'Country deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting country:', err);
     res.status(500).json({ message: 'Error deleting country' });
   }
@@ -102,7 +102,7 @@ async function getAllCounties(req, res) {
   try {
     const [rows] = await pool.query('SELECT * FROM county');
     res.status(200).json(rows);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching counties:', err);
     res.status(500).json({ message: 'Error fetching counties' });
   }
@@ -118,7 +118,7 @@ async function getCountyById(req, res) {
       return res.status(404).json({ message: 'County not found' });
     }
     res.status(200).json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching county:', err);
     res.status(500).json({ message: 'Error fetching county' });
   }
@@ -140,7 +140,7 @@ async function createCounty(req, res) {
     );
 
     res.status(201).json({ message: 'County created', CountyID: result.insertId });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating county:', err);
     res.status(500).json({ message: 'Error creating county' });
   }
@@ -167,7 +167,7 @@ async function updateCounty(req, res) {
     }
 
     res.status(200).json({ message: 'County updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating county:', err);
     res.status(500).json({ message: 'Error updating county' });
   }

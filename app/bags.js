@@ -5,8 +5,8 @@ const pool = require('./connection'); // Assume pool is a MySQL connection pool
 exports.getAllBags = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM bags');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching bags:', err);
     res.status(500).json({ message: 'Error fetching bags' });
   }
@@ -21,7 +21,7 @@ exports.getBagById = async (req, res) => {
       return res.status(404).json({ message: 'Bag not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching bag:', err);
     res.status(500).json({ message: 'Error fetching bag' });
   }
@@ -37,7 +37,7 @@ exports.createBag = async (req, res) => {
       [Description, weight, Remarks]
     );
     res.status(201).json({ id: result.insertId, message: 'Bag created' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating bag:', err);
     res.status(500).json({ message: 'Error creating bag' });
   }
@@ -59,7 +59,7 @@ exports.updateBag = async (req, res) => {
     }
 
     res.json({ message: 'Bag updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating bag:', err);
     res.status(500).json({ message: 'Error updating bag' });
   }
@@ -77,7 +77,7 @@ exports.deleteBag = async (req, res) => {
     }
 
     res.json({ message: 'Bag deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting bag:', err);
     res.status(500).json({ message: 'Error deleting bag' });
   }

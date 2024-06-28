@@ -4,9 +4,9 @@ const pool = require('./connection');
 const getAllReoffers = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM track_reoffer');
-    res.json(rows);
-  } catch (err) {
-    res.status(500).send(err);
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -20,8 +20,8 @@ const getReofferById = async (req, res) => {
     } else {
       res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -31,8 +31,8 @@ const createReoffer = async (req, res) => {
   try {
     const [result] = await pool.query('INSERT INTO track_reoffer SET ?', newReoffer);
     res.status(201).json({ ReOfferID: result.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,8 +47,8 @@ const updateReoffer = async (req, res) => {
     } else {
       res.send('Reoffer updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -62,8 +62,8 @@ const deleteReoffer = async (req, res) => {
     } else {
       res.send('Reoffer deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

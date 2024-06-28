@@ -5,8 +5,8 @@ const pool = require('./connection');
 exports.getAllBanks = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM bank');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching banks:', err);
     res.status(500).json({ message: 'Error fetching banks' });
   }
@@ -21,7 +21,7 @@ exports.getBankById = async (req, res) => {
       return res.status(404).json({ message: 'Bank not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching bank:', err);
     res.status(500).json({ message: 'Error fetching bank' });
   }
@@ -37,7 +37,7 @@ exports.createBank = async (req, res) => {
       [BankName, BankSwiftCode, Remarks, IsActive, BankCode]
     );
     res.status(201).json({ id: result.insertId, message: 'Bank created' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating bank:', err);
     res.status(500).json({ message: 'Error creating bank' });
   }
@@ -59,7 +59,7 @@ exports.updateBank = async (req, res) => {
     }
 
     res.json({ message: 'Bank updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating bank:', err);
     res.status(500).json({ message: 'Error updating bank' });
   }
@@ -77,7 +77,7 @@ exports.deleteBank = async (req, res) => {
     }
 
     res.json({ message: 'Bank deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting bank:', err);
     res.status(500).json({ message: 'Error deleting bank' });
   }

@@ -5,8 +5,8 @@ const pool = require('./connection');
 exports.getAllGRNMain = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM grn_main');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching GRN mains:', err);
     res.status(500).json({ message: 'Error fetching GRN mains' });
   }
@@ -21,7 +21,7 @@ exports.getGRNMainById = async (req, res) => {
       return res.status(404).json({ message: 'GRN main not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching GRN main:', err);
     res.status(500).json({ message: 'Error fetching GRN main' });
   }
@@ -89,7 +89,7 @@ exports.createGRNMain = async (req, res) => {
       ]
     );
     res.status(201).json({ id: result.insertId, message: 'GRN main created' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating GRN main:', err);
     res.status(500).json({ message: 'Error creating GRN main' });
   }
@@ -163,7 +163,7 @@ exports.updateGRNMain = async (req, res) => {
     }
 
     res.json({ message: 'GRN main updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating GRN main:', err);
     res.status(500).json({ message: 'Error updating GRN main' });
   }
@@ -181,7 +181,7 @@ exports.deleteGRNMain = async (req, res) => {
     }
 
     res.json({ message: 'GRN main deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting GRN main:', err);
     res.status(500).json({ message: 'Error deleting GRN main' });
   }

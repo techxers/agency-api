@@ -29,7 +29,7 @@ exports.createUser = async (req, res) => {
       error: 'Success',
       message: 'User created successfully'
     });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating user:', err);
 
      // Check for specific database error codes and return appropriate status
@@ -60,8 +60,8 @@ exports.createUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM users');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching users:', err);
     res.status(500).send('Error retrieving users');
   }
@@ -81,7 +81,7 @@ exports.getUserById = async (req, res) => {
     }
 
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'An unexpected error occurred. Please try again later.'
@@ -103,7 +103,7 @@ exports.updateUser = async (req, res) => {
     const updatedUser = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
     res.json(updatedUser[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating user:', err);
     res.status(500).send('Error updating user');
   }
@@ -115,7 +115,7 @@ exports.deleteUser = async (req, res) => {
   try {
     await pool.query('DELETE FROM users WHERE id = ?', [userId]);
     res.json({ message: 'User deleted successfully' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting user:', err);
     res.status(500).send('Error deleting user');
   }

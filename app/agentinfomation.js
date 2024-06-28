@@ -5,8 +5,8 @@ const pool = require('./connection'); // Assume pool is a MySQL connection pool
 exports.getAllAgents = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM agency.agentsinfomation');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching agents:', err);
     res.status(500).json({ message: 'Error fetching agents' });
   }
@@ -21,7 +21,7 @@ exports.getAgentById = async (req, res) => {
       return res.status(404).json({ message: 'Agent not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching agent:', err);
     res.status(500).json({ message: 'Error fetching agent' });
   }
@@ -42,7 +42,7 @@ exports.createAgent = async (req, res) => {
       [BusinessLocation, BoxOfficeNo, PrimaryMobile, Mobile, PrimaryLandline, LandLine, PhoneNumber, FaxNo, PrimaryEmailAddress, SecondaryEmailAdress, ContactPerson, AgentID, BoxCode]
     );
     res.status(201).json({ id: result.insertId, message: 'Agent created' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating agent:', err);
     res.status(500).json({ message: 'Error creating agent' });
   }
@@ -69,7 +69,7 @@ exports.updateAgent = async (req, res) => {
     }
 
     res.json({ message: 'Agent updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating agent:', err);
     res.status(500).json({ message: 'Error updating agent' });
   }
@@ -87,7 +87,7 @@ exports.deleteAgent = async (req, res) => {
     }
 
     res.json({ message: 'Agent deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting agent:', err);
     res.status(500).json({ message: 'Error deleting agent' });
   }

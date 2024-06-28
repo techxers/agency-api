@@ -6,7 +6,7 @@ async function getAllDepartments(req, res) {
   try {
     const [rows] = await pool.query('SELECT * FROM departments');
     res.status(200).json(rows);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching departments:', err);
     res.status(500).json({ message: 'Error fetching departments' });
   }
@@ -23,7 +23,7 @@ async function getDepartmentById(req, res) {
     }
 
     res.status(200).json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching department:', err);
     res.status(500).json({ message: 'Error fetching department' });
   }
@@ -47,7 +47,7 @@ async function createDepartment(req, res) {
     const [result] = await pool.query('INSERT INTO departments (DepartmentName) VALUES (?)', [DepartmentName]);
 
     res.status(201).json({ message: 'Department created', DepartmentId: result.insertId });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating department:', err);
     res.status(500).json({ message: 'Error creating department' });
   }
@@ -79,7 +79,7 @@ async function updateDepartment(req, res) {
     }
 
     res.status(200).json({ message: 'Department updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating department:', err);
     res.status(500).json({ message: 'Error updating department' });
   }
@@ -96,7 +96,7 @@ async function deleteDepartment(req, res) {
     }
 
     res.status(200).json({ message: 'Department deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting department:', err);
     res.status(500).json({ message: 'Error deleting department' });
   }

@@ -5,8 +5,8 @@ const pool = require('./connection');
 exports.getAllCertifications = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM certification');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching certifications:', err);
     res.status(500).json({ message: 'Error fetching certifications' });
   }
@@ -21,7 +21,7 @@ exports.getCertificationById = async (req, res) => {
       return res.status(404).json({ message: 'Certification not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching certification:', err);
     res.status(500).json({ message: 'Error fetching certification' });
   }
@@ -37,7 +37,7 @@ exports.createCertification = async (req, res) => {
       [CertificationName, CertDescription, StartDate, EndDate]
     );
     res.status(201).json({ id: result.insertId, message: 'Certification created' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating certification:', err);
     res.status(500).json({ message: 'Error creating certification' });
   }
@@ -59,7 +59,7 @@ exports.updateCertification = async (req, res) => {
     }
 
     res.json({ message: 'Certification updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating certification:', err);
     res.status(500).json({ message: 'Error updating certification' });
   }
@@ -77,7 +77,7 @@ exports.deleteCertification = async (req, res) => {
     }
 
     res.json({ message: 'Certification deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting certification:', err);
     res.status(500).json({ message: 'Error deleting certification' });
   }

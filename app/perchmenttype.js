@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all parchment types
 const getAllParchmentTypes = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM perchmenttype');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM perchmenttype');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -16,16 +16,16 @@ const getAllParchmentTypes = async (req, res) => {
 const getParchmentTypeById = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM perchmenttype WHERE pTypeID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM perchmenttype WHERE pTypeID = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Parchment type not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -33,12 +33,12 @@ const getParchmentTypeById = async (req, res) => {
 const createParchmentType = async (req, res) => {
   const newParchmentType = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO perchmenttype SET ?', newParchmentType);
-    await connection.end();
-    res.status(201).json({ pTypeID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO perchmenttype SET ?', newParchmentType);
+    
+    res.status(201).json({ pTypeID: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,16 +47,16 @@ const updateParchmentType = async (req, res) => {
   const { id } = req.params;
   const updatedParchmentType = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE perchmenttype SET ? WHERE pTypeID = ?', [updatedParchmentType, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE perchmenttype SET ? WHERE pTypeID = ?', [updatedParchmentType, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Parchment type not found');
     } else {
       res.send('Parchment type updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -64,16 +64,16 @@ const updateParchmentType = async (req, res) => {
 const deleteParchmentType = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM perchmenttype WHERE pTypeID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM perchmenttype WHERE pTypeID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Parchment type not found');
     } else {
       res.send('Parchment type deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

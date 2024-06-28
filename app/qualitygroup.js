@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all quality groups
 const getAllQualityGroups = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM qualitygroups');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM qualitygroups');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -16,16 +16,16 @@ const getAllQualityGroups = async (req, res) => {
 const getQualityGroupById = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM qualitygroups WHERE QualityGroupID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM qualitygroups WHERE QualityGroupID = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Quality group not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -33,12 +33,12 @@ const getQualityGroupById = async (req, res) => {
 const createQualityGroup = async (req, res) => {
   const newQualityGroup = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO qualitygroups SET ?', newQualityGroup);
-    await connection.end();
-    res.status(201).json({ QualityGroupID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO qualitygroups SET ?', newQualityGroup);
+    
+    res.status(201).json({ QualityGroupID: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,16 +47,16 @@ const updateQualityGroup = async (req, res) => {
   const { id } = req.params;
   const updatedQualityGroup = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE qualitygroups SET ? WHERE QualityGroupID = ?', [updatedQualityGroup, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE qualitygroups SET ? WHERE QualityGroupID = ?', [updatedQualityGroup, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Quality group not found');
     } else {
       res.send('Quality group updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -64,16 +64,16 @@ const updateQualityGroup = async (req, res) => {
 const deleteQualityGroup = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM qualitygroups WHERE QualityGroupID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM qualitygroups WHERE QualityGroupID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Quality group not found');
     } else {
       res.send('Quality group deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

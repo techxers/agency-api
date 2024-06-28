@@ -7,8 +7,8 @@ exports.getAllContactPersons = async (req, res) => {
 
   try {
     const [rows] = await pool.query('SELECT * FROM contactperson WHERE GrowerId = ?', [growerId]);
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching contact persons:', err);
     res.status(500).json({ message: 'Error fetching contact persons' });
   }
@@ -24,7 +24,7 @@ exports.getContactPersonById = async (req, res) => {
       return res.status(404).json({ message: 'Contact person not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching contact person:', err);
     res.status(500).json({ message: 'Error fetching contact person' });
   }
@@ -40,7 +40,7 @@ exports.createContactPerson = async (req, res) => {
       [GrowerId, ContactName, ContactNumber, Remarks, IsMainContact, ContactTitleID]
     );
     res.status(201).json({ id: result.insertId, message: 'Contact person created' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating contact person:', err);
     res.status(500).json({ message: 'Error creating contact person' });
   }
@@ -62,7 +62,7 @@ exports.updateContactPerson = async (req, res) => {
     }
 
     res.json({ message: 'Contact person updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating contact person:', err);
     res.status(500).json({ message: 'Error updating contact person' });
   }
@@ -80,7 +80,7 @@ exports.deleteContactPerson = async (req, res) => {
     }
 
     res.json({ message: 'Contact person deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting contact person:', err);
     res.status(500).json({ message: 'Error deleting contact person' });
   }

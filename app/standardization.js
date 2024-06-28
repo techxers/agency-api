@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all standardizations
 const getAllStandardizations = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM standardization');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM standardization');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -16,16 +16,16 @@ const getAllStandardizations = async (req, res) => {
 const getStandardizationById = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM standardization WHERE StandardizationID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM standardization WHERE StandardizationID = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Standardization not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -33,12 +33,12 @@ const getStandardizationById = async (req, res) => {
 const createStandardization = async (req, res) => {
   const newStandardization = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO standardization SET ?', newStandardization);
-    await connection.end();
-    res.status(201).json({ StandardizationID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO standardization SET ?', newStandardization);
+    
+    res.status(201).json({ StandardizationID: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,16 +47,16 @@ const updateStandardization = async (req, res) => {
   const { id } = req.params;
   const updatedStandardization = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE standardization SET ? WHERE StandardizationID = ?', [updatedStandardization, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE standardization SET ? WHERE StandardizationID = ?', [updatedStandardization, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Standardization not found');
     } else {
       res.send('Standardization updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -64,16 +64,16 @@ const updateStandardization = async (req, res) => {
 const deleteStandardization = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM standardization WHERE StandardizationID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM standardization WHERE StandardizationID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Standardization not found');
     } else {
       res.send('Standardization deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

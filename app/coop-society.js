@@ -5,8 +5,8 @@ const pool = require('./connection');
 const getAllCoopSocieties = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM `coop-society`');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching cooperative societies:', err);
     res.status(500).json({ message: 'Error fetching cooperative societies' });
   }
@@ -21,7 +21,7 @@ const getCoopSocietyById = async (req, res) => {
       return res.status(404).json({ message: 'Cooperative society not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching cooperative society:', err);
     res.status(500).json({ message: 'Error fetching cooperative society' });
   }
@@ -37,7 +37,7 @@ const createCoopSociety = async (req, res) => {
       [SocietyName, BankAccountNO, BankID, BranchID, SocietyCode, Description, StartDate, EndDate]
     );
     res.status(201).json({ id: result.insertId, message: 'Cooperative society created' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating cooperative society:', err);
     res.status(500).json({ message: 'Error creating cooperative society' });
   }
@@ -59,7 +59,7 @@ const updateCoopSociety = async (req, res) => {
     }
 
     res.json({ message: 'Cooperative society updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating cooperative society:', err);
     res.status(500).json({ message: 'Error updating cooperative society' });
   }
@@ -77,7 +77,7 @@ const deleteCoopSociety = async (req, res) => {
     }
 
     res.json({ message: 'Cooperative society deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting cooperative society:', err);
     res.status(500).json({ message: 'Error deleting cooperative society' });
   }

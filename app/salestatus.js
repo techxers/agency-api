@@ -4,12 +4,12 @@ const pool = require('./connection');
 // Get all sale statuses
 const getAllSaleStatuses = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM salestatus');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM salestatus');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -17,16 +17,16 @@ const getAllSaleStatuses = async (req, res) => {
 const getSaleStatusById = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM salestatus WHERE SaleStatusId = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM salestatus WHERE SaleStatusId = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Sale status not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -34,12 +34,12 @@ const getSaleStatusById = async (req, res) => {
 const createSaleStatus = async (req, res) => {
   const newSaleStatus = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO salestatus SET ?', newSaleStatus);
-    await connection.end();
-    res.status(201).json({ SaleStatusId: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO salestatus SET ?', newSaleStatus);
+    
+    res.status(201).json({ SaleStatusId: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -48,16 +48,16 @@ const updateSaleStatus = async (req, res) => {
   const { id } = req.params;
   const updatedSaleStatus = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE salestatus SET ? WHERE SaleStatusId = ?', [updatedSaleStatus, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE salestatus SET ? WHERE SaleStatusId = ?', [updatedSaleStatus, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Sale status not found');
     } else {
       res.send('Sale status updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -65,16 +65,16 @@ const updateSaleStatus = async (req, res) => {
 const deleteSaleStatus = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM salestatus WHERE SaleStatusId = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM salestatus WHERE SaleStatusId = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Sale status not found');
     } else {
       res.send('Sale status deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

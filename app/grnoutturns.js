@@ -6,8 +6,8 @@ exports.getAllGRNOutturns = async (req, res) => {
   try {
     console.log('============Fetching GRN outturns===========');
     const [rows] = await pool.query('SELECT name FROM grn_outturns');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+  } catch (error) {
     console.error('Error fetching GRN outturns:', err);
     res.status(500).json({ message: 'Error fetching GRN outturns' });
   }
@@ -22,7 +22,7 @@ exports.getGRNOutturnById = async (req, res) => {
       return res.status(404).json({ message: 'GRN outturn not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching GRN outturn:', err);
     res.status(500).json({ message: 'Error fetching GRN outturn' });
   }
@@ -34,7 +34,7 @@ exports.createGRNOutturn = async (req, res) => {
   try {
     const result = await pool.query('INSERT INTO grn_outturns SET ?', [grnOutturnData]);
     res.json({ message: 'GRN outturn created successfully', id: result.insertId });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating GRN outturn:', err);
     res.status(500).json({ message: 'Error creating GRN outturn' });
   }
@@ -50,7 +50,7 @@ exports.updateGRNOutturn = async (req, res) => {
       return res.status(404).json({ message: 'GRN outturn not found' });
     }
     res.json({ message: 'GRN outturn updated successfully' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating GRN outturn:', err);
     res.status(500).json({ message: 'Error updating GRN outturn' });
   }
@@ -65,7 +65,7 @@ exports.deleteGRNOutturn = async (req, res) => {
       return res.status(404).json({ message: 'GRN outturn not found' });
     }
     res.json({ message: 'GRN outturn deleted successfully' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting GRN outturn:', err);
     res.status(500).json({ message: 'Error deleting GRN outturn' });
   }

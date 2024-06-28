@@ -4,9 +4,12 @@ const pool = require('./connection');
 // Get all factories
 exports.getAllFactories = async (req, res) => {
   try {
+    console.log('-------------------------start factories--------------------')
     const [rows] = await pool.query('SELECT * FROM factories');
-    res.json(rows);
-  } catch (err) {
+    res.status(200).json(rows);
+    console.log('-------------------------end factories--------------------')
+
+  } catch (error) {
     console.error('Error fetching factories:', err);
     res.status(500).json({ message: 'Error fetching factories' });
   }
@@ -21,7 +24,7 @@ exports.getFactoryById = async (req, res) => {
       return res.status(404).json({ message: 'Factory not found' });
     }
     res.json(rows[0]);
-  } catch (err) {
+  } catch (error) {
     console.error('Error fetching factory:', err);
     res.status(500).json({ message: 'Error fetching factory' });
   }
@@ -37,7 +40,7 @@ exports.createFactory = async (req, res) => {
       [SocietyID, FactoryCode, FactoryName, Remarks, StartDate, EndDate, AccountNo, BankID, BranchID]
     );
     res.status(201).json({ id: result.insertId, message: 'Factory created' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error creating factory:', err);
     res.status(500).json({ message: 'Error creating factory' });
   }
@@ -59,7 +62,7 @@ exports.updateFactory = async (req, res) => {
     }
 
     res.json({ message: 'Factory updated' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error updating factory:', err);
     res.status(500).json({ message: 'Error updating factory' });
   }
@@ -77,7 +80,7 @@ exports.deleteFactory = async (req, res) => {
     }
 
     res.json({ message: 'Factory deleted' });
-  } catch (err) {
+  } catch (error) {
     console.error('Error deleting factory:', err);
     res.status(500).json({ message: 'Error deleting factory' });
   }

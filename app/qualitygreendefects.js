@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all quality green defects
 const getAllQualityGreenDefects = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM qualitygreendefects');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM qualitygreendefects');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -16,16 +16,16 @@ const getAllQualityGreenDefects = async (req, res) => {
 const getQualityGreenDefectById = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM qualitygreendefects WHERE GreenDefectsID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM qualitygreendefects WHERE GreenDefectsID = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Quality green defect not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -33,12 +33,12 @@ const getQualityGreenDefectById = async (req, res) => {
 const createQualityGreenDefect = async (req, res) => {
   const newQualityGreenDefect = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO qualitygreendefects SET ?', newQualityGreenDefect);
-    await connection.end();
-    res.status(201).json({ GreenDefectsID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO qualitygreendefects SET ?', newQualityGreenDefect);
+    
+    res.status(201).json({ GreenDefectsID: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,16 +47,16 @@ const updateQualityGreenDefect = async (req, res) => {
   const { id } = req.params;
   const updatedQualityGreenDefect = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE qualitygreendefects SET ? WHERE GreenDefectsID = ?', [updatedQualityGreenDefect, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE qualitygreendefects SET ? WHERE GreenDefectsID = ?', [updatedQualityGreenDefect, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Quality green defect not found');
     } else {
       res.send('Quality green defect updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -64,16 +64,16 @@ const updateQualityGreenDefect = async (req, res) => {
 const deleteQualityGreenDefect = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM qualitygreendefects WHERE GreenDefectsID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM qualitygreendefects WHERE GreenDefectsID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Quality green defect not found');
     } else {
       res.send('Quality green defect deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 

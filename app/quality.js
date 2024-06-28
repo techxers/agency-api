@@ -3,12 +3,12 @@ const pool = require('./connection');
 // Get all qualities
 const getAllQualities = async (req, res) => {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM quality');
-    await connection.end();
-    res.json(results);
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('SELECT * FROM quality');
+    
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -16,16 +16,16 @@ const getAllQualities = async (req, res) => {
 const getQualityById = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('SELECT * FROM quality WHERE QualityID = ?', [id]);
-    await connection.end();
-    if (results.length === 0) {
+    
+    const [rows] = await pool.query('SELECT * FROM quality WHERE QualityID = ?', [id]);
+    
+    if (rows.length === 0) {
       res.status(404).send('Quality not found');
     } else {
-      res.json(results[0]);
+      res.json(rows[0]);
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -33,12 +33,12 @@ const getQualityById = async (req, res) => {
 const createQuality = async (req, res) => {
   const newQuality = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('INSERT INTO quality SET ?', newQuality);
-    await connection.end();
-    res.status(201).json({ QualityID: results.insertId });
-  } catch (err) {
-    res.status(500).send(err);
+    
+    const [rows] = await pool.query('INSERT INTO quality SET ?', newQuality);
+    
+    res.status(201).json({ QualityID: rows.insertId });
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -47,16 +47,16 @@ const updateQuality = async (req, res) => {
   const { id } = req.params;
   const updatedQuality = req.body;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('UPDATE quality SET ? WHERE QualityID = ?', [updatedQuality, id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('UPDATE quality SET ? WHERE QualityID = ?', [updatedQuality, id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Quality not found');
     } else {
       res.send('Quality updated successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -64,16 +64,16 @@ const updateQuality = async (req, res) => {
 const deleteQuality = async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    const [results] = await connection.execute('DELETE FROM quality WHERE QualityID = ?', [id]);
-    await connection.end();
-    if (results.affectedRows === 0) {
+    
+    const [rows] = await pool.query('DELETE FROM quality WHERE QualityID = ?', [id]);
+    
+    if (rows.affectedRows === 0) {
       res.status(404).send('Quality not found');
     } else {
       res.send('Quality deleted successfully');
     }
-  } catch (err) {
-    res.status(500).send(err);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
