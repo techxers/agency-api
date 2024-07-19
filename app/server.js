@@ -3200,12 +3200,6 @@ app.delete('/millercharges/:id', millercharges.deleteMillerCharge);
  *     responses:
  *       200:
  *         description: A list of all miller charges
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
  */
 
 /**
@@ -3314,12 +3308,6 @@ app.get('/outturngrades', outturnGrades.getAllOutturnGrades);
  *     responses:
  *       200:
  *         description: A list of all outturn grades
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
  */
 app.get('/outturngrades/:id', outturnGrades.getOutturnGradeById);
 
