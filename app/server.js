@@ -2035,15 +2035,11 @@ app.get('/bags/:id', bags.getBagById);
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Bag'
  *     responses:
  *       201:
  *         description: The bag was successfully created
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Bag'
  *       500:
  *         description: Some server error
  */
@@ -2066,15 +2062,11 @@ app.post('/bags', bags.createBag);
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Bag'
  *     responses:
  *       200:
  *         description: The bag was updated
  *         content:
  *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Bag'
  *       404:
  *         description: The bag was not found
  *       500:
@@ -3458,7 +3450,7 @@ app.get('/outturns', outturns.getAllOutturns);
  *       404:
  *         description: Outturn record not found
  */
-app.get('/outturns/:id', outturns.getOutturnById);
+app.post('/outturns', outturns.createOutturn);
 
 /**
  * @swagger
@@ -3467,16 +3459,84 @@ app.get('/outturns/:id', outturns.getOutturnById);
  *     summary: Create a new outturn record
  *     tags: [Outturns]
  *     requestBody:
+ *       description: The outturn record to create
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Outturn'
+ *             type: object
+ *             properties:
+ *               OutturnMark:
+ *                 type: string
+ *               OutturnNo:
+ *                 type: string
+ *               MaterialID:
+ *                 type: integer
+ *               GrowerID:
+ *                 type: integer
+ *               MillerID:
+ *                 type: integer
+ *               CoffeeTypeID:
+ *                 type: integer
+ *               BagID:
+ *                 type: integer
+ *               BagWeight:
+ *                 type: number
+ *                 format: double
+ *               Nweight:
+ *                 type: number
+ *                 format: double
+ *               Status:
+ *                 type: integer
+ *               TotalMillerCharges:
+ *                 type: number
+ *                 format: double
+ *               TotalChargesRecovered:
+ *                 type: number
+ *                 format: double
+ *               TotalWeightSold:
+ *                 type: number
+ *                 format: double
+ *               GrowerPayee:
+ *                 type: string
+ *               SeasonID:
+ *                 type: integer
+ *                 required: true
+ *               MilledDate:
+ *                 type: string
+ *                 format: date
+ *               WeightMargin:
+ *                 type: string
+ *               Pkts:
+ *                 type: number
+ *                 format: double
+ *               MillerClassID:
+ *                 type: integer
+ *               Remarks:
+ *                 type: string
+ *               Bags:
+ *                 type: integer
+ *               Sign:
+ *                 type: string
+ *               DeliveryDate:
+ *                 type: string
+ *                 format: date
+ *               BulkOutturnNo:
+ *                 type: integer
+ *               GrossPWeight:
+ *                 type: number
+ *                 format: double
+ *               Sampled:
+ *                 type: string
+ *               BulkPercentage:
+ *                 type: string
+ *               GrnReceivediD:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: The newly created outturn record
  */
-app.post('/outturns', outturns.createOutturn);
+app.put('/outturns/:id', outturns.updateOutturn);
 
 /**
  * @swagger
@@ -3491,12 +3551,79 @@ app.post('/outturns', outturns.createOutturn);
  *           type: integer
  *         required: true
  *         description: The ID of the outturn record
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Outturn'
+ *       - in: body
+ *         name: body
+ *         description: The outturn record to update
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             OutturnMark:
+ *               type: string
+ *             OutturnNo:
+ *               type: string
+ *             MaterialID:
+ *               type: integer
+ *             GrowerID:
+ *               type: integer
+ *             MillerID:
+ *               type: integer
+ *             CoffeeTypeID:
+ *               type: integer
+ *             BagID:
+ *               type: integer
+ *             BagWeight:
+ *               type: number
+ *               format: double
+ *             Nweight:
+ *               type: number
+ *               format: double
+ *             Status:
+ *               type: integer
+ *             TotalMillerCharges:
+ *               type: number
+ *               format: double
+ *             TotalChargesRecovered:
+ *               type: number
+ *               format: double
+ *             TotalWeightSold:
+ *               type: number
+ *               format: double
+ *             GrowerPayee:
+ *               type: string
+ *             SeasonID:
+ *               type: integer
+ *               required: true
+ *             MilledDate:
+ *               type: string
+ *               format: date
+ *             WeightMargin:
+ *               type: string
+ *             Pkts:
+ *               type: number
+ *               format: double
+ *             MillerClassID:
+ *               type: integer
+ *             Remarks:
+ *               type: string
+ *             Bags:
+ *               type: integer
+ *             Sign:
+ *               type: string
+ *             DeliveryDate:
+ *               type: string
+ *               format: date
+ *             BulkOutturnNo:
+ *               type: integer
+ *             GrossPWeight:
+ *               type: number
+ *               format: double
+ *             Sampled:
+ *               type: string
+ *             BulkPercentage:
+ *               type: string
+ *             GrnReceivediD:
+ *               type: integer
  *     responses:
  *       200:
  *         description: Outturn record updated successfully
