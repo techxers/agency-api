@@ -17,11 +17,14 @@ async function getOutturnById(req, res) {
   try {
     const [rows] = await pool.query('SELECT * FROM outturns WHERE OutturnID = ?', [id]);
     if (rows.length === 0) {
+
       res.status(404).json({ error: 'Outturn record not found' });
     } else {
+
       res.status(200).json(rows[0]);
     }
   } catch (error) {
+
     res.status(500).json({ error: 'Failed to retrieve the outturn record' });
   }
 }

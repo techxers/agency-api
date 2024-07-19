@@ -3419,6 +3419,8 @@ app.delete('/outturngrades/:id', outturnGrades.deleteOutturnGrade);
  *       404:
  *         description: Outturn grade not found
  */
+
+app.get('/outturns', outturns.getAllOutturns);
 /**
  * @swagger
  * /outturns:
@@ -3429,7 +3431,7 @@ app.delete('/outturngrades/:id', outturnGrades.deleteOutturnGrade);
  *       200:
  *         description: A list of all outturn records
  */
-app.get('/outturns', outturns.getAllOutturns);
+app.get('/outturns/:id', outturns.getOutturnById);
 
 /**
  * @swagger
