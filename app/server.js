@@ -2800,17 +2800,93 @@ app.delete('/factories/:id', factories.deleteFactory);
  */
 app.get('/grnoutturns', grnOutturnRoutes.getAllGRNOutturns);
 app.get('/grnoutturns/:id', grnOutturnRoutes.getGRNOutturnById);
+app.put('/grnoutturns/:id', grnOutturnRoutes.updateGRNOutturn);
+app.delete('/grnoutturns/:id', grnOutturnRoutes.deleteGRNOutturn);
+app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
+
+// Set up routes for GRN Outturns
+
+/**
+ * @swagger
+ * /grnoutturns:
+ *   get:
+ *     summary: Retrieve all GRN Outturns
+ *     tags: [GRN Outturns]
+ *     responses:
+ *       200:
+ *         description: A list of GRN Outturns
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/GRNOutturn'
+ *       500:
+ *         description: Some error happened
+ */
+
+/**
+ * @swagger
+ * /grnoutturns:
+ *   post:
+ *     summary: Create a new GRN Outturn
+ *     tags: [GRN Outturns]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GRNOutturn'
+ *     responses:
+ *       201:
+ *         description: GRN Outturn created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GRNOutturn'
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Some error happened
+ */
+
 /**
  * @swagger
  * /grnoutturns/{id}:
- *   put:
- *     summary: Update an existing GRN outturn
+ *   get:
+ *     summary: Retrieve a single GRN Outturn by ID
+ *     tags: [GRN Outturns]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Details of the GRN Outturn
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GRNOutturn'
+ *       404:
+ *         description: GRN Outturn not found
+ *       500:
+ *         description: Some error happened
+ */
+
+/**
+ * @swagger
+ * /grnoutturns/{id}:
+ *   put:
+ *     summary: Update an existing GRN Outturn by ID
+ *     tags: [GRN Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -2819,21 +2895,726 @@ app.get('/grnoutturns/:id', grnOutturnRoutes.getGRNOutturnById);
  *             $ref: '#/components/schemas/GRNOutturn'
  *     responses:
  *       200:
- *         description: Successfully updated
+ *         description: GRN Outturn updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GRNOutturn'
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: GRN Outturn not found
+ *       500:
+ *         description: Some error happened
+ */
+
+/**
+ * @swagger
+ * /grnoutturns/{id}:
  *   delete:
- *     summary: Delete an existing GRN outturn
+ *     summary: Delete a GRN Outturn by ID
+ *     tags: [GRN Outturns]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: GRN Outturn deleted successfully
+ *       404:
+ *         description: GRN Outturn not found
+ *       500:
+ *         description: Some error happened
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     GRNOutturn:
+ *       type: object
+ *       properties:
+ *         grnOutturnID:
+ *           type: integer
+ *           description: The unique identifier for the GRN Outturn
+ *           example: 1
+ *         GRNID:
+ *           type: integer
+ *           description: The GRN identifier
+ *           example: 12345
+ *         Season:
  *           type: string
+ *           description: The season for the GRN outturn
+ *           example: "2024/2025"
+ *         Location:
+ *           type: string
+ *           description: The location associated with the outturn
+ *           example: "Nairobi"
+ *         GradeID:
+ *           type: integer
+ *           description: The grade identifier linked to the material
+ *           example: 1
+ *         Weight:
+ *           type: number
+ *           format: double
+ *           description: The weight of the outturn
+ *           example: 1000.0
+ *         CompleteLot:
+ *           type: boolean
+ *           description: Indicates if this is a complete lot
+ *           example: true
+ *         CleanTypeID:
+ *           type: integer
+ *           description: The ID of the clean type used
+ *           example: 2
+ *         Bags:
+ *           type: integer
+ *           description: Number of bags
+ *           example: 50
+ *         Pkts:
+ *           type: integer
+ *           description: Number of packets
+ *           example: 20
+ *         OutturnMark:
+ *           type: string
+ *           description: Outturn mark
+ *           example: "OUT001"
+ *         MaClass:
+ *           type: integer
+ *           description: Material classification
+ *           example: 3
+ *         OutturnQualityID:
+ *           type: integer
+ *           description: Quality ID for the outturn
+ *           example: 1
+ *         SellableStatusID:
+ *           type: integer
+ *           description: Status ID indicating if the outturn is sellable
+ *           example: 1
+ *         Quality:
+ *           type: string
+ *           description: Quality status, either 'N' for No or 'Y' for Yes
+ *           example: "Y"
+ *         PercentOfBulk:
+ *           type: number
+ *           format: double
+ *           description: Percentage of the bulk
+ *           example: 0.75
+ *         SeasonID:
+ *           type: integer
+ *           description: Identifier for the season
+ *           example: 2024
+ *         SaleStatusID:
+ *           type: integer
+ *           description: Status ID of the sale
+ *           example: 2
+ *         PartialDelivery:
+ *           type: boolean
+ *           description: Indicates if the delivery is partial
+ *           example: false
+ *         SaleID:
+ *           type: integer
+ *           description: Identifier for the sale
+ *           example: 123
+ *         OutturnNo:
+ *           type: string
+ *           description: The unique outturn number
+ *           example: "OUT-2024-0001"
+ *         CreatedOn:
+ *           type: string
+ *           format: date-time
+ *           description: The timestamp of creation
+ *           example: "2024-07-25T00:00:00Z"
+ *         OutturnBulkID:
+ *           type: integer
+ *           description: Bulk ID for the outturn
+ *           example: 1
+ *         BulkerID:
+ *           type: integer
+ *           description: Identifier for the bulker
+ *           example: 100
+ *         LotNo:
+ *           type: integer
+ *           description: Lot number
+ *           example: 50
+ *         BulkStatus:
+ *           type: integer
+ *           description: Status ID of the bulk
+ *           example: 1
+ *         GrowerId:
+ *           type: integer
+ *           description: Identifier for the grower
+ *           example: 200
+ *         WarrantedWeight:
+ *           type: number
+ *           format: double
+ *           description: The weight that is warranted
+ *           example: 1200.0
+ *         Warranted:
+ *           type: string
+ *           description: Whether warranted, 'N' or 'Y'
+ *           example: "N"
+ *         WarrantID:
+ *           type: integer
+ *           description: Identifier for the warrant
+ *           example: 300
+ *         BagTypeID:
+ *           type: integer
+ *           description: Bag type identifier
+ *           example: 1
+ *         RequiresStandardization:
+ *           type: boolean
+ *           description: If standardization is required
+ *           example: false
+ *         standardized:
+ *           type: string
+ *           description: Standardization status, 'N' or 'Y'
+ *           example: "N"
+ *         GrossWeight:
+ *           type: number
+ *           format: double
+ *           description: The gross weight of the outturn
+ *           example: 1300.0
+ */
+
+/**
+ * @swagger
+ * /grnoutturns:
+ *   get:
+ *     summary: Retrieve a list of GRN Outturns
+ *     tags: [GRN Outturns]
  *     responses:
  *       200:
- *         description: Successfully deleted
- */
-app.put('/grnoutturns/:id', grnOutturnRoutes.updateGRNOutturn);
-app.delete('/grnoutturns/:id', grnOutturnRoutes.deleteGRNOutturn);
+ *         description: A list of GRN Outturns
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   grnOutturnID:
+ *                     type: integer
+ *                     description: The auto-generated ID of the GRN Outturn
+ *                     example: 1
+ *                   GRNID:
+ *                     type: integer
+ *                     description: The GRN identifier
+ *                     example: 12345
+ *                   Season:
+ *                     type: string
+ *                     description: The season for the GRN outturn
+ *                     example: "2024/2025"
+ *                   Location:
+ *                     type: string
+ *                     description: The location associated with the outturn
+ *                     example: "Nairobi"
+ *                   GradeID:
+ *                     type: integer
+ *                     description: The grade identifier linked to the material
+ *                     example: 1
+ *                   Weight:
+ *                     type: number
+ *                     format: double
+ *                     description: The weight of the outturn
+ *                     example: 1000.0
+ *                   CompleteLot:
+ *                     type: boolean
+ *                     description: Indicates if this is a complete lot
+ *                     example: true
+ *                   CleanTypeID:
+ *                     type: integer
+ *                     description: The ID of the clean type used
+ *                     example: 2
+ *                   Bags:
+ *                     type: integer
+ *                     description: Number of bags
+ *                     example: 50
+ *                   Pkts:
+ *                     type: integer
+ *                     description: Number of packets
+ *                     example: 20
+ *                   OutturnMark:
+ *                     type: string
+ *                     description: Outturn mark
+ *                     example: "OUT001"
+ *                   MaClass:
+ *                     type: integer
+ *                     description: Material classification
+ *                     example: 3
+ *                   OutturnQualityID:
+ *                     type: integer
+ *                     description: Quality ID for the outturn
+ *                     example: 1
+ *                   SellableStatusID:
+ *                     type: integer
+ *                     description: Status ID indicating if the outturn is sellable
+ *                     example: 1
+ *                   Quality:
+ *                     type: string
+ *                     description: Quality status, either 'N' for No or 'Y' for Yes
+ *                     example: "Y"
+ *                   PercentOfBulk:
+ *                     type: number
+ *                     format: double
+ *                     description: Percentage of the bulk
+ *                     example: 0.75
+ *                   SeasonID:
+ *                     type: integer
+ *                     description: Identifier for the season
+ *                     example: 2024
+ *                   SaleStatusID:
+ *                     type: integer
+ *                     description: Status ID of the sale
+ *                     example: 2
+ *                   PartialDelivery:
+ *                     type: boolean
+ *                     description: Indicates if the delivery is partial
+ *                     example: false
+ *                   SaleID:
+ *                     type: integer
+ *                     description: Identifier for the sale
+ *                     example: 123
+ *                   OutturnNo:
+ *                     type: string
+ *                     description: The unique outturn number
+ *                     example: "OUT-2024-0001"
+ *                   CreatedOn:
+ *                     type: string
+ *                     format: date-time
+ *                     description: The timestamp of creation
+ *                     example: "2024-07-25T00:00:00Z"
+ *                   OutturnBulkID:
+ *                     type: integer
+ *                     description: Bulk ID for the outturn
+ *                     example: 1
+ *                   BulkerID:
+ *                     type: integer
+ *                     description: Identifier for the bulker
+ *                     example: 100
+ *                   LotNo:
+ *                     type: integer
+ *                     description: Lot number
+ *                     example: 50
+ *                   BulkStatus:
+ *                     type: integer
+ *                     description: Status ID of the bulk
+ *                     example: 1
+ *                   GrowerId:
+ *                     type: integer
+ *                     description: Identifier for the grower
+ *                     example: 200
+ *                   WarrantedWeight:
+ *                     type: number
+ *                     format: double
+ *                     description: The weight that is warranted
+ *                     example: 1200.0
+ *                   Warranted:
+ *                     type: string
+ *                     description: Whether warranted, 'N' or 'Y'
+ *                     example: "N"
+ *                   WarrantID:
+ *                     type: integer
+ *                     description: Identifier for the warrant
+ *                     example: 300
+ *                   BagTypeID:
+ *                     type: integer
+ *                     description: Bag type identifier
+ *                     example: 1
+ *                   RequiresStandardization:
+ *                     type: boolean
+ *                     description: If standardization is required
+ *                     example: false
+ *                   standardized:
+ *                     type: string
+ *                     description: Standardization status, 'N' or 'Y'
+ *                     example: "N"
+ *                   GrossWeight:
+ *                     type: number
+ *                     format: double
+ *                     description: The gross weight of the outturn
+ *                     example: 1300.0
+ *
+ *   post:
+ *     summary: Create a new GRN Outturn
+ *     tags: [GRN Outturns]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               GRNID:
+ *                 type: integer
+ *                 description: The GRN identifier
+ *                 example: 12345
+ *               Season:
+ *                 type: string
+ *                 description: The season for the GRN outturn
+ *                 example: "2024/2025"
+ *               Location:
+ *                 type: string
+ *                 description: The location associated with the outturn
+ *                 example: "Nairobi"
+ *               GradeID:
+ *                 type: integer
+ *                 description: The grade identifier linked to the material
+ *                 example: 1
+ *               Weight:
+ *                 type: number
+ *                 format: double
+ *                 description: The weight of the outturn
+ *                 example: 1000.0
+ *               CompleteLot:
+ *                 type: boolean
+ *                 description: Indicates if this is a complete lot
+ *                 example: true
+ *               CleanTypeID:
+ *                 type: integer
+ *                 description: The ID of the clean type used
+ *                 example: 2
+ *               Bags:
+ *                 type: integer
+ *                 description: Number of bags
+ *                 example: 50
+ *               Pkts:
+ *                 type: integer
+ *                 description: Number of packets
+ *                 example: 20
+ *               OutturnMark:
+ *                 type: string
+ *                 description: Outturn mark
+ *                 example: "OUT001"
+ *               MaClass:
+ *                 type: integer
+ *                 description: Material classification
+ *                 example: 3
+ *               OutturnQualityID:
+ *                 type: integer
+ *                 description: Quality ID for the outturn
+ *                 example: 1
+ *               SellableStatusID:
+ *                 type: integer
+ *                 description: Status ID indicating if the outturn is sellable
+ *                 example: 1
+ *               Quality:
+ *                 type: string
+ *                 description: Quality status, either 'N' for No or 'Y' for Yes
+ *                 example: "Y"
+ *               PercentOfBulk:
+ *                 type: number
+ *                 format: double
+ *                 description: Percentage of the bulk
+ *                 example: 0.75
+ *               SeasonID:
+ *                 type: integer
+ *                 description: Identifier for the season
+ *                 example: 2024
+ *               SaleStatusID:
+ *                 type: integer
+ *                 description: Status ID of the sale
+ *                 example: 2
+ *               PartialDelivery:
+ *                 type: boolean
+ *                 description: Indicates if the delivery is partial
+ *                 example: false
+ *               SaleID:
+ *                 type: integer
+ *                 description: Identifier for the sale
+ *                 example: 123
+ *               OutturnNo:
+ *                 type: string
+ *                 description: The unique outturn number
+ *                 example: "OUT-2024-0001"
+ *               CreatedOn:
+ *                 type: string
+ *                 format: date-time
+ *                 description: The timestamp of creation
+ *                 example: "2024-07-25T00:00:00Z"
+ *               OutturnBulkID:
+ *                 type: integer
+ *                 description: Bulk ID for the outturn
+ *                 example: 1
+ *               BulkerID:
+ *                 type: integer
+ *                 description: Identifier for the bulker
+ *                 example: 100
+ *               LotNo:
+ *                 type: integer
+ *                 description: Lot number
+ *                 example: 50
+ *               BulkStatus:
+ *                 type: integer
+ *                 description: Status ID of the bulk
+ *                 example: 1
+ *               GrowerId:
+ *                 type: integer
+ *                 description: Identifier for the grower
+ *                 example: 200
+ *               WarrantedWeight:
+ *                 type: number
+ *                 format: double
+ *                 description: The weight that is warranted
+ *                 example: 1200.0
+ *               Warranted:
+ *                 type: string
+ *                 description: Whether warranted, 'N' or 'Y'
+ *                 example: "N"
+ *               WarrantID:
+ *                 type: integer
+ *                 description: Identifier for the warrant
+ *                 example: 300
+ *               BagTypeID:
+ *                 type: integer
+ *                 description: Bag type identifier
+ *                 example: 1
+ *               RequiresStandardization:
+ *                 type: boolean
+ *                 description: If standardization is required
+ *                 example: false
+ *               standardized:
+ *                 type: string
+ *                 description: Standardization status, 'N' or 'Y'
+ *                 example: "N"
+ *               GrossWeight:
+ *                 type: number
+ *                 format: double
+ *                 description: The gross weight of the outturn
+ *                 example: 1300.0
+ *     responses:
+ *       201:
+ *         description: GRN Outturn created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 grnOutturnID:
+ *                   type: integer
+ *                   description: The ID of the newly created GRN Outturn
+ *                   example: 10
+ *       400:
+ *         description: Invalid input
+ *
+ * /grn_outturns/{id}:
+ *   get:
+ *     summary: Retrieve a single GRN Outturn by ID
+ *     tags: [GRN Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the GRN Outturn
+ *     responses:
+ *       200:
+ *         description: Details of a GRN Outturn
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 grnOutturnID:
+ *                   type: integer
+ *                   description: The ID of the GRN Outturn
+ *                   example: 1
+ *                 GRNID:
+ *                   type: integer
+ *                   description: The GRN identifier
+ *                   example: 12345
+ *                 Season:
+ *                   type: string
+ *                   description: The season for the GRN outturn
+ *                   example: "2024/2025"
+ *                 Location:
+ *                   type: string
+ *                   description: The location associated with the outturn
+ *                   example: "Nairobi"
+ *                 GradeID:
+ *                   type: integer
+ *                   description: The grade identifier linked to the material
+ *                   example: 1
+ *                 Weight:
+ *                   type: number
+ *                   format: double
+ *                   description: The weight of the outturn
+ *                   example: 1000.0
+ *                 CompleteLot:
+ *                   type: boolean
+ *                   description: Indicates if this is a complete lot
+ *                   example: true
+ *                 CleanTypeID:
+ *                   type: integer
+ *                   description: The ID of the clean type used
+ *                   example: 2
+ *                 Bags:
+ *                   type: integer
+ *                   description: Number of bags
+ *                   example: 50
+ *                 Pkts:
+ *                   type: integer
+ *                   description: Number of packets
+ *                   example: 20
+ *                 OutturnMark:
+ *                   type: string
+ *                   description: Outturn mark
+ *                   example: "OUT001"
+ *                 MaClass:
+ *                   type: integer
+ *                   description: Material classification
+ *                   example: 3
+ *                 OutturnQualityID:
+ *                   type: integer
+ *                   description: Quality ID for the outturn
+ *                   example: 1
+ *                 SellableStatusID:
+ *                   type: integer
+ *                   description: Status ID indicating if the outturn is sellable
+ *                   example: 1
+ *                 Quality:
+ *                   type: string
+ *                   description: Quality status, either 'N' for No or 'Y' for Yes
+ *                   example: "Y"
+ *                 PercentOfBulk:
+ *                   type: number
+ *                   format: double
+ *                   description: Percentage of the bulk
+ *                   example: 0.75
+ *                 SeasonID:
+ *                   type: integer
+ *                   description: Identifier for the season
+ *                   example: 2024
+ *                 SaleStatusID:
+ *                   type: integer
+ *                   description: Status ID of the sale
+ *                   example: 2
+ *                 PartialDelivery:
+ *                   type: boolean
+ *                   description: Indicates if the delivery is partial
+ *                   example: false
+ *                 SaleID:
+ *                   type: integer
+ *                   description: Identifier for the sale
+ *                   example: 123
+ *                 OutturnNo:
+ *                   type: string
+ *                   description: The unique outturn number
+ *                   example: "OUT-2024-0001"
+ *                 CreatedOn:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The timestamp of creation
+ *                   example: "2024-07-25T00:00:00Z"
+ *                 OutturnBulkID:
+ *                   type: integer
+ *                   description: Bulk ID for the outturn
+ *                   example: 1
+ *                 BulkerID:
+ *                   type: integer
+ *                   description: Identifier for the bulker
+ *                   example: 100
+ *                 LotNo:
+ *                   type: integer
+ *                   description: Lot number
+ *                   example: 50
+ *                 BulkStatus:
+ *                   type: integer
+ *                   description: Status ID of the bulk
+ *                   example: 1
+ *                 GrowerId:
+ *                   type: integer
+ *                   description: Identifier for the grower
+ *                   example: 200
+ *                 WarrantedWeight:
+ *                   type: number
+ *                   format: double
+ *                   description: The weight that is warranted
+ *                   example: 1200.0
+ *                 Warranted:
+ *                   type: string
+ *                   description: Whether warranted, 'N' or 'Y'
+ *                   example: "N"
+ *                 WarrantID:
+ *                   type: integer
+ *                   description: Identifier for the warrant
+ *                   example: 300
+ *                 BagTypeID:
+ *                   type: integer
+ *                   description: Bag type identifier
+ *                   example: 1
+ *                 RequiresStandardization:
+ *                   type: boolean
+ *                   description: If standardization is required
+ *                   example: false
+ *                 standardized:
+ *                   type: string
+ *                   description: Standardization status, 'N' or 'Y'
+ *                   example: "N"
+ *                 GrossWeight:
+ *                   type: number
+ *                   format: double
+ *                   description: The gross weight of the outturn
+ *                   example: 1300.0
+ *       404:
+ *         description: GRN Outturn not found
+ *
+ *   put:
+ *     summary: Update a GRN Outturn by ID
+ *     tags: [GRN Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the GRN Outturn
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               GRNID:
+ *                 type: integer
+ *                 description: The GRN identifier
+ *                 example: 12345
+ *               Season:
+ *                 type: string
+ *                 description: The season for the GRN outturn
+ *                 example: "2024/2025"
+ *               Location:
+ *                 type: string
+ *                 description: The location associated with the outturn
+ *                 example: "Nairobi"
+ *               GradeID:
+ *                 type: integer
+ *                 description: The grade identifier linked to the material
+ *                 example: 1
+ *               Weight:
+ *                 type: number
+ *                 format: double
+ *                 description: The weight of the outturn
+ *                 example: 1000.0
+ *               CompleteLot:
+ *                 type: boolean
+ *                 description: Indicates if this is a complete lot
+ *                 example: true
+ *               CleanTypeID:
+ *                 type: integer
+ *                 description: The ID of the clean type used
+ *                 example: 2
+ *               Bags:
+ *                 type: integer
+ *                 description: Number of bags
+ *                 example: 50
+ *               Pkts:
+ *                 type:
+
 /**
  * @swagger
  * /growertypes:
