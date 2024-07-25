@@ -36,7 +36,7 @@ async function createGRNOutturn(req, res) {
     res.status(201).json({ message: 'GRN outturn created successfully', id: result.insertId });
   } catch (error) {
     console.error('Error creating GRN outturn:', error);
-    res.status(500).json({ message: 'Error creating GRN outturn' });
+    res.status(500).json({ message: 'Error creating GRN outturn' + error });
   }
 }
 
