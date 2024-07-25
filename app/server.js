@@ -3348,6 +3348,58 @@ app.post('/outturngrades', outturnGrades.createOutturnGrade);
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               OutturnMark:
+ *                 type: string
+ *                 example: "Grade A"
+ *               Bags:
+ *                 type: number
+ *                 format: double
+ *                 example: 10.5
+ *               Pkts:
+ *                 type: number
+ *                 format: double
+ *                 example: 5.5
+ *               Weight:
+ *                 type: number
+ *                 format: double
+ *                 example: 100.75
+ *               MillerClass:
+ *                 type: integer
+ *                 example: 1
+ *               CleanBulk:
+ *                 type: boolean
+ *                 example: true
+ *               MaterialID:
+ *                 type: integer
+ *                 example: 123
+ *               WeightPercentage:
+ *                 type: string
+ *                 example: "20%"
+ *               MaClass:
+ *                 type: integer
+ *                 example: 1
+ *               BulkOutturnNo:
+ *                 type: string
+ *                 example: "BO123456"
+ *               BulkGroupID:
+ *                 type: integer
+ *                 example: 456
+ *               SeasonID:
+ *                 type: integer
+ *                 example: 2023
+ *               OutturnQualityID:
+ *                 type: integer
+ *                 example: 789
+ *               PercentageOfGradeBulk:
+ *                 type: string
+ *                 example: "50%"
+ *               OutturnGradesFk:
+ *                 type: integer
+ *                 example: 3000
+ *               OutturnID:
+ *                 type: integer
+ *                 example: 1000
  *     responses:
  *       201:
  *         description: Outturn grade created successfully
@@ -3356,8 +3408,64 @@ app.post('/outturngrades', outturnGrades.createOutturnGrade);
  *             schema:
  *               type: object
  *               properties:
- *                 OutturnGradeID:
+ *                 OutturnGradesID:
  *                   type: integer
+ *                   example: 3001
+ *                 OutturnMark:
+ *                   type: string
+ *                   example: "Grade A"
+ *                 Bags:
+ *                   type: number
+ *                   format: double
+ *                   example: 10.5
+ *                 Pkts:
+ *                   type: number
+ *                   format: double
+ *                   example: 5.5
+ *                 Weight:
+ *                   type: number
+ *                   format: double
+ *                   example: 100.75
+ *                 MillerClass:
+ *                   type: integer
+ *                   example: 1
+ *                 CleanBulk:
+ *                   type: boolean
+ *                   example: true
+ *                 CreatedOn:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-07-25T12:34:56Z"
+ *                 MaterialID:
+ *                   type: integer
+ *                   example: 123
+ *                 WeightPercentage:
+ *                   type: string
+ *                   example: "20%"
+ *                 MaClass:
+ *                   type: integer
+ *                   example: 1
+ *                 BulkOutturnNo:
+ *                   type: string
+ *                   example: "BO123456"
+ *                 BulkGroupID:
+ *                   type: integer
+ *                   example: 456
+ *                 SeasonID:
+ *                   type: integer
+ *                   example: 2023
+ *                 OutturnQualityID:
+ *                   type: integer
+ *                   example: 789
+ *                 PercentageOfGradeBulk:
+ *                   type: string
+ *                   example: "50%"
+ *                 OutturnGradesFk:
+ *                   type: integer
+ *                   example: 3000
+ *                 OutturnID:
+ *                   type: integer
+ *                   example: 1000
  */
 app.put('/outturngrades/:id', outturnGrades.updateOutturnGrade);
 
