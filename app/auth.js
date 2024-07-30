@@ -41,28 +41,25 @@ exports.register = async (req, res) => {
   
       res.status(201).json({ message: 'User registered successfully', userId: result.insertId });
     } catch (error) {
- // Check for specific database error codes and return appropriate status
- if (err.code === 'ER_DUP_ENTRY') {
-    res.status(409).json({
-      error: 'Conflict',
-      message: err.sqlMessage
-    });
-  } else if (err.sqlState) {
-    // If there's a known database error, return 400 with detailed information
-    res.status(400).json({
-      error: 'Database Error',
-      sqlState: err.sqlState,
-      sqlMessage: err.sqlMessage,
-      message: 'A database error occurred. Please check your request and try again.'
-    });
-  } else {
-    // For unexpected errors, return a generic 500 response
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: 'An unexpected error occurred. Please try again later.'
-    });
-  }
-}
+      if (error.code === 'ER_DUP_ENTRY') { // Correct error code
+        res.status(409).json({
+          error: 'Conflict',
+          message: 'The username or email already exists.'
+        });
+      } else if (error.sqlState) {
+        res.status(400).json({
+          error: 'Database Error',
+          sqlState: error.sqlState,
+          sqlMessage: error.sqlMessage,
+          message: 'A database error occurred. Please check your request and try again.'
+        });
+      } else {
+        res.status(500).json({
+          error: 'Internal Server Error',
+          message: 'An unexpected error occurred. Please try again later.'
+        });
+      }
+    }
 };
 // User Login
 exports.login = async (req, res) => {
@@ -84,7 +81,6 @@ exports.login = async (req, res) => {
 
     // Compare the provided password with the hashed password in the database
     const passwordMatch = await bcrypt.compare(password, user.Password);
-    console.log(`passwordMatch: ${passwordMatch}`);
     if (!passwordMatch) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
