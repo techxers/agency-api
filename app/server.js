@@ -45,6 +45,8 @@ const regionCounty = require('./regioncounty');
 const qualityGreenDefect = require('./qualitygreendefects');
 const saleType = require('./saletype');
 const standardization = require('./standardization');
+const agent = require('./agent');
+const cleanTypes = require('./cleantype');
 
 const app = express();
 // Use CORS middleware
@@ -6477,3 +6479,293 @@ app.put('/track-reoffer/:id', trackReoffer.updateReoffer);
  *         description: Reoffer not found
  */
 app.delete('/track-reoffer/:id', trackReoffer.deleteReoffer);
+
+// swagger.js
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Agent:
+ *       type: object
+ *       required:
+ *         - AgentCategoryId
+ *         - AgentName
+ *       properties:
+ *         AgentId:
+ *           type: integer
+ *           description: Unique identifier for the agent
+ *           example: 1
+ *         AgentCategoryId:
+ *           type: integer
+ *           description: ID of the agent's category
+ *           example: 2
+ *         AgentName:
+ *           type: string
+ *           description: Name of the agent
+ *           example: "John Doe"
+ *         AgentCode:
+ *           type: string
+ *           description: Code for the agent
+ *           example: "A123"
+ *         IsActive:
+ *           type: boolean
+ *           description: Whether the agent is active
+ *           example: true
+ *         Remarks:
+ *           type: string
+ *           description: Remarks about the agent
+ *           example: "Top agent of the year"
+ * 
+ * /agents:
+ *   get:
+ *     summary: Retrieve a list of agents
+ *     tags: [Agents]
+ *     responses:
+ *       200:
+ *         description: A list of agents
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Agent'
+ * 
+ *   post:
+ *     summary: Create a new agent
+ *     tags: [Agents]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Agent'
+ *     responses:
+ *       201:
+ *         description: The created agent
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       409:
+ *         description: Conflict - AgentCode already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ * 
+ * /agents/{id}:
+ *   get:
+ *     summary: Retrieve an agent by ID
+ *     tags: [Agents]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the agent
+ *     responses:
+ *       200:
+ *         description: The agent details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       404:
+ *         description: Agent not found
+ * 
+ *   put:
+ *     summary: Update an agent by ID
+ *     tags: [Agents]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the agent
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Agent'
+ *     responses:
+ *       200:
+ *         description: The updated agent details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       404:
+ *         description: Agent not found
+ * 
+ *   delete:
+ *     summary: Delete an agent by ID
+ *     tags: [Agents]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the agent
+ *     responses:
+ *       200:
+ *         description: Agent deleted successfully
+ *       404:
+ *         description: Agent not found
+ */
+
+app.get('/agents', agent.getAllAgents);
+app.get('/agents/:id', agent.getAgentById);
+app.post('/agents/:id', agent.createAgent);
+app.put('/agents/:id', agent.updateAgent);
+app.delete('/agents/:id', agent.deleteAgent);
+
+
+
+app.get('/cleantypes', cleanTypes.getAllCleanTypes);
+app.get('/cleantypes/:id', cleanTypes.getCleanTypeById);
+app.post('/cleantypes/:id', cleanTypes.createCleanType);
+app.put('/cleantypes/:id', cleanTypes.updateCleanType);
+app.delete('/cleantypes/:id', cleanTypes.deleteCleanType);
+
+
+
+
+// swagger.js
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CleanType:
+ *       type: object
+ *       properties:
+ *         cleanTypeID:
+ *           type: integer
+ *           description: Unique identifier for the clean type
+ *           example: 1
+ *         Description:
+ *           type: string
+ *           description: Description of the clean type
+ *           example: "Clean Coffee Grade"
+ *         CreatedOn:
+ *           type: string
+ *           format: date-time
+ *           description: Timestamp when the clean type was created
+ *           example: "2024-07-31T12:34:56.789Z"
+ *         Remarks:
+ *           type: string
+ *           description: Remarks about the clean type
+ *           example: "Bulk clean type"
+ *         CoffeeType:
+ *           type: string
+ *           description: Type of coffee
+ *           example: "A"
+ * 
+ * /cleantypes:
+ *   get:
+ *     summary: Retrieve a list of clean types
+ *     tags: [CleanTypes]
+ *     responses:
+ *       200:
+ *         description: A list of clean types
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/CleanType'
+ * 
+ *   post:
+ *     summary: Create a new clean type
+ *     tags: [CleanTypes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CleanType'
+ *     responses:
+ *       201:
+ *         description: The created clean type
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CleanType'
+ * 
+ * /cleantypes/{id}:
+ *   get:
+ *     summary: Retrieve a clean type by ID
+ *     tags: [CleanTypes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the clean type
+ *     responses:
+ *       200:
+ *         description: The clean type details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CleanType'
+ *       404:
+ *         description: Clean type not found
+ * 
+ *   put:
+ *     summary: Update a clean type by ID
+ *     tags: [CleanTypes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the clean type
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CleanType'
+ *     responses:
+ *       200:
+ *         description: The updated clean type details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CleanType'
+ *       404:
+ *         description: Clean type not found
+ * 
+ *   delete:
+ *     summary: Delete a clean type by ID
+ *     tags: [CleanTypes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the clean type
+ *     responses:
+ *       200:
+ *         description: Clean type deleted successfully
+ *       404:
+ *         description: Clean type not found
+ */
+
+
+
+
