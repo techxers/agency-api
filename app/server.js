@@ -47,6 +47,7 @@ const saleType = require('./saletype');
 const standardization = require('./standardization');
 const agent = require('./agent');
 const cleanTypes = require('./cleantype');
+const agentCategory = require('./agentcategory');
 
 const app = express();
 // Use CORS middleware
@@ -3970,6 +3971,7 @@ app.delete('/materials/:id', material.deleteMaterial);
 // Miller Charges Route Handlers
 app.get('/millercharges', millercharges.getAllMillerCharges);
 app.get('/millercharges/:id', millercharges.getMillerChargeById);
+app.get('/millercharges/outturn/:id', millercharges.getMillerChargeByOutturnId);
 app.post('/millercharges', millercharges.createMillerCharge);
 app.put('/millercharges/:id', millercharges.updateMillerCharge);
 app.delete('/millercharges/:id', millercharges.deleteMillerCharge);
@@ -3985,6 +3987,30 @@ app.delete('/millercharges/:id', millercharges.deleteMillerCharge);
  *         description: A list of all miller charges
  */
 
+
+/**
+ * @swagger
+ * /millercharges/outturn/{id}:
+ *   get:
+ *     summary: Get a miller charge by Outturn ID
+ *     tags: [Miller Charges]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The Outturn ID of the miller charge
+ *     responses:
+ *       200:
+ *         description: The requested miller charge
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       404:
+ *         description: Miller charge not found
+ */
 /**
  * @swagger
  * /millercharges/{id}:
@@ -4117,6 +4143,49 @@ app.get('/outturngrades/:id', outturnGrades.getOutturnGradeById);
  *       404:
  *         description: Outturn grade not found
  */
+app.get('/outturngrades/outturn/:id', outturnGrades.getOutturnGradeByOutturnId);
+
+/**
+ * @swagger
+ * /outturngrades/outturn/{id}:
+ *   get:
+ *     summary: Get an outturn grade by OutturnID
+ *     tags: [Outturn Grades]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The OutturnID of the outturn
+ *     responses:
+ *       200:
+ *         description: The requested outturn grades on Outturn
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 GradeID:
+ *                   type: integer
+ *                   description: Unique identifier for the grade
+ *                 OutturnID:
+ *                   type: integer
+ *                   description: Unique identifier for the outturn
+ *                 GradeName:
+ *                   type: string
+ *                   description: Name of the grade
+ *                 Description:
+ *                   type: string
+ *                   description: Description of the grade
+ *                 CreatedOn:
+ *                   type: string
+ *                   format: date-time
+ *                   description: Timestamp when the grade was created
+ *       404:
+ *         description: Outturn grade not found
+ */
+
 app.post('/outturngrades', outturnGrades.createOutturnGrade);
 
 /**
@@ -6765,7 +6834,130 @@ app.delete('/cleantypes/:id', cleanTypes.deleteCleanType);
  *       404:
  *         description: Clean type not found
  */
+app.get('/agentcategories', agentCategory.getAllAgentCategories);
+app.get('/agentcategories/:id', agentCategory.getAgentCategoryById);
+app.post('/agentcategories', agentCategory.createAgentCategory);
+app.put('/agentcategories/:id', agentCategory.updateAgentCategory);
+app.delete('/agentcategories/:id', agentCategory.deleteAgentCategory);
 
+// swagger.js
 
-
-
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     AgentCategory:
+ *       type: object
+ *       properties:
+ *         AgentCategoryId:
+ *           type: integer
+ *           description: Unique identifier for the agent category
+ *           example: 1
+ *         AgentCategoryName:
+ *           type: string
+ *           description: Name of the agent category
+ *           example: "Wholesale Agents"
+ *         CreatedOn:
+ *           type: string
+ *           format: date-time
+ *           description: Timestamp when the agent category was created
+ *           example: "2024-07-31T12:34:56.789Z"
+ *         Remarks:
+ *           type: string
+ *           description: Remarks about the agent category
+ *           example: "High priority agents"
+ * 
+ * /agentcategories:
+ *   get:
+ *     summary: Retrieve a list of agent categories
+ *     tags: [AgentCategories]
+ *     responses:
+ *       200:
+ *         description: A list of agent categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AgentCategory'
+ * 
+ *   post:
+ *     summary: Create a new agent category
+ *     tags: [AgentCategories]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AgentCategory'
+ *     responses:
+ *       201:
+ *         description: The created agent category
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AgentCategory'
+ * 
+ * /agentcategories/{id}:
+ *   get:
+ *     summary: Retrieve an agent category by ID
+ *     tags: [AgentCategories]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the agent category
+ *     responses:
+ *       200:
+ *         description: The agent category details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AgentCategory'
+ *       404:
+ *         description: Agent category not found
+ * 
+ *   put:
+ *     summary: Update an agent category by ID
+ *     tags: [AgentCategories]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the agent category
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AgentCategory'
+ *     responses:
+ *       200:
+ *         description: The updated agent category details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AgentCategory'
+ *       404:
+ *         description: Agent category not found
+ * 
+ *   delete:
+ *     summary: Delete an agent category by ID
+ *     tags: [AgentCategories]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the agent category
+ *     responses:
+ *       200:
+ *         description: Agent category deleted successfully
+ *       404:
+ *         description: Agent category not found
+ */

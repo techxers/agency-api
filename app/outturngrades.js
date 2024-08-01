@@ -37,7 +37,30 @@ async function getOutturnGradeById(req, res) {
 
   }
 }
+// Get an outturn grade by OutturnID
+async function getOutturnGradeByOutturnId(req, res) {
+  const { id } = req.params;
+  try {
+    console.log(`-------------STARTSTART-------Param is --- ` + id);
 
+    const [rows] = await pool.query('SELECT * FROM outturngrades WHERE OutturnID = ?', [id]);
+    console.log(`-------------STARTSTART-------rows.length --- ` + rows.length);
+     
+    if (rows.length === 0) {
+      console.log(`-------------Length == 0----------`);
+
+      res.status(404).send('Outturn grades not found');
+    } else {
+      res.status(200).json(rows);
+    }
+    console.log(`-------------END----------`);
+
+  } catch (error) {
+    res.status(500).send(error);
+    console.log(`-------------CATCH----------`);
+
+  }
+}
 // Create a new outturn grade
 async function createOutturnGrade(req, res) {
   const newOutturnGrade = req.body;
@@ -86,6 +109,7 @@ async function deleteOutturnGrade(req, res) {
 module.exports = {
   getAllOutturnGrades,
   getOutturnGradeById,
+  getOutturnGradeByOutturnId,
   createOutturnGrade,
   updateOutturnGrade,
   deleteOutturnGrade

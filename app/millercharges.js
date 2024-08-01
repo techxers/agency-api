@@ -29,6 +29,28 @@ async function getMillerChargeById(req, res) {
   }
 }
 
+// Get a miller charge by OutturnID
+async function getMillerChargeByOutturnId(req, res) {
+  const { id } = req.params;
+  try {
+    console.log(`-------------STARTSTART-------getMillerChargeByOutturnId--- ` + id);
+
+    const [rows] = await pool.query('SELECT * FROM millercharges WHERE OutturnID = ?', [id]);
+    
+    console.log(`-------------STARTSTART-------getMillerChargeByOutturnId--- ` );
+
+    if (rows.length === 0) {
+      console.log(`-------------STARTSTART-------rows.length --- ` + rows.length);
+
+      res.status(404).send('Miller charge not found');
+    } else {
+      res.json(rows);
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
 // Create a new miller charge
 async function createMillerCharge(req, res) {
   const newMillerCharge = req.body;
@@ -82,5 +104,6 @@ module.exports = {
   getMillerChargeById,
   createMillerCharge,
   updateMillerCharge,
-  deleteMillerCharge
+  deleteMillerCharge,
+  getMillerChargeByOutturnId
 };
