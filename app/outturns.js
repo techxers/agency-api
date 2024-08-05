@@ -29,6 +29,24 @@ async function getOutturnById(req, res) {
   }
 }
 
+
+// Get an outturn record by ID
+async function getOutturnInBulkByOutturnNo(req, res) {
+  const { id } = req.params;
+  try {
+    const [rows] = await pool.query('SELECT s.Year AS Seaon,o.OutturnNo,O.GrossPWeight as GrossWeight,o.Nweight as NetWeight,c.Description,g.GrowerName, m.MaterialName,q.Class ,o.CreatedOn as MilledDate FROM outturns o INNER JOIN coffeeseason s ON o.SeasonID = s.SeasonID INNER JOIN cleantype c ON o.CoffeeTypeID = c.cleanTypeID INNER JOIN grower g ON o.GrowerID = g.GrowerId INNER JOIN material m ON o.MaterialID = m.MaterialID LEFT JOIN qualityclass q ON o.MillerClassID = q.classID WHERE OutturnID  = ? ', [id]);
+    if (rows.length === 0) {
+
+      res.status(404).json({ error: 'Outturn record not found' });
+    } else {
+
+      res.status(200).json(rows[0]);
+    }
+  } catch (error) {
+
+    res.status(500).json({ error: 'Failed to retrieve the outturn record' + error.message });
+  }
+}
 // Create a new outturn record
 async function createOutturn(req, res) {
   const {
@@ -143,5 +161,6 @@ module.exports = {
   getOutturnById,
   createOutturn,
   updateOutturn,
-  deleteOutturn
+  deleteOutturn,
+  getOutturnInBulkByOutturnNo
 };

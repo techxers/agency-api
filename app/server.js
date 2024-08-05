@@ -4400,6 +4400,65 @@ app.get('/outturns/:id', outturns.getOutturnById);
  *       404:
  *         description: Outturn record not found
  */
+app.get('/outturns/bulks/:id', outturns.getOutturnInBulkByOutturnNo);
+
+/**
+ * @swagger
+ * /outturns/bulks/{id}:
+ *   get:
+ *     summary: Get an Bulk outturn record based on Outturn ID
+ *     tags: [Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the outturn record
+ *     responses:
+ *       200:
+ *         description: The requested outturn record
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 OutturnNo:
+ *                   type: String
+ *                   example: 48US0001
+ *                 GrossWight:
+ *                   type: integer
+ *                   example: 1
+ *                 NetWeight:
+ *                   type: integer
+ *                   example: 171
+ *                 Season:
+ *                   type: string
+ *                   example: "2023/2024"
+ *                 Description:
+ *                   type: string
+ *                   example: "CLEAN STRAIGHT OUTTURN"
+ *                 GrowerName:
+ *                   type: string
+ *                   example: "KARUNGURU"
+ *                 MaterialName:
+ *                   type: string
+ *                   example: "P1"
+ *                 MilledDate:
+ *                   type: string
+ *                   nullable: true
+ *                   example: 2023-10-04 08:57:30
+ *       404:
+ *         description: Outturn record not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Outturn record not found"
+ */
 app.post('/outturns', outturns.createOutturn);
 
 /**
