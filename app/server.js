@@ -4400,18 +4400,18 @@ app.get('/outturns/:id', outturns.getOutturnById);
  *       404:
  *         description: Outturn record not found
  */
-app.get('/outturns/:outturnID/season/:seasonID', outturns.getOutturnByIdandSeason);
+app.get('/outturns/:outturnNo/season/:seasonID', outturns.getOutturnByIdandSeason);
 /**
  * @swagger
- * /outturns/{outturnID}/season/{seasonID}:
+ * /outturns/{outturnNo}/season/{seasonID}:
  *   get:
- *     summary: Get an outturn record by OutturnID and SeasonID
+ *     summary: Get an outturn record by outturnNo and SeasonID
  *     tags: [Outturns]
  *     parameters:
  *       - in: path
- *         name: outturnID
+ *         name: outturnNo
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: The ID of the outturn record
  *       - in: path

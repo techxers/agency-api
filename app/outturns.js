@@ -30,13 +30,13 @@ async function getOutturnById(req, res) {
 }
 // Get an outturn record by ID and seaon
 async function getOutturnByIdandSeason(req, res) {
-  const { outturnID } = req.params;
+  const { outturnNo } = req.params;
   const { seasonID } = req.params;
 
-  console.log('OutturnID ' + outturnID +  ' and ' + 'SeasonID ' + seasonID)
+  console.log('OutturnNo ' + outturnNo +  ' and ' + 'SeasonID ' + seasonID)
 
   try {
-    const [rows] = await pool.query('SELECT * FROM outturns WHERE OutturnID = ? and SeasonID = ?', [outturnID,seasonID]);
+    const [rows] = await pool.query('SELECT * FROM outturns WHERE OutturnNo = ? and SeasonID = ?', [outturnNo,seasonID]);
     if (rows.length === 0) {
 
       res.status(404).json({ error: 'Outturn record not found' });
