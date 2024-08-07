@@ -4400,6 +4400,173 @@ app.get('/outturns/:id', outturns.getOutturnById);
  *       404:
  *         description: Outturn record not found
  */
+app.get('/outturns/:outturnID/season/:seasonID', outturns.getOutturnByIdandSeason);
+/**
+ * @swagger
+ * /outturns/{outturnID}/season/{seasonID}:
+ *   get:
+ *     summary: Get an outturn record by OutturnID and SeasonID
+ *     tags: [Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: outturnID
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the outturn record
+ *       - in: path
+ *         name: seasonID
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the season
+ *     responses:
+ *       200:
+ *         description: The requested outturn record
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 OutturnID:
+ *                   type: integer
+ *                   description: The unique identifier for the outturn
+ *                   example: 1
+ *                 OutturnMark:
+ *                   type: string
+ *                   description: The mark of the outturn
+ *                   example: "48US0001/13"
+ *                 OutturnNo:
+ *                   type: string
+ *                   description: The outturn number
+ *                   example: "48US0001"
+ *                 MaterialID:
+ *                   type: integer
+ *                   description: Identifier for the material
+ *                   example: 1
+ *                 GrowerID:
+ *                   type: integer
+ *                   description: Identifier for the grower
+ *                   example: 17
+ *                 MillerID:
+ *                   type: integer
+ *                   description: Identifier for the miller
+ *                   example: 171
+ *                 CoffeeTypeID:
+ *                   type: integer
+ *                   description: Identifier for the coffee type
+ *                   example: 1
+ *                 BagID:
+ *                   type: integer
+ *                   description: Identifier for the bag
+ *                   example: null
+ *                 BagWeight:
+ *                   type: number
+ *                   format: float
+ *                   description: The weight of the bag
+ *                   example: null
+ *                 Nweight:
+ *                   type: string
+ *                   description: The net weight
+ *                   example: "2713"
+ *                 Status:
+ *                   type: string
+ *                   description: The status of the outturn
+ *                   example: null
+ *                 TotalMillerCharges:
+ *                   type: number
+ *                   format: float
+ *                   description: The total miller charges
+ *                   example: null
+ *                 TotalChargesRecovered:
+ *                   type: number
+ *                   format: float
+ *                   description: The total charges recovered
+ *                   example: null
+ *                 TotalWeightSold:
+ *                   type: number
+ *                   format: float
+ *                   description: The total weight sold
+ *                   example: null
+ *                 GrowerPayee:
+ *                   type: string
+ *                   description: The grower payee
+ *                   example: null
+ *                 CreatedOn:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The creation date of the outturn record
+ *                   example: "2023-10-04T06:57:30.000Z"
+ *                 SeasonID:
+ *                   type: integer
+ *                   description: Identifier for the season
+ *                   example: 13
+ *                 MilledDate:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The date the coffee was milled
+ *                   example: "2023-09-04T22:00:00.000Z"
+ *                 WeightMargin:
+ *                   type: string
+ *                   description: The weight margin
+ *                   example: "23"
+ *                 Pkts:
+ *                   type: string
+ *                   description: The number of packets
+ *                   example: "13"
+ *                 MillerClassID:
+ *                   type: integer
+ *                   description: Identifier for the miller class
+ *                   example: null
+ *                 Remarks:
+ *                   type: string
+ *                   description: Additional remarks about the outturn
+ *                   example: null
+ *                 Bags:
+ *                   type: integer
+ *                   description: The number of bags
+ *                   example: 45
+ *                 Sign:
+ *                   type: string
+ *                   description: Sign notation
+ *                   example: "-"
+ *                 DeliveryDate:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The delivery date
+ *                   example: null
+ *                 BulkOutturnNo:
+ *                   type: string
+ *                   description: The bulk outturn number
+ *                   example: null
+ *                 GrossPWeight:
+ *                   type: string
+ *                   description: The gross production weight
+ *                   example: "3531.000"
+ *                 Sampled:
+ *                   type: boolean
+ *                   description: Indicator if sampled
+ *                   example: null
+ *                 BulkPercentage:
+ *                   type: string
+ *                   description: The bulk percentage
+ *                   example: "2713"
+ *                 GrnReceivediD:
+ *                   type: integer
+ *                   description: Identifier for the GRN received
+ *                   example: null
+ *       404:
+ *         description: Outturn record not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Outturn record not found"
+ */
+
 app.get('/outturns/bulks/:id', outturns.getOutturnInBulkByOutturnNo);
 
 /**

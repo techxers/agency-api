@@ -28,6 +28,28 @@ async function getOutturnById(req, res) {
     res.status(500).json({ error: 'Failed to retrieve the outturn record' });
   }
 }
+// Get an outturn record by ID and seaon
+async function getOutturnByIdandSeason(req, res) {
+  const { outturnID } = req.params;
+  const { seasonID } = req.params;
+
+  console.log('OutturnID ' + outturnID +  ' and ' + 'SeasonID ' + seasonID)
+
+  try {
+    const [rows] = await pool.query('SELECT * FROM outturns WHERE OutturnID = ? and SeasonID = ?', [outturnID,seasonID]);
+    if (rows.length === 0) {
+
+      res.status(404).json({ error: 'Outturn record not found' });
+    } else {
+
+      res.status(200).json(rows[0]);
+    }
+  } catch (error) {
+
+    res.status(500).json({ error: 'Failed to retrieve the outturn record'+ error.message });
+  }
+}
+
 
 
 // Get an outturn record by ID
@@ -162,5 +184,7 @@ module.exports = {
   createOutturn,
   updateOutturn,
   deleteOutturn,
-  getOutturnInBulkByOutturnNo
+  getOutturnInBulkByOutturnNo,
+  getOutturnByIdandSeason
+  
 };
