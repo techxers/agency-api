@@ -48,6 +48,7 @@ const standardization = require('./standardization');
 const agent = require('./agent');
 const cleanTypes = require('./cleantype');
 const agentCategory = require('./agentcategory');
+const chargesType = require('./chargestype');
 
 const app = express();
 // Use CORS middleware
@@ -1801,7 +1802,7 @@ app.delete('/coffeeseasons/:id', coffeeSeason.deleteCoffeeSeason); // Delete cof
  * @swagger
  * components:
  *   schemas:
- *     Agent:
+ *     agentsinfomationInfomation:
  *       type: object
  *       required:
  *         - AgentID
@@ -1912,7 +1913,7 @@ app.post('/agentsinfomation', agentsinfomation.createAgent);
  * @swagger
  * /agentsinfomation:
  *   post:
- *     summary: Create a new agent
+ *     summary: Create a new agent agentsinfomation
  *     tags: [agentsinfomation]
  *     requestBody:
  *       required: true
@@ -6854,6 +6855,28 @@ app.delete('/track-reoffer/:id', trackReoffer.deleteReoffer);
  *                 message:
  *                   type: string
  * 
+ * 
+ * /agents/category/{catID}:
+ *   get:
+ *     summary: Retrieve an agent category by catID
+ *     tags: [Agents]
+ *     parameters:
+ *       - in: path
+ *         name: catID
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the agent category
+ *     responses:
+ *       200:
+ *         description: The agent category details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       404:
+ *         description: Agent category not found
+
  * /agents/{id}:
  *   get:
  *     summary: Retrieve an agent by ID
@@ -6919,6 +6942,7 @@ app.delete('/track-reoffer/:id', trackReoffer.deleteReoffer);
  */
 
 app.get('/agents', agent.getAllAgents);
+app.get('/agents/category/:catID', agent.getByCategory);
 app.get('/agents/:id', agent.getAgentById);
 app.post('/agents/:id', agent.createAgent);
 app.put('/agents/:id', agent.updateAgent);
@@ -7066,8 +7090,6 @@ app.post('/agentcategories', agentCategory.createAgentCategory);
 app.put('/agentcategories/:id', agentCategory.updateAgentCategory);
 app.delete('/agentcategories/:id', agentCategory.deleteAgentCategory);
 
-// swagger.js
-
 /**
  * @swagger
  * components:
@@ -7187,3 +7209,162 @@ app.delete('/agentcategories/:id', agentCategory.deleteAgentCategory);
  *       404:
  *         description: Agent category not found
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ChargeType:
+ *       type: object
+ *       required:
+ *         - ChargeTypeDescription
+ *       properties:
+ *         ChargeTypeID:
+ *           type: integer
+ *           description: Auto-generated ID of the charge type
+ *         ChargeTypeDescription:
+ *           type: string
+ *           description: The charge type description
+ *         CreatedOn:
+ *           type: string
+ *           format: date-time
+ *           description: The timestamp when the charge type was created
+ *         Remarks:
+ *           type: string
+ *           description: Additional remarks
+ *       example:
+ *         ChargeTypeID: 1
+ *         ChargeTypeDescription: "Service Fee"
+ *         CreatedOn: "2023-08-09T00:00:00.000Z"
+ *         Remarks: "Applicable for all services"
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: ChargeTypes
+ *   description: The charge types managing API
+ */
+
+/**
+ * @swagger
+ * /chargetypes:
+ *   get:
+ *     summary: Retrieve a list of charge types
+ *     tags: [ChargeTypes]
+ *     responses:
+ *       200:
+ *         description: The list of charge types
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ChargeType'
+ */
+app.get('/chargetypes', chargesType.getAllChargeTypes);
+
+/**
+ * @swagger
+ * /chargetypes/{id}:
+ *   get:
+ *     summary: Retrieve a charge type by ID
+ *     tags: [ChargeTypes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The charge type ID
+ *     responses:
+ *       200:
+ *         description: The charge type description
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ChargeType'
+ *       404:
+ *         description: Charge type not found
+ */
+app.get('/chargetypes/:id', chargesType.getChargeTypeById);
+
+/**
+ * @swagger
+ * /chargetypes:
+ *   post:
+ *     summary: Create a new charge type
+ *     tags: [ChargeTypes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ChargeType'
+ *     responses:
+ *       201:
+ *         description: Charge type created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ChargeType'
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Internal server error
+ */
+app.post('/chargetypes', chargesType.createChargeType);
+
+/**
+ * @swagger
+ * /chargetypes/{id}:
+ *   put:
+ *     summary: Update a charge type by ID
+ *     tags: [ChargeTypes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The charge type ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ChargeType'
+ *     responses:
+ *       200:
+ *         description: Charge type updated successfully
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: Charge type not found
+ *       500:
+ *         description: Internal server error
+ */
+app.put('/chargetypes/:id', chargesType.updateChargeType);
+
+/**
+ * @swagger
+ * /chargetypes/{id}:
+ *   delete:
+ *     summary: Delete a charge type by ID
+ *     tags: [ChargeTypes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The charge type ID
+ *     responses:
+ *       200:
+ *         description: Charge type deleted successfully
+ *       404:
+ *         description: Charge type not found
+ *       500:
+ *         description: Internal server error
+ */
+app.delete('/chargetypes/:id', chargesType.deleteChargeType);

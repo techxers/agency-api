@@ -32,6 +32,24 @@ async function getAgentById(req, res) {
   }
 }
 
+// Get a single agent by Category ID
+async function getByCategory(req, res) {
+  const { catID } = req.params;
+  console.log('Agent Category is :' + catID)
+  try {
+    const [agent] = await pool.query('SELECT * FROM agent WHERE AgentCategoryId = ?', [catID]);
+    if (agent.length === 0) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: 'Agent not found',
+      });
+    }
+    res.status(200).json(agent);
+  } catch (err) {
+    sqlErrorHandler(err, res);
+  }
+}
+
 // Create a new agent
 async function createAgent(req, res) {
   const { AgentCategoryId, AgentName, AgentCode, IsActive, Remarks } = req.body;
@@ -121,6 +139,7 @@ async function deleteAgent(req, res) {
 module.exports = {
     getAllAgents,
     getAgentById,
+    getByCategory,
     createAgent,
     updateAgent,
     deleteAgent

@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator');
 // GET all grades
 async function getAllGrades(req, res) {
   try {
-    const [rows] = await pool.query('SELECT * FROM grades');
+    const [rows] = await pool.query('SELECT * FROM Material');
     res.status(200).json(rows);
   } catch (error) {
     console.error('Error fetching grades:', error);
@@ -17,7 +17,7 @@ async function getGradeById(req, res) {
   const { id } = req.params;
 
   try {
-    const [rows] = await pool.query('SELECT * FROM grades WHERE GradeID = ?', [id]);
+    const [rows] = await pool.query('SELECT * FROM Material WHERE MaterialID = ?', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ message: 'Grade not found' });
     }
@@ -40,11 +40,11 @@ async function createGrade(req, res) {
 
   try {
     const [result] = await pool.query(
-      'INSERT INTO grades (Grade, Remarks) VALUES (?, ?)',
+      'INSERT INTO Material (Grade, Remarks) VALUES (?, ?)',
       [Grade, Remarks]
     );
 
-    res.status(201).json({ message: 'Grade created', GradeID: result.insertId });
+    res.status(201).json({ message: 'Grade created', MaterialID: result.insertId });
   } catch (error) {
     console.error('Error creating grade:', error);
     res.status(500).json({ message: 'Error creating grade' });
@@ -63,7 +63,7 @@ async function updateGrade(req, res) {
 
   try {
     const [result] = await pool.query(
-      'UPDATE grades SET Grade = ?, Remarks = ? WHERE GradeID = ?',
+      'UPDATE Material SET Material = ?, Remarks = ? WHERE MaterialID = ?',
       [Grade, Remarks, id]
     );
 
@@ -83,7 +83,7 @@ async function deleteGrade(req, res) {
   const { id } = req.params;
 
   try {
-    const [result] = await pool.query('DELETE FROM grades WHERE GradeID = ?', [id]);
+    const [result] = await pool.query('DELETE FROM Material WHERE MaterialID = ?', [id]);
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Grade not found' });
     }
