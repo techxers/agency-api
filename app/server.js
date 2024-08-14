@@ -3,10 +3,10 @@ const bodyParser = require('body-parser');
 const users = require('./users'); // Import users.js
 const growers = require('./growers'); // Import growers.js
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swagger'); 
-const roles = require('./roles'); 
-const auctionsale = require('./auctionsale'); 
-const auth = require('./auth'); 
+const swaggerSpec = require('./swagger');
+const roles = require('./roles');
+const auctionsale = require('./auctionsale');
+const auth = require('./auth');
 const { check } = require('express-validator'); // Correct import
 const departments = require('./departments'); // Import CRUD routes
 const gender = require('./gender'); // Import CRUD routes
@@ -34,7 +34,7 @@ const outturnQuality = require('./outturnquality');
 const perchmenttypes = require('./perchmenttype');
 const trackReoffer = require('./track_reoffer');
 const stocks = require('./stocks');
-const sampleType =  require('./sampletype');
+const sampleType = require('./sampletype');
 const saleStatus = require('./salestatus');
 const quality = require('./quality');
 const qualityParameter = require('./qualityparameters');
@@ -56,7 +56,7 @@ app.use(cors());
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+    console.log(`Server listening on port ${port}`);
 });
 
 
@@ -149,8 +149,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
  */
 
 app.post('/register', [
-  check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
-  check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
+    check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
 ], auth.register);
 
 /**
@@ -158,7 +158,7 @@ app.post('/register', [
  * /login:
  *   post:
  *     summary: User login
-  *     tags:
+ *     tags:
  *       - User
  *     requestBody:
  *       content:
@@ -179,14 +179,14 @@ app.post('/register', [
  *         description: Invalid username or password
  */
 app.post('/login', [
-  check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
-  check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
+    check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
 ], auth.login);
 
 // General error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'An unexpected error occurred' });
+    console.error(err.stack);
+    res.status(500).json({ error: 'An unexpected error occurred' });
 });
 
 
@@ -926,8 +926,8 @@ app.get('/gender/:id', gender.getGenderById); // Get gender by ID
  *         description: Gender already exists
  */
 app.post('/gender', [
-  check('GenderName').isLength({ min: 1 }).withMessage('GenderName is required'),
-  check('GenderChar').isLength({ min: 1 }).withMessage('GenderChar is required'),
+    check('GenderName').isLength({ min: 1 }).withMessage('GenderName is required'),
+    check('GenderChar').isLength({ min: 1 }).withMessage('GenderChar is required'),
 ], gender.createGender); // Create a new gender
 
 /**
@@ -1064,8 +1064,8 @@ app.get('/country/:id', location.getCountyById); // Get country by ID
  *         description: country not found
  */
 app.post('/country', [
-  check('countryName').isLength({ min: 1 }).withMessage('countryName is required'),
-  check('countryCode').isLength({ min: 1 }).withMessage('countryCode is required'),
+    check('countryName').isLength({ min: 1 }).withMessage('countryName is required'),
+    check('countryCode').isLength({ min: 1 }).withMessage('countryCode is required'),
 ], location.createCountry); // Create a new country
 
 /**
@@ -1244,9 +1244,9 @@ app.get('/counties/:id', location.getCountyById); // Get county by ID
  *         description: County not found
  */
 app.post('/counties', [
-  check('CountyName').isLength({ min: 1 }).withMessage('CountyName is required'),
-  check('CountryID').isInt().withMessage('CountryID must be an integer'),
-  check('RegionID').isInt().withMessage('RegionID must be an integer'),
+    check('CountyName').isLength({ min: 1 }).withMessage('CountyName is required'),
+    check('CountryID').isInt().withMessage('CountryID must be an integer'),
+    check('RegionID').isInt().withMessage('RegionID must be an integer'),
 ], location.createCounty); // Create a new county
 
 // Create a new county
@@ -4048,6 +4048,35 @@ app.delete('/millercharges/:id', millercharges.deleteMillerCharge);
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               ChargeTypeID:
+ *                 type: integer
+ *               OutturnMark:
+ *                 type: string
+ *               OutturnSeason:
+ *                 type: integer
+ *               ChargeAmount:
+ *                 type: string
+ *               Currency:
+ *                 type: integer
+ *               ChargeRecovered:
+ *                 type: string
+ *               FullyRecovered:
+ *                 type: integer
+ *               CreatedON:
+ *                 type: string
+ *                 format: date
+ *               Remarks:
+ *                 type: string
+ *               VAT:
+ *                 type: string
+ *               Total:
+ *                 type: string
+ *               OutturnID:
+ *                 type: integer
+ *               Balance:
+ *                 type: string
+ *                 nullable: true
  *     responses:
  *       201:
  *         description: Miller charge created successfully
@@ -4058,7 +4087,50 @@ app.delete('/millercharges/:id', millercharges.deleteMillerCharge);
  *               properties:
  *                 MillerChargeID:
  *                   type: integer
+ *                   example: 190
+ *                 ChargeTypeID:
+ *                   type: integer
+ *                   example: 1
+ *                 OutturnMark:
+ *                   type: string
+ *                   example: "13SM0001/14"
+ *                 OutturnSeason:
+ *                   type: integer
+ *                   example: 14
+ *                 ChargeAmount:
+ *                   type: string
+ *                   example: "1"
+ *                 Currency:
+ *                   type: integer
+ *                   example: 1
+ *                 ChargeRecovered:
+ *                   type: string
+ *                   example: "0.00"
+ *                 FullyRecovered:
+ *                   type: integer
+ *                   example: 0
+ *                 CreatedON:
+ *                   type: string
+ *                   format: date
+ *                   example: "2024-02-23"
+ *                 Remarks:
+ *                   type: string
+ *                   example: "test"
+ *                 VAT:
+ *                   type: string
+ *                   example: "0"
+ *                 Total:
+ *                   type: string
+ *                   example: "1214.00"
+ *                 OutturnID:
+ *                   type: integer
+ *                   example: 686
+ *                 Balance:
+ *                   type: string
+ *                   nullable: true
+ *                   example: null
  */
+
 
 /**
  * @swagger
@@ -7348,7 +7420,7 @@ app.put('/chargetypes/:id', chargesType.updateChargeType);
 
 /**
  * @swagger
- * /chargetypes/{id}:
+ * /chargesType/{id}:
  *   delete:
  *     summary: Delete a charge type by ID
  *     tags: [ChargeTypes]
