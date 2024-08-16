@@ -5618,22 +5618,58 @@ app.delete('/quality_sizes/:id', qualitySize.deleteQualitySize);
 
 /**
  * @swagger
- * /quality_classes/{id}:
+ * /quality_classes:
  *   get:
- *     summary: Get quality class by ID
+ *     summary: Get All quality classes
  *     tags: [Quality Class]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: The ID of the quality class
  *     responses:
  *       200:
- *         description: A single quality class
+ *         description: List of all quality classes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   description:
+ *                     type: string
  *       404:
- *         description: Quality class not found
+ *         description: Quality classes not found
+ */
+app.get('/quality_classes', qualityClass.getAllQualityClasses);
+
+/**
+ * @swagger
+ * /quality_classes:
+ *   post:
+ *     summary: Create a new quality class
+ *     tags: [Quality Class]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Class:
+ *                 type: string
+ *               Value:
+ *                 type: integer
+ *             example:
+ *               Class: "A"
+ *               Value: 1
+ *     responses:
+ *       201:
+ *         description: New quality class created
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
  */
 app.get('/quality_classes/:id', qualityClass.getQualityClassById);
 
@@ -5700,6 +5736,38 @@ app.post('/quality_classes', qualityClass.createQualityClass);
  *       404:
  *         description: Quality class not found
  */
+/**
+ * @swagger
+ * /quality_classes/{id}:
+ *   get:
+ *     summary: Get a quality class by ID
+ *     tags: [Quality Class]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the quality class
+ *     responses:
+ *       200:
+ *         description: The quality class with the specified ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *       404:
+ *         description: Quality class not found
+ */
+app.get('/quality_classes/:id', qualityClass.getQualityClassById);
+
 app.put('/quality_classes/:id', qualityClass.updateQualityClass);
 
 /**
