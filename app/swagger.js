@@ -3,7 +3,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerDefinition = {
     openapi: '3.0.0',
     info: {
-        title: 'API Spec document for Coffee Agency System',
+        title: 'API Specification document for Coffee Agency System',
         version: '1.0.0',
         description: 'Web Api for Agency Management System',
         //add tags here   
