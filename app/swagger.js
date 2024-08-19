@@ -5,7 +5,7 @@ const swaggerDefinition = {
     info: {
         title: 'API Specification document -- Coffee Agency System',
         version: '1.0.0',
-        description: 'Web Api for Agency Management System',
+        description: 'Swagger API for Agency Management System',
         //add tags here   
         tags: [{
                 "name": "Users",
