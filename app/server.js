@@ -50,9 +50,12 @@ const cleanTypes = require('./cleantype');
 const agentCategory = require('./agentcategory');
 const chargesType = require('./chargestype');
 
-const app = express();
-// Use CORS middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://134.122.56.219', // Your frontend's origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
+}));
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
