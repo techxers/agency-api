@@ -49,6 +49,8 @@ const agent = require('./agent');
 const cleanTypes = require('./cleantype');
 const agentCategory = require('./agentcategory');
 const chargesType = require('./chargestype');
+const grnMain = require('./grn_main');
+
 
 const app = express();
 // Use CORS middleware
@@ -2809,6 +2811,8 @@ app.delete('/factories/:id', factories.deleteFactory);
  */
 app.get('/grnoutturns', grnOutturnRoutes.getAllGRNOutturns);
 app.get('/grnoutturns/:id', grnOutturnRoutes.getGRNOutturnById);
+app.get('/grnoutturns/grn/:id', grnOutturnRoutes.getGRNOutturnByIdandSeason);
+
 app.put('/grnoutturns/:id', grnOutturnRoutes.updateGRNOutturn);
 app.delete('/grnoutturns/:id', grnOutturnRoutes.deleteGRNOutturn);
 app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
@@ -2864,6 +2868,31 @@ app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
  * /grnoutturns/{id}:
  *   get:
  *     summary: Retrieve a single GRN Outturn by ID
+ *     tags: [GRN Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Details of the GRN Outturn
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GRNOutturn'
+ *       404:
+ *         description: GRN Outturn not found
+ *       500:
+ *         description: Some error happened
+ */
+
+/**
+ * @swagger
+ * /grnoutturns/grn/{id}:
+ *   get:
+ *     summary: Retrieve a related GRN Outturn by ID
  *     tags: [GRN Outturns]
  *     parameters:
  *       - in: path
@@ -7513,3 +7542,556 @@ app.put('/chargetypes/:id', chargesType.updateChargeType);
  *         description: Internal server error
  */
 app.delete('/chargetypes/:id', chargesType.deleteChargeType);
+
+/**
+ * @swagger
+ * /grnMain:
+ *   get:
+ *     summary: Retrieve all GRN main records
+ *     tags: [GRN Main]
+ *     responses:
+ *       200:
+ *         description: List of GRN main records
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ */
+// Routes for GRN Main
+
+/**
+ * @swagger
+ * /grnMain:
+ *   get:
+ *     summary: Retrieve all GRN main records
+ *     tags: [GRN Main]
+ *     responses:
+ *       200:
+ *         description: List of GRN main records
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   grnID:
+ *                     type: integer
+ *                     example: 6
+ *                   documentSerial:
+ *                     type: string
+ *                     example: "12345"
+ *                   DeliveryDate:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-04-05T12:26:37.000Z"
+ *                   VehiclePlate:
+ *                     type: string
+ *                     example: "ABC-123"
+ *                   GrossWeight:
+ *                     type: string
+ *                     example: "1000"
+ *                   PermitNo:
+ *                     type: string
+ *                     example: "P-123"
+ *                   TareWeight:
+ *                     type: string
+ *                     example: "500"
+ *                   grnNo:
+ *                     type: string
+ *                     example: "GRN-123"
+ *                   WeighBridgeNo:
+ *                     type: string
+ *                     example: "WB-123"
+ *                   DriverName:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   DriverIDNo:
+ *                     type: string
+ *                     example: "D-123"
+ *                   SeasonID:
+ *                     type: integer
+ *                     example: 12
+ *                   WarehouseID:
+ *                     type: integer
+ *                     example: 1
+ *                   GrowerID:
+ *                     type: integer
+ *                     example: 1
+ *                   SupervisorID:
+ *                     type: integer
+ *                     example: 1
+ *                   WHManager:
+ *                     type: integer
+ *                     example: 1
+ *                   IsVerified:
+ *                     type: integer
+ *                     example: 0
+ *                   MillerID:
+ *                     type: integer
+ *                     example: 1
+ *                   Remarks:
+ *                     type: string
+ *                     example: "Test Remarks"
+ *                   GrowerWeight:
+ *                     type: string
+ *                     example: "500"
+ *                   WarrantNo:
+ *                     type: string
+ *                     example: "W-123"
+ *                   NetWeight:
+ *                     type: string
+ *                     example: "500"
+ *                   CoffeeTypeId:
+ *                     type: integer
+ *                     example: 1
+ *                   CreatedOn:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-04-05T12:26:37.000Z"
+ *                   RequiresStandardization:
+ *                     type: integer
+ *                     example: 0
+ *                   standardized:
+ *                     type: string
+ *                     example: "N"
+ */
+app.get('/grnMain', grnMain.getAllGRNMains);
+
+/**
+ * @swagger
+ * /grnMain/{id}:
+ *   get:
+ *     summary: Retrieve a single GRN main record by ID
+ *     tags: [GRN Main]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 6
+ *     responses:
+ *       200:
+ *         description: A single GRN main record
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 grnID:
+ *                   type: integer
+ *                   example: 6
+ *                 documentSerial:
+ *                   type: string
+ *                   example: "12345"
+ *                 DeliveryDate:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-04-05T12:26:37.000Z"
+ *                 VehiclePlate:
+ *                   type: string
+ *                   example: "ABC-123"
+ *                 GrossWeight:
+ *                   type: string
+ *                   example: "1000"
+ *                 PermitNo:
+ *                   type: string
+ *                   example: "P-123"
+ *                 TareWeight:
+ *                   type: string
+ *                   example: "500"
+ *                 grnNo:
+ *                   type: string
+ *                   example: "GRN-123"
+ *                 WeighBridgeNo:
+ *                   type: string
+ *                   example: "WB-123"
+ *                 DriverName:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 DriverIDNo:
+ *                   type: string
+ *                   example: "D-123"
+ *                 SeasonID:
+ *                   type: integer
+ *                   example: 12
+ *                 WarehouseID:
+ *                   type: integer
+ *                   example: 1
+ *                 GrowerID:
+ *                   type: integer
+ *                   example: 1
+ *                 SupervisorID:
+ *                   type: integer
+ *                   example: 1
+ *                 WHManager:
+ *                   type: integer
+ *                   example: 1
+ *                 IsVerified:
+ *                   type: integer
+ *                   example: 0
+ *                 MillerID:
+ *                   type: integer
+ *                   example: 1
+ *                 Remarks:
+ *                   type: string
+ *                   example: "Test Remarks"
+ *                 GrowerWeight:
+ *                   type: string
+ *                   example: "500"
+ *                 WarrantNo:
+ *                   type: string
+ *                   example: "W-123"
+ *                 NetWeight:
+ *                   type: string
+ *                   example: "500"
+ *                 CoffeeTypeId:
+ *                   type: integer
+ *                   example: 1
+ *                 CreatedOn:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-04-05T12:26:37.000Z"
+ *                 RequiresStandardization:
+ *                   type: integer
+ *                   example: 0
+ *                 standardized:
+ *                   type: string
+ *                   example: "N"
+ */
+app.get('/grnMain/:id', grnMain.getGRNMainById);
+
+/**
+ * @swagger
+ * /grnMain:
+ *   post:
+ *     summary: Create a new GRN main record
+ *     tags: [GRN Main]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               grnID:
+ *                 type: integer
+ *                 example: 6
+ *               documentSerial:
+ *                 type: string
+ *                 example: "12345"
+ *               DeliveryDate:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-04-05T12:26:37.000Z"
+ *               VehiclePlate:
+ *                 type: string
+ *                 example: "ABC-123"
+ *               GrossWeight:
+ *                 type: string
+ *                 example: "1000"
+ *               PermitNo:
+ *                 type: string
+ *                 example: "P-123"
+ *               TareWeight:
+ *                 type: string
+ *                 example: "500"
+ *               grnNo:
+ *                 type: string
+ *                 example: "GRN-123"
+ *               WeighBridgeNo:
+ *                 type: string
+ *                 example: "WB-123"
+ *               DriverName:
+ *                 type: string
+ *                 example: "John Doe"
+ *               DriverIDNo:
+ *                 type: string
+ *                 example: "D-123"
+ *               SeasonID:
+ *                 type: integer
+ *                 example: 12
+ *               WarehouseID:
+ *                 type: integer
+ *                 example: 1
+ *               GrowerID:
+ *                 type: integer
+ *                 example: 1
+ *               SupervisorID:
+ *                 type: integer
+ *                 example: 1
+ *               WHManager:
+ *                 type: integer
+ *                 example: 1
+ *               IsVerified:
+ *                 type: integer
+ *                 example: 0
+ *               MillerID:
+ *                 type: integer
+ *                 example: 1
+ *               Remarks:
+ *                 type: string
+ *                 example: "Test Remarks"
+ *               GrowerWeight:
+ *                 type: string
+ *                 example: "500"
+ *               WarrantNo:
+ *                 type: string
+ *                 example: "W-123"
+ *               NetWeight:
+ *                 type: string
+ *                 example: "500"
+ *               CoffeeTypeId:
+ *                 type: integer
+ *                 example: 1
+ *               CreatedOn:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-04-05T12:26:37.000Z"
+ *               RequiresStandardization:
+ *                 type: integer
+ *                 example: 0
+ *               standardized:
+ *                 type: string
+ *                 example: "N"
+ *     responses:
+ *       201:
+ *         description: GRN main record created successfully
+ */
+app.post('/grnMain', grnMain.createGRNMain);
+
+/**
+ * @swagger
+ * /grnMain/{id}:
+ *   put:
+ *     summary: Update an existing GRN main record
+ *     tags: [GRN Main]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 6
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               documentSerial:
+ *                 type: string
+ *                 example: "12345"
+ *               DeliveryDate:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-04-05T12:26:37.000Z"
+ *               VehiclePlate:
+ *                 type: string
+ *                 example: "ABC-123"
+ *               GrossWeight:
+ *                 type: string
+ *                 example: "1000"
+ *               PermitNo:
+ *                 type: string
+ *                 example: "P-123"
+ *               TareWeight:
+ *                 type: string
+ *                 example: "500"
+ *               grnNo:
+ *                 type: string
+ *                 example: "GRN-123"
+ *               WeighBridgeNo:
+ *                 type: string
+ *                 example: "WB-123"
+ *               DriverName:
+ *                 type: string
+ *                 example: "John Doe"
+ *               DriverIDNo:
+ *                 type: string
+ *                 example: "D-123"
+ *               SeasonID:
+ *                 type: integer
+ *                 example: 12
+ *               WarehouseID:
+ *                 type: integer
+ *                 example: 1
+ *               GrowerID:
+ *                 type: integer
+ *                 example: 1
+ *               SupervisorID:
+ *                 type: integer
+ *                 example: 1
+ *               WHManager:
+ *                 type: integer
+ *                 example: 1
+ *               IsVerified:
+ *                 type: integer
+ *                 example: 0
+ *               MillerID:
+ *                 type: integer
+ *                 example: 1
+ *               Remarks:
+ *                 type: string
+ *                 example: "Test Remarks"
+ *               GrowerWeight:
+ *                 type: string
+ *                 example: "500"
+ *               WarrantNo:
+ *                 type: string
+ *                 example: "W-123"
+ *               NetWeight:
+ *                 type: string
+ *                 example: "500"
+ *               CoffeeTypeId:
+ *                 type: integer
+ *                 example: 1
+ *               CreatedOn:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-04-05T12:26:37.000Z"
+ *               RequiresStandardization:
+ *                 type: integer
+ *                 example: 0
+ *               standardized:
+ *                 type: string
+ *                 example: "N"
+ *     responses:
+ *       200:
+ *         description: GRN main record updated successfully
+ */
+app.put('/grnMain/:id', grnMain.updateGRNMain);
+
+/**
+ * @swagger
+ * /grnMain/{id}:
+ *   delete:
+ *     summary: Delete an existing GRN main record
+ *     tags: [GRN Main]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 6
+ *     responses:
+ *       200:
+ *         description: GRN main record deleted successfully
+ */
+
+app.delete('/grnMain/:id', grnMain.deleteGRNMain);
+app.get('/grnMain/:grnID/season/:seasonID', grnMain.getGRNMainsByGrnIdAndSeason);
+
+/**
+ * @swagger
+ * /grnMain/{grnID}/season/{seasonID}:
+ *   get:
+ *     summary: Get an outturn record by outturnNo and SeasonID
+ *     tags: [GRN Main]
+ *     parameters:
+ *       - in: path
+ *         name: grnID
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the grn  record
+ *       - in: path
+ *         name: seasonID
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the season
+ *     responses:
+ *       200:
+ *         description: List of GRN main records matching the filter criteria
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   grnID:
+ *                     type: integer
+ *                     example: 6
+ *                   documentSerial:
+ *                     type: string
+ *                     example: "12345"
+ *                   DeliveryDate:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-04-05T12:26:37.000Z"
+ *                   VehiclePlate:
+ *                     type: string
+ *                     example: "ABC-123"
+ *                   GrossWeight:
+ *                     type: string
+ *                     example: "1000"
+ *                   PermitNo:
+ *                     type: string
+ *                     example: "P-123"
+ *                   TareWeight:
+ *                     type: string
+ *                     example: "500"
+ *                   grnNo:
+ *                     type: string
+ *                     example: "GRN-123"
+ *                   WeighBridgeNo:
+ *                     type: string
+ *                     example: "WB-123"
+ *                   DriverName:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   DriverIDNo:
+ *                     type: string
+ *                     example: "D-123"
+ *                   SeasonID:
+ *                     type: integer
+ *                     example: 12
+ *                   WarehouseID:
+ *                     type: integer
+ *                     example: 1
+ *                   GrowerID:
+ *                     type: integer
+ *                     example: 1
+ *                   SupervisorID:
+ *                     type: integer
+ *                     example: 1
+ *                   WHManager:
+ *                     type: integer
+ *                     example: 1
+ *                   IsVerified:
+ *                     type: integer
+ *                     example: 0
+ *                   MillerID:
+ *                     type: integer
+ *                     example: 1
+ *                   Remarks:
+ *                     type: string
+ *                     example: "Test Remarks"
+ *                   GrowerWeight:
+ *                     type: string
+ *                     example: "500"
+ *                   WarrantNo:
+ *                     type: string
+ *                     example: "W-123"
+ *                   NetWeight:
+ *                     type: string
+ *                     example: "500"
+ *                   CoffeeTypeId:
+ *                     type: integer
+ *                     example: 1
+ *                   CreatedOn:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-04-05T12:26:37.000Z"
+ *                   RequiresStandardization:
+ *                     type: integer
+ *                     example: 0
+ *                   standardized:
+ *                     type: string
+ *                     example: "N"
+ */
