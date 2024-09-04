@@ -70,24 +70,20 @@ async function deleteGRNMain(req, res) {
     }
 }
 async function getGRNMainsByGrnIdAndSeason(req, res) {
-    const { grnID } = req.params;
+    const { GrnNo } = req.params;
     const { seasonID } = req.params;
-    console.log(' grnID ' + grnID + ' SeasonID' + seasonID);
+    console.log(' grnID ' + GrnNo + ' SeasonID' + seasonID);
 
-    if (!grnID || !seasonID) {
-        return res.status(400).json({ message: 'grnID and SeasonID are required query parameters.' });
+    try {
+        console.log('============Fetching GRN main records===========');
+        const [rows] = await pool.query('SELECT * FROM grn_main WHERE GrnNo = ? AND seasonID = ?', [GrnNo, seasonID]);
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error('Error fetching GRN main records:', error);
+        res.status(500).json({ message: 'Error fetching GRN main records' });
     }
 
-    const query = `SELECT * FROM grn_main WHERE grnID = ? AND seasonID = ?`;
 
-    pool.query(query, [grnID, seasonID], (error, results) => {
-        if (error) {
-            console.error('Error fetching GRN Main records:', error);
-            return res.status(500).json({ message: 'Failed to fetch GRN Main records' });
-        }
-
-        res.status(200).json(results);
-    });
 };
 
 module.exports = {

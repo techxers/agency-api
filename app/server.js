@@ -7983,21 +7983,21 @@ app.put('/grnMain/:id', grnMain.updateGRNMain);
  */
 
 app.delete('/grnMain/:id', grnMain.deleteGRNMain);
-app.get('/grnMain/:grnID/season/:seasonID', grnMain.getGRNMainsByGrnIdAndSeason);
+app.get('/grnMain/:GrnNo/season/:seasonID', grnMain.getGRNMainsByGrnIdAndSeason);
 
 /**
  * @swagger
- * /grnMain/{grnID}/season/{seasonID}:
+ * /grnMain/{GrnNo}/season/{seasonID}:
  *   get:
- *     summary: Get an outturn record by outturnNo and SeasonID
+ *     summary: Get an outturn record by GrnNo and SeasonID
  *     tags: [GRN Main]
  *     parameters:
  *       - in: path
- *         name: grnID
+ *         name: GrnNo
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
- *         description: The ID of the grn  record
+ *         description: The String No of the grn  record
  *       - in: path
  *         name: seasonID
  *         schema:

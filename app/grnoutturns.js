@@ -29,13 +29,13 @@ async function getGRNOutturnById(req, res) {
 }
 // Get an outturn record by ID and seaon
 async function getGRNOutturnByIdandSeason(req, res) {
-    const { GRNID } = req.params;
+    const { id } = req.params;
     const { seasonID } = req.params;
 
-    console.log('GRNID ' + GRNID);
+    console.log('GRNID ' + id);
 
     try {
-        const [rows] = await pool.query('SELECT * FROM grn_outturns WHERE GRNID = ? ', [GRNID]);
+        const [rows] = await pool.query('SELECT * FROM grn_outturns WHERE GRNID = ? ', [id]);
         if (rows.length === 0) {
 
             res.status(404).json({ error: 'GRN Outturns record not found' });
