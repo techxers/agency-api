@@ -8010,7 +8010,7 @@ app.get('/grnMain/:GrnNo/season/:seasonID', grnMain.getGRNMainsByGrnIdAndSeason)
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 type: object
  *                 properties:

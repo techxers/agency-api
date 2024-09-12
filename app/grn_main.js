@@ -77,7 +77,10 @@ async function getGRNMainsByGrnIdAndSeason(req, res) {
     try {
         console.log('============Fetching GRN main records===========');
         const [rows] = await pool.query('SELECT * FROM grn_main WHERE GrnNo = ? AND seasonID = ?', [GrnNo, seasonID]);
-        res.status(200).json(rows);
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'GRN main record not found' });
+        }
+        res.status(200).json(rows[0]);
     } catch (error) {
         console.error('Error fetching GRN main records:', error);
         res.status(500).json({ message: 'Error fetching GRN main records' });
