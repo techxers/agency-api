@@ -50,7 +50,7 @@ const cleanTypes = require('./cleantype');
 const agentCategory = require('./agentcategory');
 const chargesType = require('./chargestype');
 const grnMain = require('./grn_main');
-
+const warrants = require('./warrant');
 
 const app = express();
 // Use CORS middleware
@@ -8095,3 +8095,157 @@ app.get('/grnMain/:GrnNo/season/:seasonID', grnMain.getGRNMainsByGrnIdAndSeason)
  *                     type: string
  *                     example: "N"
  */
+// Routes for CRUD operations
+
+/**
+ * @swagger
+ * /warrants:
+ *   get:
+ *     summary: Retrieve all warrants
+ *     tags: [Warrants]
+ *     responses:
+ *       200:
+ *         description: A list of warrants
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ */
+app.get('/warrants', warrants.getAllWarrants);
+
+/**
+ * @swagger
+ * /warrants/{id}:
+ *   get:
+ *     summary: Retrieve a warrant by ID
+ *     tags: [Warrants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The warrant ID
+ *     responses:
+ *       200:
+ *         description: A warrant object
+ *       404:
+ *         description: Warrant not found
+ */
+app.get('/warrants/:id', warrants.getWarrantById);
+
+/**
+ * @swagger
+ * /warrants:
+ *   post:
+ *     summary: Create a new warrant
+ *     tags: [Warrants]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               WarrantNo:
+ *                 type: string
+ *               grnOutturnID:
+ *                 type: integer
+ *               WarrantedWeight:
+ *                 type: number
+ *               Bags:
+ *                 type: integer
+ *               Pkts:
+ *                 type: integer
+ *               Status:
+ *                 type: integer
+ *               SellableStatus:
+ *                 type: integer
+ *               SaleID:
+ *                 type: integer
+ *               LotNo:
+ *                 type: integer
+ *               Flag:
+ *                 type: string
+ *               Percentage:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Warrant created successfully
+ *       500:
+ *         description: Error creating warrant
+ */
+app.post('/warrants', warrants.createWarrant);
+
+/**
+ * @swagger
+ * /warrants/{id}:
+ *   put:
+ *     summary: Update a warrant by ID
+ *     tags: [Warrants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The warrant ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               WarrantNo:
+ *                 type: string
+ *               grnOutturnID:
+ *                 type: integer
+ *               WarrantedWeight:
+ *                 type: number
+ *               Bags:
+ *                 type: integer
+ *               Pkts:
+ *                 type: integer
+ *               Status:
+ *                 type: integer
+ *               SellableStatus:
+ *                 type: integer
+ *               SaleID:
+ *                 type: integer
+ *               LotNo:
+ *                 type: integer
+ *               Flag:
+ *                 type: string
+ *               Percentage:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Warrant updated successfully
+ *       404:
+ *         description: Warrant not found
+ */
+app.put('/warrants/:id', warrants.updateWarrant);
+
+/**
+ * @swagger
+ * /warrants/{id}:
+ *   delete:
+ *     summary: Delete a warrant by ID
+ *     tags: [Warrants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The warrant ID
+ *     responses:
+ *       200:
+ *         description: Warrant deleted successfully
+ *       404:
+ *         description: Warrant not found
+ */
+app.delete('/warrants/:id', warrants.deleteWarrant);
