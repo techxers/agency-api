@@ -8,7 +8,7 @@ async function getAllWarrants(req, res) {
         res.status(200).json(rows);
     } catch (error) {
         console.error('Error fetching warrants:', error);
-        res.status(500).json({ message: 'Error fetching warrants' });
+        res.status(500).json({ message: `Error fetching warrant: ${error.message}` });
     }
 }
 
@@ -23,7 +23,7 @@ async function getWarrantById(req, res) {
         res.status(200).json(rows[0]);
     } catch (error) {
         console.error('Error fetching warrant:', error);
-        res.status(500).json({ message: 'Error fetching warrant' });
+        res.status(500).json({ message: `Error fetching warrant: ${error.message}` });
     }
 }
 
@@ -38,7 +38,7 @@ async function getWarrantsByGRNOutturnId(req, res) {
         res.status(200).json(rows);
     } catch (error) {
         console.error('Error fetching warrants by GRN outturn:', error);
-        res.status(500).json({ message: 'Error fetching warrants by GRN outturn' });
+        res.status(500).json({ message: `Error fetching warrant: ${error.message}` });
     }
 }
 
@@ -50,9 +50,10 @@ async function createWarrant(req, res) {
         res.status(201).json({ message: 'Warrant created successfully', id: result.insertId });
     } catch (error) {
         console.error('Error creating warrant:', error);
-        res.status(500).json({ message: 'Error creating warrant' });
+        res.status(500).json({ message: `Error creating warrant: ${error.message}` });
     }
 }
+
 
 // Update an existing warrant
 async function updateWarrant(req, res) {
@@ -66,7 +67,7 @@ async function updateWarrant(req, res) {
         res.status(200).json({ message: 'Warrant updated successfully' });
     } catch (error) {
         console.error('Error updating warrant:', error);
-        res.status(500).json({ message: 'Error updating warrant' });
+        res.status(500).json({ message: `Error updating warrant: ${error.message}` });
     }
 }
 
@@ -81,7 +82,7 @@ async function deleteWarrant(req, res) {
         res.status(200).json({ message: 'Warrant deleted successfully' });
     } catch (error) {
         console.error('Error deleting warrant:', error);
-        res.status(500).json({ message: 'Error deleting warrant' });
+        res.status(500).json({ message: `Error deleting warrant: ${error.message}` });
     }
 }
 
