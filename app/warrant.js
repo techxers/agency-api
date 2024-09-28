@@ -26,6 +26,22 @@ async function getWarrantById(req, res) {
         res.status(500).json({ message: `Error fetching warrant: ${error.message}` });
     }
 }
+// Retrieve a single warrant by ID
+async function getWarrantByNoandSeason(req, res) {
+    const { outturnNo } = req.params;
+    const { seasonID } = req.params;
+    const { gradeID  } = req.params;
+    try {
+        const [rows] = await pool.query('SELECT cs.Year, g.OutturnNo, wc.WarrantNo, m.MaterialName as Grade, g.Weight as GrnWeight, wc.WarrantedWeight, wc.Bags as WBags , wc.Pkts as WPkts , g.MaClass class FROM `agency.new`.warranted_coffee wc JOIN grn_outturns g ON wc.grnOutturnID = g.grnOutturnID JOIN coffeeseason cs ON g.SeasonID = cs.SeasonID JOIN material m on m.MaterialID = g.GradeID WHERE g.OutturnNo = ?  and cs.SeasonID = ?  AND g.GradeID = ?' , [outturnNo,seasonID,gradeID]);
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Warrant not found' });
+        }
+        res.status(200).json(rows[0]);
+    } catch (error) {
+        console.error('Error fetching warrant:', error);
+        res.status(500).json({ message: `Error fetching warrant: ${error.message}` });
+    }
+}
 
 // Retrieve warrants by GRN Outturn ID
 async function getWarrantsByGRNOutturnId(req, res) {
@@ -92,5 +108,6 @@ module.exports = {
     getWarrantsByGRNOutturnId,
     createWarrant,
     updateWarrant,
-    deleteWarrant
+    deleteWarrant,
+    getWarrantByNoandSeason
 };

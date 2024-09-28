@@ -8249,3 +8249,63 @@ app.put('/warrants/:id', warrants.updateWarrant);
  *         description: Warrant not found
  */
 app.delete('/warrants/:id', warrants.deleteWarrant);
+
+/**
+ * @swagger
+ * /warrants/{outturnNo}/season/{seasonID}/grade/{gradeID}:
+ *   get:
+ *     summary: Retrieve a warrant by OutturnNo, SeasonID, and GradeID
+ *     tags: [Warrants]
+ *     parameters:
+ *       - in: path
+ *         name: outturnNo
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The Outturn Number of the warrant
+ *       - in: path
+ *         name: seasonID
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The Season ID
+ *       - in: path
+ *         name: gradeID
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The Grade ID
+ *     responses:
+ *       200:
+ *         description: Warrant details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Year:
+ *                   type: string
+ *                 OutturnNo:
+ *                   type: string
+ *                 WarrantNo:
+ *                   type: string
+ *                 Grade:
+ *                   type: string
+ *                 GrnWeight:
+ *                   type: number
+ *                 WarrantedWeight:
+ *                   type: number
+ *                 WBags:
+ *                   type: integer
+ *                 WPkts:
+ *                   type: integer
+ *                 class:
+ *                   type: string
+ *       400:
+ *         description: Missing required parameters
+ *       404:
+ *         description: Warrant not found
+ *       500:
+ *         description: Error retrieving warrant
+ */
+app.get('/warrants/:outturnNo/season/:seasonID/grade/:gradeID', warrants.getWarrantByNoandSeason);
