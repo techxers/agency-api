@@ -161,72 +161,47 @@ async function deleteGRNOutturn(req, res) {
         res.status(500).json({ message: 'Error deleting GRN outturn' });
     }
 }
-// Save Bulk Collection for GRN Outturns
 async function saveBulkCollection(req, res) {
     const { selectedBulkItems, totalKgs, grnOutturnID } = req.body;
-
-    if (!selectedBulkItems || !selectedBulkItems.length) {
-        return res.status(400).json({ message: 'Please select outturns to bulk before saving!' });
-    }
-
-    // Prepare array to store all new bulk items
-    const bulkItems = selectedBulkItems.map(item => ({
-        grnOutturnID: item.grnOutturnID,
-        GrossWeight: 0,
-        GRNID: item.GRNID,
-        SeasonID: item.SeasonID,
-        Location: item.Location,
-        Weight: item.Weight,
-        Bags: item.Bags,
-        Pkts: item.Pkts,
-        GradeID: item.GradeID,
-        MaClass: item.MaClass,
-        CleanTypeID: item.CleanTypeID,
-        OutturnMark: item.OutturnMark,
-        Quality: item.Quality,
-        SaleStatusID: item.SaleStatusID,
-        GrowerId: item.GrowerId,
-        CreatedOn: item.CreatedOn,
-        OutturnNo: item.OutturnNo,
-        SellableStatusID: item.SellableStatusID,
-        BulkStatus: item.BulkStatus,
-        Season: item.Season,
-        PercentOfBulk: parseFloat((item.Weight / totalKgs).toFixed(15)),
-        BulkerID: item.BulkerID,
-        BagTypeID: item.BagTypeID,
-        CompleteLot: item.CompleteLot,
-        LotNo: item.LotNo,
-        OutturnBulkID: item.OutturnBulkID,
-        OutturnQualityID: item.OutturnQualityID,
-        PartialDelivery: item.PartialDelivery,
-        SaleID: item.SaleID,
-        WarrantID: item.WarrantID,
-        WarrantedWeight: item.WarrantedWeight
-    }));
-
-    // Confirm operation
-    if (!req.body.confirmation) {
-        return res.status(400).json({ message: 'Operation not confirmed by the user.' });
-    }
+    console.log('-----------updateGRNOutturn-------------------------');
 
     try {
-        // Insert bulk items into the database
-        const [result] = await pool.query('INSERT INTO grn_outturns SET ?', [bulkItems]);
+        for (const item of selectedBulkItems) {
+            const percentOfBulk = parseFloat((item.Weight / totalKgs).toFixed(15));
+            const updateData = {
+                OutturnBulkID: item.OutturnBulkID,
+                SellableStatusID: item.SellableStatusID,
+                BulkStatus: item.BulkStatus,
+                GrowerId: item.GrowerId,
+                SaleStatusID: item.SaleStatusID,
+                PercentOfBulk: percentOfBulk
+            };
 
-        // Update the GrossWeight after bulk processing
-        const updateBulk = {
-            grnOutturnID: grnOutturnID,
-            GrossWeight: totalKgs
-        };
+            console.log(`Updating GRN Outturn ID: ${item.grnOutturnID} with data:`, updateData);
+            
+            try {
+                const [result] = await pool.query(
+                    'UPDATE grn_outturns SET ? WHERE grnOutturnID = ?',
+                    [updateData, item.grnOutturnID]
+                );
+                console.log(`Update result for grnOutturnID ${item.grnOutturnID}:`, result);
+            } catch (error) {
+                console.error(`Error updating grnOutturnID ${item.grnOutturnID}:`, error);
+            }
+        }
+
+        // Optional: Update the GrossWeight for the main grnOutturnID after all items have been processed
+        const updateBulk = { grnOutturnID, GrossWeight: totalKgs };
         await pool.query('UPDATE grn_outturns SET ? WHERE grnOutturnID = ?', [updateBulk, grnOutturnID]);
+        console.log(`GrossWeight updated for grnOutturnID ${grnOutturnID} with totalKgs: ${totalKgs}`);
 
         res.status(200).json({ message: 'Bulk process completed successfully.' });
     } catch (error) {
         console.error('Error in bulk processing:', error);
         res.status(500).json({ message: 'Bulk process failed.' });
     }
-
 };
+
 module.exports = {
     getAllGRNOutturns,
     getGRNOutturnById,

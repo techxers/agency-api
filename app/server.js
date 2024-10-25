@@ -2821,7 +2821,7 @@ app.delete('/grnoutturns/:id', grnOutturnRoutes.deleteGRNOutturn);
 
 app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
 app.post('/grnoutturns/bulk', grnOutturnRoutes.createBulkOutturn);
-app.post('/saveBulkCollection', grnOutturnRoutes.saveBulkCollection);
+app.post('/grnoutturns/saveBulkCollection', grnOutturnRoutes.saveBulkCollection);
 
 
 
@@ -2871,74 +2871,54 @@ app.post('/saveBulkCollection', grnOutturnRoutes.saveBulkCollection);
  *                   properties:
  *                     grnOutturnID:
  *                       type: integer
- *                     GrossWeight:
- *                       type: integer
- *                     GRNID:
- *                       type: integer
- *                     SeasonID:
- *                       type: integer
- *                     Location:
- *                       type: string
- *                     Weight:
- *                       type: number
- *                     Bags:
- *                       type: integer
- *                     Pkts:
- *                       type: integer
- *                     GradeID:
- *                       type: integer
- *                     MaClass:
- *                       type: string
- *                     CleanTypeID:
- *                       type: integer
- *                     OutturnMark:
- *                       type: string
- *                     Quality:
- *                       type: string
- *                     SaleStatusID:
- *                       type: integer
- *                     GrowerId:
- *                       type: integer
- *                     CreatedOn:
- *                       type: string
- *                       format: date-time
- *                     OutturnNo:
- *                       type: string
- *                     SellableStatusID:
- *                       type: integer
- *                     BulkStatus:
- *                       type: string
- *                     Season:
- *                       type: string
- *                     PercentOfBulk:
- *                       type: number
- *                     BulkerID:
- *                       type: integer
- *                     BagTypeID:
- *                       type: integer
- *                     CompleteLot:
- *                       type: boolean
- *                     LotNo:
- *                       type: string
+ *                       description: ID of the GRN outturn item.
  *                     OutturnBulkID:
  *                       type: integer
- *                     OutturnQualityID:
+ *                       description: ID for bulked outturn.
+ *                     SellableStatusID:
  *                       type: integer
- *                     PartialDelivery:
- *                       type: boolean
- *                     SaleID:
+ *                       description: Status ID indicating if the item is sellable.
+ *                     BulkStatus:
  *                       type: integer
- *                     WarrantID:
+ *                       description: Status of the bulk processing.
+ *                     GrowerId:
  *                       type: integer
- *                     WarrantedWeight:
+ *                       description: ID of the grower associated with the outturn.
+ *                     SaleStatusID:
+ *                       type: integer
+ *                       description: Status ID indicating the sale status.
+ *                     PercentOfBulk:
  *                       type: number
+ *                       description: Percentage of the total bulk weight.
+ *                     Weight:
+ *                       type: number
+ *                       description: Weight of the item contributing to the bulk total.
  *               totalKgs:
  *                 type: number
+ *                 description: Total weight of the bulk collection.
  *               grnOutturnID:
  *                 type: integer
- *               confirmation:
- *                 type: boolean
- *                 description: Confirmation of the operation by the user.
+ *                 description: ID of the GRN Outturn item to update GrossWeight.
+ *           example:
+ *             selectedBulkItems:
+ *               - grnOutturnID: 1
+ *                 OutturnBulkID: 120
+ *                 SellableStatusID: 3
+ *                 BulkStatus: 2
+ *                 GrowerId: 1
+ *                 SaleStatusID: 9
+ *                 PercentOfBulk: 0.15
+ *                 Weight: 130
+ *               - grnOutturnID: 2
+ *                 OutturnBulkID: 121
+ *                 SellableStatusID: 3
+ *                 BulkStatus: 2
+ *                 GrowerId: 1
+ *                 SaleStatusID: 9
+ *                 PercentOfBulk: 0.25
+ *                 Weight: 200
+ *             totalKgs: 1300
+ *             grnOutturnID: 1
  *     responses:
  *       200:
  *         description: Bulk process completed successfully.
@@ -2950,16 +2930,6 @@ app.post('/saveBulkCollection', grnOutturnRoutes.saveBulkCollection);
  *                 message:
  *                   type: string
  *                   example: Bulk process completed successfully.
- *       400:
- *         description: Invalid request or missing confirmation.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Please select outturns to bulk before saving!
  *       500:
  *         description: Server error occurred during the bulk process.
  *         content:
@@ -2971,8 +2941,6 @@ app.post('/saveBulkCollection', grnOutturnRoutes.saveBulkCollection);
  *                   type: string
  *                   example: Bulk process failed.
  */
-
-
 /**
  * @swagger
  * /grnoutturns/{outturnNo}/season/{seasonID}:
