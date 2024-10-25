@@ -55,26 +55,33 @@ async function getGRNOutturnByIdandSeason(req, res) {
 }
 // Get an outturn record by ID and seaon
 async function getOutturnInBulkByIdandSeason(req, res) {
-    const { OutturnNo } = req.params;
-    const { SeasonID } = req.params;
+    const { OutturnNo, SeasonID } = req.params;
     console.log('-----------getOutturnInBulkByIdandSeason-------------------------');
-
-    console.log('OutturnNo and SeasonID  ' + OutturnNo + '--- '+SeasonID );
+    console.log(`OutturnNo and SeasonID: ${OutturnNo} --- ${SeasonID}`);
 
     try {
-        const [rows] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnNo = ?  AND SeasonID = ?', [OutturnNo,SeasonID]);
+        const [rows] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnNo = ? AND SeasonID = ?', [OutturnNo, SeasonID]);
+
         if (rows.length === 0) {
-
-            res.status(404).json({ error: 'Bulk Outturns records not found' });
+            return res.status(404).json({ error: 'GRN Outturns is not a bulk' });
         } else {
+            console.log('----------- rows[0]-------------------------' +  rows[0]);
 
-            res.status(200).json(rows);
+            const OutturnBulkID = rows[0].grnOutturnID;  // Extract OutturnBulkID from the first row
+            console.log('-----------OutturnBulkID-------------------------' + OutturnBulkID);
+
+            // Query for related records
+            const [rows2] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnBulkID = ?', [OutturnBulkID]);
+
+            // Send both the original and related records in a single response
+            return res.status(200).json(rows2);
         }
     } catch (error) {
-
-        res.status(500).json({ error: 'Failed to retrieve the Bulk Outturn record' + error.message });
+        console.error('Error retrieving Bulk Outturn record:', error.message);
+        return res.status(500).json({ error: 'Failed to retrieve the Bulk Outturn record' });
     }
 }
+
 
 // Get an outturn record by ID and seaon
 async function getGetGrnGradesBulk(req, res) {
@@ -85,9 +92,11 @@ async function getGetGrnGradesBulk(req, res) {
     try {
         const [rows] = await pool.query('SELECT * FROM grn_outturns WHERE SaleStatusID = 2 AND OutturnBulkID IS NULL AND BulkStatus IS NULL AND Weight <= 100');
         if (rows.length === 0) {
+            console.log('----------- rows.length === 0-------------------------');
 
             res.status(404).json({ error: 'Grades to Bulk GRN Outturns records not found' });
         } else {
+            console.log('----------- res.status(200)-------------------------' + rows.length);
 
             res.status(200).json(rows);
         }
