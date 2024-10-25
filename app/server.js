@@ -51,6 +51,7 @@ const agentCategory = require('./agentcategory');
 const chargesType = require('./chargestype');
 const grnMain = require('./grn_main');
 const warrants = require('./warrant');
+const Internal_bulks = require('./internal_bulks');
 
 const app = express();
 // Use CORS middleware
@@ -2810,14 +2811,202 @@ app.delete('/factories/:id', factories.deleteFactory);
  *         description: Successfully created
  */
 app.get('/grnoutturns', grnOutturnRoutes.getAllGRNOutturns);
+app.get('/grnoutturns/gradesInBulk', grnOutturnRoutes.getGetGrnGradesBulk);
 app.get('/grnoutturns/:id', grnOutturnRoutes.getGRNOutturnById);
 app.get('/grnoutturns/grn/:id', grnOutturnRoutes.getGRNOutturnByIdandSeason);
+app.get('/grnoutturns/:OutturnNo/season/:SeasonID', grnOutturnRoutes.getOutturnInBulkByIdandSeason);
 
 app.put('/grnoutturns/:id', grnOutturnRoutes.updateGRNOutturn);
 app.delete('/grnoutturns/:id', grnOutturnRoutes.deleteGRNOutturn);
-app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
 
-// Set up routes for GRN Outturns
+app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
+app.post('/grnoutturns/bulk', grnOutturnRoutes.createBulkOutturn);
+app.post('/saveBulkCollection', grnOutturnRoutes.saveBulkCollection);
+
+
+
+
+/**
+ * @swagger
+ * /grnoutturns/gradesInBulk:
+ *   get:
+ *     summary: Retrieve grades that can be bulked
+ *     tags: 
+ *       - GRN Outturns   # Ensure this tag matches what's defined in your components or general tags section
+ *     responses:
+ *       200:
+ *         description: GRN Outturns retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array  # Specify if the response is an array of GRN Outturns
+ *               items:
+ *                 $ref: '#/components/schemas/GRNOutturn'  # Ensure this ref points to a valid schema
+ *       400:
+ *         description: Invalid input   # Update or remove this if no input is expected for a GET request
+ *       404:
+ *         description: GRN Outturns not found   # This suggests the resource wasn't found
+ *       500:
+ *         description: Some server error occurred
+ */
+/**
+ * @swagger
+ * /grnoutturns/saveBulkCollection:
+ *   post:
+ *     summary: Save bulk collection of GRN Outturns
+ *     description: Saves a collection of bulk items for GRN Outturns and updates the gross weight.
+ *     tags: 
+ *       - GRN Outturns
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedBulkItems:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     grnOutturnID:
+ *                       type: integer
+ *                     GrossWeight:
+ *                       type: integer
+ *                     GRNID:
+ *                       type: integer
+ *                     SeasonID:
+ *                       type: integer
+ *                     Location:
+ *                       type: string
+ *                     Weight:
+ *                       type: number
+ *                     Bags:
+ *                       type: integer
+ *                     Pkts:
+ *                       type: integer
+ *                     GradeID:
+ *                       type: integer
+ *                     MaClass:
+ *                       type: string
+ *                     CleanTypeID:
+ *                       type: integer
+ *                     OutturnMark:
+ *                       type: string
+ *                     Quality:
+ *                       type: string
+ *                     SaleStatusID:
+ *                       type: integer
+ *                     GrowerId:
+ *                       type: integer
+ *                     CreatedOn:
+ *                       type: string
+ *                       format: date-time
+ *                     OutturnNo:
+ *                       type: string
+ *                     SellableStatusID:
+ *                       type: integer
+ *                     BulkStatus:
+ *                       type: string
+ *                     Season:
+ *                       type: string
+ *                     PercentOfBulk:
+ *                       type: number
+ *                     BulkerID:
+ *                       type: integer
+ *                     BagTypeID:
+ *                       type: integer
+ *                     CompleteLot:
+ *                       type: boolean
+ *                     LotNo:
+ *                       type: string
+ *                     OutturnBulkID:
+ *                       type: integer
+ *                     OutturnQualityID:
+ *                       type: integer
+ *                     PartialDelivery:
+ *                       type: boolean
+ *                     SaleID:
+ *                       type: integer
+ *                     WarrantID:
+ *                       type: integer
+ *                     WarrantedWeight:
+ *                       type: number
+ *               totalKgs:
+ *                 type: number
+ *               grnOutturnID:
+ *                 type: integer
+ *               confirmation:
+ *                 type: boolean
+ *                 description: Confirmation of the operation by the user.
+ *     responses:
+ *       200:
+ *         description: Bulk process completed successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Bulk process completed successfully.
+ *       400:
+ *         description: Invalid request or missing confirmation.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Please select outturns to bulk before saving!
+ *       500:
+ *         description: Server error occurred during the bulk process.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Bulk process failed.
+ */
+
+
+/**
+ * @swagger
+ * /grnoutturns/{outturnNo}/season/{seasonID}:
+ *   get:
+ *     summary: Retrieve an existing GRN Outturn by Outturn Number and Season ID
+ *     tags: [GRN Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: outturnNo
+ *         required: true
+ *         description: The unique outturn number to search for.
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: seasonID
+ *         required: true
+ *         description: The unique season ID associated with the outturn.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: GRN Outturn retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GRNOutturn'
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: GRN Outturn not found
+ *       500:
+ *         description: Some error happened
+ */
+
 
 /**
  * @swagger
@@ -2838,6 +3027,30 @@ app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
  *         description: Some error happened
  */
 
+/**
+ * @swagger
+ * /grnoutturns/bulk:
+ *   post:
+ *     summary: Create a new Bulk Outturn
+ *     tags: [GRN Outturns]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GRNOutturn'
+ *     responses:
+ *       201:
+ *         description: GRN Outturn created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GRNOutturn'
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Some error happened
+ */
 /**
  * @swagger
  * /grnoutturns:
@@ -3116,6 +3329,45 @@ app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
  *           description: The gross weight of the outturn
  *           example: 1300.0
  */
+/**
+ * @swagger
+ * /grnoutturns/{outturnNo}/season/{seasonID}:
+ *   get:
+ *     summary: Retrieve Bulk Record of a GRN Outturn by Outturn Number and Season ID
+ *     tags: [GRN Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: outturnNo
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique outturn number to search for.
+ *       - in: path
+ *         name: seasonID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The unique season ID associated with the outturn.
+ *     responses:
+ *       200:
+ *         description: Details of the GRN Outturn for the specified outturn number and season ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GRNOutturn'
+ *       404:
+ *         description: GRN Outturn not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: GRN Outturn not found
+ *       500:
+ *         description: Some error happened
+ *        
 
 /**
  * @swagger
@@ -8309,3 +8561,7 @@ app.delete('/warrants/:id', warrants.deleteWarrant);
  *         description: Error retrieving warrant
  */
 app.get('/warrants/:outturnNo/season/:seasonID/grade/:gradeID', warrants.getWarrantByNoandSeason);
+
+
+app.get('/warrants/:outturnNo/season/:seasonID/grade/:gradeID', warrants.getWarrantByNoandSeason);
+
