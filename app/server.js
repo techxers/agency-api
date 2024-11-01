@@ -3006,19 +3006,54 @@ app.post('/grnoutturns/saveBulkCollection', grnOutturnRoutes.saveBulkCollection)
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/GRNOutturn'
+ *             type: object
+ *             properties:
+ *               GrowerId:
+ *                 type: integer
+ *                 description: The ID of the grower.
+ *               SeasonID:
+ *                 type: integer
+ *                 description: The ID of the season.
+ *               BulkOutturn:
+ *                 type: string
+ *                 description: The bulk outturn identifier.
+ *               TotalKgs:
+ *                 type: number
+ *                 format: string
+ *                 description: Total weight in kilograms.
+ *               GradeID:
+ *                 type: integer
+ *                 description: The ID of the grade.
+ *               MaClass:
+ *                 type: string
+ *                 description: The classification of the material.
+ *             required:
+ *               - GrowerId
+ *               - SeasonID
+ *               - BulkOutturn
+ *               - TotalKgs
+ *               - GradeID
+ *               - MaClass
  *     responses:
  *       201:
  *         description: GRN Outturn created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/GRNOutturn'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: GRN outturn and main created successfully
+ *                 grnMainId:
+ *                   type: integer
+ *                   description: The ID of the created GRN main entry.
  *       400:
  *         description: Invalid input
  *       500:
  *         description: Some error happened
  */
+
 /**
  * @swagger
  * /grnoutturns:

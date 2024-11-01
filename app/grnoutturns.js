@@ -119,15 +119,84 @@ async function createGRNOutturn(req, res) {
 }
 // Create a new GRN outturn
 async function createBulkOutturn(req, res) {
-    const grnOutturnData = req.body;
+    const { GrowerId, SeasonID, BulkOutturn, TotalKgs, GradeID, MaClass } = req.body;
+    console.log('----------- res.status(200)-------------------------' + JSON.stringify(req.params, null, 2));
+
+    // Validate TotalKgs
+    if (TotalKgs == null) {
+        return res.status(400).json({ message: 'TotalKgs is required.' });
+    }
+
+    // Calculate bags and packets
+    const bags = Math.floor(TotalKgs / 60); // Use Math.floor for integers
+    const pkts = TotalKgs % 60; // Remainder for packets
+
+    // Create the grn_main entry first
+    const grnMainData = {
+        documentSerial: "BULK",
+        GrowerID: GrowerId, // Use incoming GrowerId
+        DeliveryDate: new Date(), // Current date
+        VehiclePlate: "N/A",
+        GrossWeight: 0, // Initial gross weight, can be updated later
+        PermitNo: "N/A",
+        TareWeight: 0,
+        SeasonID: SeasonID,
+        NetWeight: 0, // Initial net weight, can be updated later
+        grnNo: "BULK" + BulkOutturn + SeasonID,
+        WeighBridgeNo: "N/A",
+        DriverName: "N/A",
+        DriverIDNo: "N/A",
+        IsVerified: true,
+        WarrantNo: "N/A",
+        WHManager: 20,
+        SupervisorID: 19,
+        WarehouseID: 3,
+        MillerID: 186,
+        CoffeeTypeId: 3,
+        Remarks: "SYSTEM GENERATED BULK",
+        CreatedOn: new Date(), // Current timestamp
+    };
+
     try {
-        const [result] = await pool.query('INSERT INTO grn_outturns SET ?', [grnOutturnData]);
-        res.status(201).json({ message: 'GRN outturn created successfully', id: result.insertId });
+        // Insert into grn_main
+        const [grnMainResult] = await pool.query('INSERT INTO grn_main SET ?', [grnMainData]);
+        const grnMainId = grnMainResult.insertId; // Get the inserted ID
+
+        // Prepare data for grn_outturns
+        const grnOutturn = {
+            GRNID: grnMainId, // Use the grn_main ID
+            SeasonID: SeasonID,
+            Location: "ABL", // Assuming this is a fixed value
+            Weight: 0, // If you need to calculate this, adjust accordingly
+            GrossWeight: TotalKgs, // Assuming total gross weight is provided
+            Bags: bags,
+            Pkts: pkts,
+            GradeID: GradeID,
+            MaClass: MaClass,
+            CleanTypeID: 3, // Fixed value
+            OutturnMark: BulkOutturn + '/' + SeasonID,
+            Quality: "Y", // Fixed value
+            SaleStatusID: 1, // Fixed value
+            GrowerId: GrowerId,
+            CreatedOn: new Date(), // Current timestamp
+            OutturnNo: BulkOutturn, // Using BulkOutturn directly
+            SellableStatusID: 3, // Fixed value
+            BulkStatus: 2, // Fixed value
+            Season: new Date().getFullYear().toString(), // Current year as string
+        };
+
+        // Insert into grn_outturns
+        await pool.query('INSERT INTO grn_outturns SET ?', [grnOutturn]);
+
+        // Respond with success message
+        res.status(201).json({ message: ' BULK GRN outturn  created successfully', grnMainId });
     } catch (error) {
-        console.error('Error creating GRN outturn:', error);
-        res.status(500).json({ message: 'Error creating GRN outturn' + error });
+        console.error('Error creating GRN outturn or main:', error);
+        res.status(500).json({ message: 'Error creating GRN outturn or main: ' + error.message });
     }
 }
+
+
 
 // Update an existing GRN outturn
 async function updateGRNOutturn(req, res) {
