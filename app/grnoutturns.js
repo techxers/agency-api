@@ -214,8 +214,8 @@ async function finalizeOutturnTemplate(req, res) {
       // Retrieve the Goutturn data by GrnOutturnId
       const [goutturn] = await pool.query('SELECT * FROM grn_outturns WHERE grnOutturnId = ?', [req.body.grnOutturnID]);
 
-      if (!goutturn) {
-        return res.status(404).json({ message: "Outturn record not found" });
+      if (goutturn.length === 0) {
+        return res.status(404).json({ message: "bulk Outturn record not found" });
       }
         console.log('----OT Record found now cresting template ' + goutturn[0].Weight);
       // 2. Prepare data for the new bulk record
