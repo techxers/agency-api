@@ -196,7 +196,67 @@ async function createBulkOutturn(req, res) {
     }
 }
 
+// Get an outturn record by ID and season
+// {
+//     "Approved": 1 --  0 = Rejected , 1 =Approved
+//     "grnOutturnID": 1,
+//     "ActionDate":"2024-07-29",
+//     "ConfirmedBy" : 28 ,
+//     "ActualWeight": 2000  
+//  }
+async function finalizeOutturnTemplate(req, res) {
+    try {
+        const { grnOutturnId, Approved, ActionDate, ConfirmedBy, ActualWeight } = req.body;
+        console.log("Request body:", req.body); // Check if req.body is populated
 
+        console.log('----------- res.status(200)-------------------------' + req.body.grnOutturnID);
+      // 1. Retrieve the Goutturn data by GrnOutturnId and Season (modify as per ORM or query syntax)
+      // Retrieve the Goutturn data by GrnOutturnId
+      const [goutturn] = await pool.query('SELECT * FROM grn_outturns WHERE grnOutturnId = ?', [req.body.grnOutturnID]);
+
+      if (!goutturn) {
+        return res.status(404).json({ message: "Outturn record not found" });
+      }
+        console.log('----OT Record found now cresting template ' + goutturn[0].Weight);
+      // 2. Prepare data for the new bulk record
+      const newBulkData = {
+        BulkFlagID: 3,
+        Remarks: "Saved Automatically",
+        CreatedOn: new Date(),
+        EffectiveDate: new Date(),
+        Weight:goutturn[0].Weight,
+        OuttutnNo: goutturn[0].OutturnNo,
+        GradeID: goutturn[0].GradeID,
+        GrnOutturnId: goutturn[0].grnOutturnID,
+        SeasonID: goutturn[0].SeasonID,
+        ComputedWeight: req.body.ActualWeight,
+        PreparedBy: req.body.ConfirmedBy,
+        ConfirmedBy: req.body.ConfirmedBy, // Assuming user ID is available from req.user
+        BulkerID: 2,
+      };
+  
+      // 3. Insert into t_outturn_bulks table
+      await pool.query('INSERT INTO t_outturn_bulks SET ?', [newBulkData]);
+
+      //Update bulk items with status 3 
+
+      const [bulkmembers] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnBulkID = ?', [goutturn[0].OutturnBulkID]);
+      console.log('----Number of bulk members is ' + bulkmembers.length);
+
+      for (const b of bulkmembers) {
+        await pool.query('UPDATE grn_outturns SET BulkStatus = ? WHERE OutturnBulkID = ?', [2, b.OutturnBulkID]);
+      }
+      
+
+  
+      // 4. Send success response
+      res.status(201).json({ message: "Outturn bulk approval completed successfully" });
+    } catch (error) {
+      console.error("Error Approvinf bulk:", error);
+      res.status(500).json({ message: "Internal server error", error });
+    }
+  }
+  
 
 // Update an existing GRN outturn
 async function updateGRNOutturn(req, res) {
@@ -281,6 +341,7 @@ module.exports = {
     getOutturnInBulkByIdandSeason,
     createBulkOutturn,
     getGetGrnGradesBulk,
-    saveBulkCollection  
+    saveBulkCollection,
+    finalizeOutturnTemplate
 
 };

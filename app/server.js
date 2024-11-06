@@ -2822,9 +2822,64 @@ app.delete('/grnoutturns/:id', grnOutturnRoutes.deleteGRNOutturn);
 app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
 app.post('/grnoutturns/bulk', grnOutturnRoutes.createBulkOutturn);
 app.post('/grnoutturns/saveBulkCollection', grnOutturnRoutes.saveBulkCollection);
+app.post('/grnoutturns/bulk/approve', grnOutturnRoutes.finalizeOutturnTemplate);
 
 
-
+/**
+ * @swagger
+ * /grnoutturns/bulk/approve:
+ *   post:
+ *     summary: Approve or reject a Bulk a Outturn record
+ *     tags: 
+ *       - GRN Outturns
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Approved:
+ *                 type: integer
+ *                 description: Approval status (0 = Rejected, 1 = Approved)
+ *                 example: 1
+ *               grnOutturnID:
+ *                 type: integer
+ *                 description: ID of the GRN Outturn to be approved
+ *                 example: 1
+ *               ActionDate:
+ *                 type: string
+ *                 format: date
+ *                 description: Date of the action
+ *                 example: "2024-07-29"
+ *               ConfirmedBy:
+ *                 type: integer
+ *                 description: ID of the user who confirmed the action
+ *                 example: 28
+ *               ActualWeight:
+ *                 type: number
+ *                 description: Actual weight of the bulk
+ *                 example: 2000
+ *     responses:
+ *       201:
+ *         description: GRN Outturn status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "GRN Outturn record updated successfully"
+ *                 data:
+ *                   $ref: '#/components/schemas/GRNOutturn'
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: GRN Outturn not found
+ *       500:
+ *         description: Some server error occurred
+ */
 
 /**
  * @swagger
