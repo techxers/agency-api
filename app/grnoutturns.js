@@ -83,6 +83,25 @@ async function getOutturnInBulkByIdandSeason(req, res) {
 }
 
 
+
+// Get an outturn record by ID and seaon
+async function getBulkOutturns(req, res) {
+    console.log('-----------getBulkOutturns-------------------------');
+
+    try {
+        const [rows] = await pool.query('SELECT * FROM agency.grn_outturns  where OutturnBulkID is not null LIMIT 300');
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'No GRN Outturns ' });
+        } else {
+            res.status(200).json(rows);
+
+        }
+    } catch (error) {
+        console.error('Error retrieving Bulk Outturn record:', error.message);
+        return res.status(500).json({ error: 'Failed to retrieve the Bulk Outturn record' });
+    }
+}
 // Get an outturn record by ID and seaon
 async function getGetGrnGradesBulk(req, res) {
     console.log('-----------getGetGrnGradesBulk-------------------------');
@@ -90,7 +109,7 @@ async function getGetGrnGradesBulk(req, res) {
 
 
     try {
-        const [rows] = await pool.query('SELECT * FROM grn_outturns WHERE SaleStatusID = 2 AND OutturnBulkID IS NULL AND BulkStatus IS NULL AND Weight <= 100');
+        const [rows] = await pool.query('SELECT * FROM grn_outturns WHERE   OutturnBulkID IS NULL AND Weight <= 1200');
         if (rows.length === 0) {
             console.log('----------- rows.length === 0-------------------------');
 
@@ -182,6 +201,7 @@ async function createBulkOutturn(req, res) {
             OutturnNo: BulkOutturn, // Using BulkOutturn directly
             SellableStatusID: 3, // Fixed value
             BulkStatus: 2, // Fixed value
+            OutturnQualityID:null,
             Season: new Date().getFullYear().toString(), // Current year as string
         };
 
@@ -276,6 +296,37 @@ async function updateGRNOutturn(req, res) {
     }
 }
 
+async function removeBulkFromGRNOutturn(req, res) {
+    const { grnOutturnID } = req.params;  // Assuming these values are passed in the request body
+    console.log('----------- res.grnOutturnID-------------------------' + grnOutturnID );
+
+    try {
+        // Start the transaction to ensure consistency
+
+        // Perform the update to the grn_outturns table where the grnOutturnID matches
+        const [result] = await pool.query(
+            'UPDATE grn_outturns SET OutturnBulkID = null, SellableStatusID = 2, BulkStatus = null, SaleStatusID = 2 WHERE grnOutturnID = ?',
+            [grnOutturnID]
+        );
+        
+        if (result.affectedRows === 0) {
+            // If no rows were affected, return an error message
+            return res.status(404).json({ message: 'GRN outturn not found' });
+        }
+
+        // Commit the transaction if everything is successful
+        
+        // Return success response
+        res.status(200).json({ message: 'GRN outturn updated successfully' });
+        
+    } catch (error) {
+        // In case of any errors, rollback the transaction
+        console.error('Error updating GRN outturn:', error);
+        res.status(500).json({ message: 'Error updating GRN outturn' });
+    }
+}
+
+
 // Delete an existing GRN outturn
 async function deleteGRNOutturn(req, res) {
     const { id } = req.params;
@@ -342,6 +393,8 @@ module.exports = {
     createBulkOutturn,
     getGetGrnGradesBulk,
     saveBulkCollection,
-    finalizeOutturnTemplate
+    finalizeOutturnTemplate,
+    getBulkOutturns,
+    removeBulkFromGRNOutturn
 
 };

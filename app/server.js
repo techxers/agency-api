@@ -2811,12 +2811,16 @@ app.delete('/factories/:id', factories.deleteFactory);
  *         description: Successfully created
  */
 app.get('/grnoutturns', grnOutturnRoutes.getAllGRNOutturns);
+app.get('/grnoutturns/allbulks', grnOutturnRoutes.getBulkOutturns);
+
 app.get('/grnoutturns/gradesInBulk', grnOutturnRoutes.getGetGrnGradesBulk);
 app.get('/grnoutturns/:id', grnOutturnRoutes.getGRNOutturnById);
 app.get('/grnoutturns/grn/:id', grnOutturnRoutes.getGRNOutturnByIdandSeason);
 app.get('/grnoutturns/:OutturnNo/season/:SeasonID', grnOutturnRoutes.getOutturnInBulkByIdandSeason);
+app.delete('/grnoutturns/:grnOutturnID', grnOutturnRoutes.removeBulkFromGRNOutturn);
 
 app.put('/grnoutturns/:id', grnOutturnRoutes.updateGRNOutturn);
+
 app.delete('/grnoutturns/:id', grnOutturnRoutes.deleteGRNOutturn);
 
 app.post('/grnoutturns', grnOutturnRoutes.createGRNOutturn);
@@ -2824,6 +2828,26 @@ app.post('/grnoutturns/bulk', grnOutturnRoutes.createBulkOutturn);
 app.post('/grnoutturns/saveBulkCollection', grnOutturnRoutes.saveBulkCollection);
 app.post('/grnoutturns/bulk/approve', grnOutturnRoutes.finalizeOutturnTemplate);
 
+//all bulks
+
+/**
+ * @swagger
+ * /grnoutturns/allbulks:
+ *   get:
+ *     summary: Retrieve all GRN Bulks Outturns
+ *     tags: [GRN Outturns]
+ *     responses:
+ *       200:
+ *         description: A list of  GRN Bulks Outturns
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/GRNOutturn'
+ *       500:
+ *         description: Some error happened
+ */
 
 /**
  * @swagger
@@ -3213,6 +3237,27 @@ app.post('/grnoutturns/bulk/approve', grnOutturnRoutes.finalizeOutturnTemplate);
  *         description: Invalid input
  *       404:
  *         description: GRN Outturn not found
+ *       500:
+ *         description: Some error happened
+ */
+
+/**
+ * @swagger
+ * /grnoutturns/{grnOutturnID}:
+ *   delete:
+ *     summary: Delete a Bulk Outturn by grnOutturnID
+ *     tags: [GRN Outturns]
+ *     parameters:
+ *       - in: path
+ *         name: grnOutturnID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description:  Bulk Outturn deleted successfully
+ *       404:
+ *         description: Bulk Outturn not found
  *       500:
  *         description: Some error happened
  */
