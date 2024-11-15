@@ -5594,6 +5594,98 @@ app.post('/outturnquality', outturnQuality.createOutturnQuality);
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               OutturnQualityID:
+ *                 type: integer
+ *               greenSizeID:
+ *                 type: integer
+ *                 nullable: true
+ *               greenColourID:
+ *                 type: integer
+ *                 nullable: true
+ *               greenDefectsID:
+ *                 type: integer
+ *                 nullable: true
+ *               roastTypeID:
+ *                 type: integer
+ *                 nullable: true
+ *               roastCentreTypeID:
+ *                 type: integer
+ *                 nullable: true
+ *               RoastDefectsID:
+ *                 type: integer
+ *                 nullable: true
+ *               cupAcidityID:
+ *                 type: integer
+ *                 nullable: true
+ *               cupBodyID:
+ *                 type: integer
+ *                 nullable: true
+ *               cupTaintID:
+ *                 type: integer
+ *                 nullable: true
+ *               cupAromaID:
+ *                 type: integer
+ *                 nullable: true
+ *               cupQuality:
+ *                 type: integer
+ *                 nullable: true
+ *               overalGreenQuality:
+ *                 type: number
+ *                 format: float
+ *                 nullable: true
+ *               overalRoastQuality:
+ *                 type: number
+ *                 format: float
+ *                 nullable: true
+ *               overalCupQuality:
+ *                 type: number
+ *                 format: float
+ *                 nullable: true
+ *               OutturnID:
+ *                 type: integer
+ *               CreatedOn:
+ *                 type: string
+ *                 format: date-time
+ *               CuppedBy:
+ *                 type: integer
+ *               ConfirmedBy:
+ *                 type: integer
+ *               EffectiveDate:
+ *                 type: string
+ *                 format: date-time
+ *               OutturnMark:
+ *                 type: string
+ *               FinalComments:
+ *                 type: string
+ *                 nullable: true
+ *               Serial:
+ *                 type: string
+ *                 nullable: true
+ *             example:
+ *               OutturnQualityID: 11
+ *               greenSizeID: null
+ *               greenColourID: null
+ *               greenDefectsID: null
+ *               roastTypeID: null
+ *               roastCentreTypeID: null
+ *               RoastDefectsID: null
+ *               cupAcidityID: null
+ *               cupBodyID: null
+ *               cupTaintID: null
+ *               cupAromaID: null
+ *               cupQuality: null
+ *               overalGreenQuality: null
+ *               overalRoastQuality: null
+ *               overalCupQuality: null
+ *               OutturnID: 1
+ *               CreatedOn: "2023-10-05T13:41:08.000Z"
+ *               CuppedBy: 25
+ *               ConfirmedBy: 25
+ *               EffectiveDate: "2023-10-04T22:00:00.000Z"
+ *               OutturnMark: "638321208684594226"
+ *               FinalComments: null
+ *               Serial: null
  *     responses:
  *       201:
  *         description: Outturn quality created successfully
@@ -5604,7 +5696,10 @@ app.post('/outturnquality', outturnQuality.createOutturnQuality);
  *               properties:
  *                 OutturnQualityID:
  *                   type: integer
+ *               example:
+ *                 OutturnQualityID: 11
  */
+
 app.put('/outturnquality/:id', outturnQuality.updateOutturnQuality);
 
 /**
@@ -6296,6 +6391,21 @@ app.delete('/quality_greendefects/:id', qualityGreenDefect.deleteQualityGreenDef
  *     responses:
  *       200:
  *         description: A single quality group
+ *       404:
+ *         description: Quality group not found
+ */
+app.get('/quality_groups/', qualityGroup.getAllQualityGroups);
+
+app.delete('/quality_groups/', qualityGroup.deleteQualityGroup);
+/**
+ * @swagger
+ * /quality_groups:
+ *   get:
+ *     summary: Get All quality groups
+ *     tags: [Quality Groups]
+ *     responses:
+ *       200:
+ *         description: List of all  quality group
  *       404:
  *         description: Quality group not found
  */

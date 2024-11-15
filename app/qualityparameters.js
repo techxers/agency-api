@@ -3,7 +3,8 @@ const pool = require('./connection');
 // Get all quality parameters
 const getAllQualityParameters = async (req, res) => {
   try {
-    
+    console.log('-----------getAllQualityParameters-------------------------');
+
     const [rows] = await pool.query('SELECT * FROM qualityparameters');
     
     res.status(200).json(rows);
@@ -17,12 +18,12 @@ const getQualityParameterById = async (req, res) => {
   const { id } = req.params;
   try {
     
-    const [rows] = await pool.query('SELECT * FROM qualityparameters WHERE QualityParamsID = ?', [id]);
+    const [rows] = await pool.query('SELECT * FROM qualityparameters WHERE QualityGroupID = ?', [id]);
     
     if (rows.length === 0) {
       res.status(404).send('Quality parameter not found');
     } else {
-      res.json(rows[0]);
+      res.status(200).json(rows);
     }
   } catch (error) {
     res.status(500).send(error);
@@ -36,7 +37,7 @@ const createQualityParameter = async (req, res) => {
     
     const [rows] = await pool.query('INSERT INTO qualityparameters SET ?', newQualityParameter);
     
-    res.status(201).json({ QualityParamsID: rows.insertId });
+    res.status(201).json({ QualityGroupID: rows.insertId });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -48,7 +49,7 @@ const updateQualityParameter = async (req, res) => {
   const updatedQualityParameter = req.body;
   try {
     
-    const [rows] = await pool.query('UPDATE qualityparameters SET ? WHERE QualityParamsID = ?', [updatedQualityParameter, id]);
+    const [rows] = await pool.query('UPDATE qualityparameters SET ? WHERE QualityGroupID = ?', [updatedQualityParameter, id]);
     
     if (rows.affectedRows === 0) {
       res.status(404).send('Quality parameter not found');
@@ -65,7 +66,7 @@ const deleteQualityParameter = async (req, res) => {
   const { id } = req.params;
   try {
     
-    const [rows] = await pool.query('DELETE FROM qualityparameters WHERE QualityParamsID = ?', [id]);
+    const [rows] = await pool.query('DELETE FROM qualityparameters WHERE QualityGroupID = ?', [id]);
     
     if (rows.affectedRows === 0) {
       res.status(404).send('Quality parameter not found');

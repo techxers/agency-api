@@ -16,7 +16,8 @@ const getAllQualityGroups = async (req, res) => {
 const getQualityGroupById = async (req, res) => {
   const { id } = req.params;
   try {
-    
+    console.log('-----------getQualityGroupById-------------------------');
+
     const [rows] = await pool.query('SELECT * FROM qualitygroups WHERE QualityGroupID = ?', [id]);
     
     if (rows.length === 0) {
