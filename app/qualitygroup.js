@@ -34,7 +34,8 @@ const getQualityGroupById = async (req, res) => {
 const createQualityGroup = async (req, res) => {
   const newQualityGroup = req.body;
   try {
-    
+    console.log('-----------createQualityGroup-------------------------');
+
     const [rows] = await pool.query('INSERT INTO qualitygroups SET ?', newQualityGroup);
     
     res.status(201).json({ QualityGroupID: rows.insertId });

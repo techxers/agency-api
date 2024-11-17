@@ -5538,6 +5538,85 @@ app.put('/payments/:id', payments.updatePayment);
 app.delete('/payments/:id', payments.deletePayment);
 // Route handlers
 app.get('/outturnquality', outturnQuality.getAllOutturnQuality);
+app.post('/outturnquality', outturnQuality.createOutturnQuality);
+app.get('/outturnquality/:seasonID/outturn/:outturnNo/grade/:gradeID?', outturnQuality.getOutturnQualityBySeason);
+/**
+ * @swagger
+ * /outturnquality/{seasonID}/outturn/{outturnNo}/grade/{gradeID}:
+ *   get:
+ *     summary: Get a GRN Outturn by Outturn Number, Season ID, and optionally Grade ID
+ *     tags: [Outturn Quality]
+ *     parameters:
+ *       - in: path
+ *         name: seasonID
+ *         required: true
+ *         description: The unique season ID associated with the outturn.
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: outturnNo
+ *         required: true
+ *         description: The unique outturn number to search for.
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: gradeID
+ *         required: false
+ *         description: The grade of the GRN Outturn.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: GRN Outturn retrieved successfully
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: GRN Outturn not found
+ *       500:
+ *         description: Server error happened
+ */
+
+
+
+/**
+ * @swagger
+ * /outturnquality:
+ *   post:
+ *     summary: Post an outturn quality
+ *     tags: [Outturn Quality]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               OutturnID:
+ *                 type: integer
+ *                 description: The OutturnID of the outturn quality
+ *     responses:
+ *       201:
+ *         description: The outturn quality was created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 OutturnQualityID:
+ *                   type: integer
+ *                   description: The ID of the created outturn quality
+ *                 message:
+ *                   type: string
+ *                   description: A success message
+ *               example:
+ *                 OutturnQualityID: 11
+ *                 message: "Outturn quality created successfully."
+ *       400:
+ *         description: Bad request, missing required field or invalid input
+ *       500:
+ *         description: Internal server error
+ */
+
 
 /**
  * @swagger
@@ -5555,6 +5634,7 @@ app.get('/outturnquality', outturnQuality.getAllOutturnQuality);
  *               items:
  *                 type: object
  */
+
 app.get('/outturnquality/:id', outturnQuality.getOutturnQualityById);
 
 /**
@@ -5580,125 +5660,8 @@ app.get('/outturnquality/:id', outturnQuality.getOutturnQualityById);
  *       404:
  *         description: Outturn quality not found
  */
-app.post('/outturnquality', outturnQuality.createOutturnQuality);
 
-/**
- * @swagger
- * /outturnquality:
- *   post:
- *     summary: Create a new outturn quality
- *     tags: [Outturn Quality]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               OutturnQualityID:
- *                 type: integer
- *               greenSizeID:
- *                 type: integer
- *                 nullable: true
- *               greenColourID:
- *                 type: integer
- *                 nullable: true
- *               greenDefectsID:
- *                 type: integer
- *                 nullable: true
- *               roastTypeID:
- *                 type: integer
- *                 nullable: true
- *               roastCentreTypeID:
- *                 type: integer
- *                 nullable: true
- *               RoastDefectsID:
- *                 type: integer
- *                 nullable: true
- *               cupAcidityID:
- *                 type: integer
- *                 nullable: true
- *               cupBodyID:
- *                 type: integer
- *                 nullable: true
- *               cupTaintID:
- *                 type: integer
- *                 nullable: true
- *               cupAromaID:
- *                 type: integer
- *                 nullable: true
- *               cupQuality:
- *                 type: integer
- *                 nullable: true
- *               overalGreenQuality:
- *                 type: number
- *                 format: float
- *                 nullable: true
- *               overalRoastQuality:
- *                 type: number
- *                 format: float
- *                 nullable: true
- *               overalCupQuality:
- *                 type: number
- *                 format: float
- *                 nullable: true
- *               OutturnID:
- *                 type: integer
- *               CreatedOn:
- *                 type: string
- *                 format: date-time
- *               CuppedBy:
- *                 type: integer
- *               ConfirmedBy:
- *                 type: integer
- *               EffectiveDate:
- *                 type: string
- *                 format: date-time
- *               OutturnMark:
- *                 type: string
- *               FinalComments:
- *                 type: string
- *                 nullable: true
- *               Serial:
- *                 type: string
- *                 nullable: true
- *             example:
- *               OutturnQualityID: 11
- *               greenSizeID: null
- *               greenColourID: null
- *               greenDefectsID: null
- *               roastTypeID: null
- *               roastCentreTypeID: null
- *               RoastDefectsID: null
- *               cupAcidityID: null
- *               cupBodyID: null
- *               cupTaintID: null
- *               cupAromaID: null
- *               cupQuality: null
- *               overalGreenQuality: null
- *               overalRoastQuality: null
- *               overalCupQuality: null
- *               OutturnID: 1
- *               CreatedOn: "2023-10-05T13:41:08.000Z"
- *               CuppedBy: 25
- *               ConfirmedBy: 25
- *               EffectiveDate: "2023-10-04T22:00:00.000Z"
- *               OutturnMark: "638321208684594226"
- *               FinalComments: null
- *               Serial: null
- *     responses:
- *       201:
- *         description: Outturn quality created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 OutturnQualityID:
- *                   type: integer
- *               example:
- *                 OutturnQualityID: 11
- */
+
 
 app.put('/outturnquality/:id', outturnQuality.updateOutturnQuality);
 

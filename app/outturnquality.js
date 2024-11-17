@@ -29,12 +29,54 @@ async function getOutturnQualityById(req, res) {
   }
 }
 
+// Get an outturn quality record by Outturn Number and Season ID
+// Get an outturn quality record by Outturn Number and Season ID (with optional gradeID)
+async function getOutturnQualityBySeason(req, res) {
+  const { outturnNo, seasonID, gradeID } = req.params;
+  console.log('----------- grade-------------------------'+ gradeID);
+
+  try {
+    let rows; // Use let to allow reassignment
+
+    // Check if gradeID is provided or not
+    if (gradeID && gradeID !== 'null') {
+
+      console.log('-----------without grade-------------------------');
+
+      // Query when gradeID is not provided
+      const [result] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnNo = ? AND SeasonID = ?', [outturnNo, seasonID]);
+      rows = result; // Assign the rows from the result of the query
+    } else {
+      console.log('-----------with grade-------------------gradeID------' + gradeID);
+
+      // Query when gradeID is provided
+      const [result] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnNo = ? AND SeasonID = ? AND GradeID = ?', [outturnNo, seasonID, gradeID]);
+      rows = result; // Assign the rows from the result of the query
+    }
+
+    // Check if any records were found
+    if (rows.length === 0) {
+      return res.status(404).json('GRN Outturn records not found');
+    } else {
+      return res.status(200).json(rows); // Return the records in JSON format
+    }
+  } catch (error) {
+    console.error('Error retrieving GRN Outturn:', error.message);
+    return res.status(500).json({ error: 'Failed to retrieve the GRN Outturn' });
+  }
+}
+
+
+
 // Create a new outturn quality record
 async function createOutturnQuality(req, res) {
-  const newOutturnQuality = req.body;
+  const { id } = req.body;
   try {
-    
-    const [rows] = await pool.query('INSERT INTO outturnquality SET ?', newOutturnQuality);
+    console.log('Request Body:', req.body);
+
+    console.log('-----------getAllGRNOutturns---------------------OutturnID = ----' + id);
+
+    const [rows] = await pool.query('INSERT INTO outturnquality SET OutturnID =  ?', id);
     
     res.status(201).json({ OutturnQualityID: rows.insertId });
   } catch (error) {
@@ -82,5 +124,6 @@ module.exports = {
   getOutturnQualityById,
   createOutturnQuality,
   updateOutturnQuality,
-  deleteOutturnQuality
+  deleteOutturnQuality,
+  getOutturnQualityBySeason
 };
