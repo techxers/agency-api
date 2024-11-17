@@ -70,19 +70,40 @@ async function getOutturnQualityBySeason(req, res) {
 
 // Create a new outturn quality record
 async function createOutturnQuality(req, res) {
-  const { id } = req.body;
+  const { OutturnID } = req.body;
+  
+  // Log the incoming request body for debugging
+  console.log('Request Body:', req.body);
+  console.log('-----------Creating Outturn Quality for OutturnID = ----' + OutturnID);
+
   try {
-    console.log('Request Body:', req.body);
-
-    console.log('-----------getAllGRNOutturns---------------------OutturnID = ----' + id);
-
-    const [rows] = await pool.query('INSERT INTO outturnquality SET OutturnID =  ?', id);
+    // Step 1: Check if a record with the same OutturnID already exists in outturnquality table
+    const [existingRows] = await pool.query('SELECT * FROM outturnquality WHERE OutturnID = ?', [OutturnID]);
     
-    res.status(201).json({ OutturnQualityID: rows.insertId });
+    // If a record with the same OutturnID already exists, return a 409 Conflict response
+    if (existingRows.length > 0) {
+      return res.status(409).json({
+        message: `Outturn quality record with OutturnID ${OutturnID} already exists`
+      });
+    }
+
+    // Step 2: Insert the new record
+    const [result] = await pool.query('INSERT INTO outturnquality (OutturnID) VALUES (?)', [OutturnID]);
+
+    // Respond with the new OutturnQualityID from the insert
+    res.status(201).json({ OutturnQualityID: result.insertId });
+
   } catch (error) {
-    res.status(500).send(error);
+    console.error('Error creating outturn quality record:', error.message);
+
+    // Return a generic server error with the error message
+    res.status(500).json({
+      error: 'Failed to create the Outturn quality record',
+      details: error.message // Include error details for debugging
+    });
   }
 }
+
 
 // Update an outturn quality record by ID
 async function updateOutturnQuality(req, res) {
