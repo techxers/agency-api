@@ -284,17 +284,33 @@ async function updateGRNOutturn(req, res) {
 
     const { id } = req.params;
     const grnOutturnData = req.body;
+    const now = new Date().toISOString().slice(0, 19).replace('T', ' ');  // 'YYYY-MM-DD HH:MM:SS'
+
+    // Add or override custom values for CreatedOn and UpdatedOn
+    const customFields = {
+        CreatedOn: now, 
+    };
+
     try {
-        const [result] = await pool.query('UPDATE grn_outturns SET ? WHERE grnOutturnID = ?', [grnOutturnData, id]);
+        // Merge custom fields with other data, ensuring custom fields take precedence
+        const updateData = { ...grnOutturnData, ...customFields };
+
+        const [result] = await pool.query(
+            'UPDATE grn_outturns SET ? WHERE grnOutturnID = ?',
+            [updateData, id]
+        );
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'GRN outturn not found' });
         }
+
         res.status(200).json({ message: 'GRN outturn updated successfully' });
     } catch (error) {
         console.error('Error updating GRN outturn:', error);
         res.status(500).json({ message: 'Error updating GRN outturn' });
     }
 }
+
 
 async function removeBulkFromGRNOutturn(req, res) {
     const { grnOutturnID } = req.params;  // Assuming these values are passed in the request body

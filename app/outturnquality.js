@@ -29,31 +29,57 @@ async function getOutturnQualityById(req, res) {
   }
 }
 
-// Get an outturn quality record by Outturn Number and Season ID
 // Get an outturn quality record by Outturn Number and Season ID (with optional gradeID)
-async function getOutturnQualityBySeason(req, res) {
+
+
+async function getOutturnQualityByGrade(req, res) {
   const { outturnNo, seasonID, gradeID } = req.params;
-  console.log('----------- grade-------------------------'+ gradeID);
+  console.log('----------- outturnNo---'+ outturnNo +  'seasonID---'+ seasonID +  'gradeID---'+ gradeID);
 
   try {
     let rows; // Use let to allow reassignment
 
     // Check if gradeID is provided or not
-    if (gradeID && gradeID !== 'null') {
+ 
+      console.log('-----------with grade-------------------gradeID------' + gradeID);
+
+      // Query when gradeID is provided
+      const [result] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnNo = ? AND SeasonID = ? AND GradeID = ?', [outturnNo, seasonID, gradeID]);
+      
+      // Ensure result is an array and assign it to rows
+      rows = Array.isArray(result) ? result : [];
+ // Check if any records were found
+    if (rows.length === 0) {
+      return res.status(404).json('GRN Outturn records not found');
+    } else {
+      return res.status(200).json(rows); // Return the records in JSON format
+    }
+    
+    
+
+   
+  } catch (error) {
+    console.error('Error retrieving GRN Outturn:', error.message);
+    return res.status(500).json({ error: 'Failed to retrieve the GRN Outturn' });
+  }
+}
+async function getOutturnQualityBySeason(req, res) {
+  const { outturnNo, seasonID  } = req.params;
+  console.log('----------- outturnNo---'+ outturnNo +  'seasonID---'+ seasonID );
+
+  try {
+    let rows; // Use let to allow reassignment
+
+    // Check if gradeID is provided or not
 
       console.log('-----------without grade-------------------------');
 
       // Query when gradeID is not provided
       const [result] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnNo = ? AND SeasonID = ?', [outturnNo, seasonID]);
-      rows = result; // Assign the rows from the result of the query
-    } else {
-      console.log('-----------with grade-------------------gradeID------' + gradeID);
-
-      // Query when gradeID is provided
-      const [result] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnNo = ? AND SeasonID = ? AND GradeID = ?', [outturnNo, seasonID, gradeID]);
-      rows = result; // Assign the rows from the result of the query
-    }
-
+      
+      // Ensure result is an array and assign it to rows
+      rows = Array.isArray(result) ? result : [];
+   
     // Check if any records were found
     if (rows.length === 0) {
       return res.status(404).json('GRN Outturn records not found');
@@ -67,28 +93,35 @@ async function getOutturnQualityBySeason(req, res) {
 }
 
 
-
-// Create a new outturn quality record
 async function createOutturnQuality(req, res) {
-  const { OutturnID } = req.body;
-  
+  const { grnOutturnID } = req.body;
+
   // Log the incoming request body for debugging
   console.log('Request Body:', req.body);
-  console.log('-----------Creating Outturn Quality for OutturnID = ----' + OutturnID);
+  console.log('-----------Creating Outturn Quality for OutturnID = ----' + grnOutturnID);
 
   try {
-    // Step 1: Check if a record with the same OutturnID already exists in outturnquality table
-    const [existingRows] = await pool.query('SELECT * FROM outturnquality WHERE OutturnID = ?', [OutturnID]);
-    
-    // If a record with the same OutturnID already exists, return a 409 Conflict response
+    // Step 1: Check if a record with the same grnOutturnID already exists in outturnquality table
+    const [existingRows] = await pool.query('SELECT * FROM outturnquality WHERE OutturnID = ?', [grnOutturnID]);
+
+    // If a record with the same grnOutturnID already exists, return a 409 Conflict response
     if (existingRows.length > 0) {
       return res.status(409).json({
-        message: `Outturn quality record with OutturnID ${OutturnID} already exists`
+        message: `Outturn quality record with OutturnID ${grnOutturnID} already exists`
       });
     }
 
-    // Step 2: Insert the new record
-    const [result] = await pool.query('INSERT INTO outturnquality (OutturnID) VALUES (?)', [OutturnID]);
+    // Step 2: Insert the new record with hardcoded values
+    const [result] = await pool.query(
+      'INSERT INTO outturnquality (OutturnID, CuppedBy, ConfirmedBy, CreatedOn, EffectiveDate) VALUES (?, ?, ?, ?, ?)', 
+      [
+        grnOutturnID,        // OutturnID
+        25,                  // CuppedBy
+        25,                  // ConfirmedBy
+        Math.floor(Date.now() / 1000),  // CreatedOn as timestamp (seconds since epoch)
+        new Date()           // EffectiveDate
+      ]
+    );
 
     // Respond with the new OutturnQualityID from the insert
     res.status(201).json({ OutturnQualityID: result.insertId });
@@ -146,5 +179,6 @@ module.exports = {
   createOutturnQuality,
   updateOutturnQuality,
   deleteOutturnQuality,
-  getOutturnQualityBySeason
+  getOutturnQualityBySeason,
+  getOutturnQualityByGrade
 };

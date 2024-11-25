@@ -5539,7 +5539,38 @@ app.delete('/payments/:id', payments.deletePayment);
 // Route handlers
 app.get('/outturnquality', outturnQuality.getAllOutturnQuality);
 app.post('/outturnquality', outturnQuality.createOutturnQuality);
-app.get('/outturnquality/:seasonID/outturn/:outturnNo/grade/:gradeID?', outturnQuality.getOutturnQualityBySeason);
+app.get('/outturnquality/:seasonID/outturn/:outturnNo', outturnQuality.getOutturnQualityBySeason);
+
+app.get('/outturnquality/:seasonID/outturn/:outturnNo/grade/:gradeID?', outturnQuality.getOutturnQualityByGrade);
+/**
+ * @swagger
+ * /outturnquality/{seasonID}/outturn/{outturnNo}:
+ *   get:
+ *     summary: Get a GRN Outturn by Outturn Number, Season ID.
+ *     tags: [Outturn Quality]
+ *     parameters:
+ *       - in: path
+ *         name: seasonID
+ *         required: true
+ *         description: The unique season ID associated with the outturn.
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: outturnNo
+ *         required: true
+ *         description: The unique outturn number to search for.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: GRN Outturn retrieved successfully
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: GRN Outturn not found
+ *       500:
+ *         description: Server error happened
+ */
 /**
  * @swagger
  * /outturnquality/{seasonID}/outturn/{outturnNo}/grade/{gradeID}:
@@ -5591,9 +5622,9 @@ app.get('/outturnquality/:seasonID/outturn/:outturnNo/grade/:gradeID?', outturnQ
  *           schema:
  *             type: object
  *             properties:
- *               OutturnID:
+ *               grnOutturnID:
  *                 type: integer
- *                 description: The OutturnID of the outturn quality
+ *                 description: The grnOutturnID of the outturn quality
  *     responses:
  *       201:
  *         description: The outturn quality was created successfully
