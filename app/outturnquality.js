@@ -111,6 +111,7 @@ async function createOutturnQuality(req, res) {
       });
     }
 
+   
     // Step 2: Insert the new record with hardcoded values
     const [result] = await pool.query(
       'INSERT INTO outturnquality (OutturnID, CuppedBy, ConfirmedBy, CreatedOn, EffectiveDate) VALUES (?, ?, ?, ?, ?)', 
@@ -118,8 +119,8 @@ async function createOutturnQuality(req, res) {
         grnOutturnID,        // OutturnID
         25,                  // CuppedBy
         25,                  // ConfirmedBy
-        Math.floor(Date.now() / 1000),  // CreatedOn as timestamp (seconds since epoch)
-        new Date()           // EffectiveDate
+        new Date().toISOString().slice(0, 19).replace('T', ' '),  // CreatedOn as timestamp (seconds since epoch)
+        new Date().toISOString().slice(0, 19).replace('T', ' ')         // EffectiveDate
       ]
     );
 
@@ -138,23 +139,81 @@ async function createOutturnQuality(req, res) {
 }
 
 
-// Update an outturn quality record by ID
 async function updateOutturnQuality(req, res) {
   const { id } = req.params;
   const updatedOutturnQuality = req.body;
+
+  const {
+    greenDefects = [],
+    roastDefects = [],
+    taints = [],
+    ...mainOutturnQuality
+  } = updatedOutturnQuality;
+
+  const connection = await pool.getConnection();
+
   try {
-    
-    const [rows] = await pool.query('UPDATE outturnquality SET ? WHERE OutturnQualityID = ?', [updatedOutturnQuality, id]);
-    
-    if (rows.affectedRows === 0) {
-      res.status(404).send('Outturn quality record not found');
-    } else {
-      res.send('Outturn quality record updated successfully');
+    await connection.beginTransaction();
+
+    // Update the main outturn quality record
+    const [mainResult] = await connection.query(
+      'UPDATE outturnquality SET ? WHERE OutturnQualityID = ?',
+      [mainOutturnQuality, id]
+    );
+
+    if (mainResult.affectedRows === 0) {
+      await connection.rollback();
+      return res.status(404).send('Outturn quality record not found');
     }
+
+    // Helper function to sync sub-tables
+    const syncSubTable = async (table, data, foreignKeyColumn) => {
+      // Fetch existing records
+      const [existingRecords] = await connection.query(
+        `SELECT QualityParamsID FROM ${table} WHERE ${foreignKeyColumn} = ?`,
+        [id]
+      );
+
+      const existingIds = new Set(existingRecords.map((row) => row.QualityParamsID));
+      const incomingIds = new Set(data.map((item) => item.QualityParamsID));
+
+      // Identify records to insert
+      const toInsert = data.filter((item) => !existingIds.has(item.QualityParamsID));
+      if (toInsert.length > 0) {
+        const insertValues = toInsert.map((item) => [item.QualityParamsID, id]);
+        await connection.query(
+          `INSERT INTO ${table} (QualityParamsID, ${foreignKeyColumn}) VALUES ?`,
+          [insertValues]
+        );
+      }
+
+      // Identify records to delete
+      const toDelete = [...existingIds].filter((id) => !incomingIds.has(id));
+      if (toDelete.length > 0) {
+        await connection.query(
+          `DELETE FROM ${table} WHERE ${foreignKeyColumn} = ? AND QualityParamsID IN (?)`,
+          [id, toDelete]
+        );
+      }
+    };
+
+    // Sync sub-tables
+    await syncSubTable('t_outturn_quality_greendefects', greenDefects, 'OutturnQualityID');
+    await syncSubTable('t_outturn_quality_roastdefects', roastDefects, 'OutturnQualityID');
+    await syncSubTable('t_outturn_quality_taint', taints, 'OutturnQualityID');
+
+    await connection.commit();
+    res.send('Outturn quality record updated successfully');
   } catch (error) {
-    res.status(500).send(error);
+    await connection.rollback();
+    console.error('Error updating outturn quality:', error);
+    res.status(500).send(error.message);
+  } finally {
+    connection.release();
   }
 }
+
+
 
 // Delete an outturn quality record by ID
 async function deleteOutturnQuality(req, res) {

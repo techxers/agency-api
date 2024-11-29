@@ -5700,7 +5700,7 @@ app.put('/outturnquality/:id', outturnQuality.updateOutturnQuality);
  * @swagger
  * /outturnquality/{id}:
  *   put:
- *     summary: Update an outturn quality by ID
+ *     summary: Update an outturn quality by ID, including green defects, roast defects, and taints
  *     tags: [Outturn Quality]
  *     parameters:
  *       - in: path
@@ -5715,12 +5715,184 @@ app.put('/outturnquality/:id', outturnQuality.updateOutturnQuality);
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               greenSizeID:
+ *                 type: integer
+ *                 description: The green size ID
+ *                 example: 3
+ *               greenColourID:
+ *                 type: integer
+ *                 description: The green colour ID
+ *                 example: 5
+ *               greenDefectsID:
+ *                 type: integer
+ *                 description: The green defects ID
+ *                 example: 2
+ *               roastTypeID:
+ *                 type: integer
+ *                 description: The roast type ID
+ *                 example: 1
+ *               roastCentreTypeID:
+ *                 type: integer
+ *                 description: The roast centre type ID
+ *                 example: 4
+ *               RoastDefectsID:
+ *                 type: integer
+ *                 description: The roast defects ID
+ *                 example: 6
+ *               cupAcidityID:
+ *                 type: integer
+ *                 description: The cup acidity ID
+ *                 example: 8
+ *               cupBodyID:
+ *                 type: integer
+ *                 description: The cup body ID
+ *                 example: 7
+ *               cupTaintID:
+ *                 type: integer
+ *                 description: The cup taint ID
+ *                 example: 0
+ *               cupAromaID:
+ *                 type: integer
+ *                 description: The cup aroma ID
+ *                 example: 9
+ *               cupQuality:
+ *                 type: integer
+ *                 description: The overall cup quality score
+ *                 example: 85
+ *               overalGreenQuality:
+ *                 type: string
+ *                 description: A summary of overall green quality
+ *                 example: "Excellent"
+ *               overalRoastQuality:
+ *                 type: string
+ *                 description: A summary of overall roast quality
+ *                 example: "Very Good"
+ *               overalCupQuality:
+ *                 type: string
+ *                 description: A summary of overall cup quality
+ *                 example: "Outstanding"
+ *               OutturnID:
+ *                 type: integer
+ *                 description: The related outturn ID
+ *                 example: 12345
+ *               CuppedBy:
+ *                 type: integer
+ *                 description: The ID of the person who cupped the coffee
+ *                 example: 101
+ *               ConfirmedBy:
+ *                 type: integer
+ *                 description: The ID of the person who confirmed the results
+ *                 example: 202
+ *               EffectiveDate:
+ *                 type: string
+ *                 format: date
+ *                 description: The effective date of the quality assessment
+ *                 example: "2024-01-15"
+ *               OutturnMark:
+ *                 type: string
+ *                 description: A mark assigned to the outturn
+ *                 example: "A+"
+ *               FinalComments:
+ *                 type: string
+ *                 description: Any final comments on the outturn quality
+ *                 example: "Exceptional aroma and balance."
+ *               Serial:
+ *                 type: string
+ *                 description: The serial number associated with the outturn
+ *                 example: "Q123456789"
+ *               greenDefects:
+ *                 type: array
+ *                 description: Array of green defects
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     QualityParamsID:
+ *                       type: integer
+ *                       description: The quality parameter ID
+ *                       example: 12
+ *                     OutturnMark:
+ *                       type: string
+ *                       description: The outturn mark for the defect
+ *                       example: "B"
+ *               roastDefects:
+ *                 type: array
+ *                 description: Array of roast defects
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     QualityParamsID:
+ *                       type: integer
+ *                       description: The quality parameter ID
+ *                       example: 22
+ *                     OutturnMark:
+ *                       type: string
+ *                       description: The outturn mark for the roast defect
+ *                       example: "A"
+ *               taints:
+ *                 type: array
+ *                 description: Array of taints
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     QualityParamsID:
+ *                       type: integer
+ *                       description: The quality parameter ID
+ *                       example: 35
+ *                     OutturnMark:
+ *                       type: string
+ *                       description: The outturn mark for the taint
+ *                       example: "C"
  *     responses:
  *       200:
  *         description: Outturn quality updated successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Outturn quality updated successfully"
+ *               data:
+ *                 OutturnQualityID: 1
+ *                 greenSizeID: 3
+ *                 greenColourID: 5
+ *                 greenDefectsID: 2
+ *                 roastTypeID: 1
+ *                 roastCentreTypeID: 4
+ *                 RoastDefectsID: 6
+ *                 cupAcidityID: 8
+ *                 cupBodyID: 7
+ *                 cupTaintID: 0
+ *                 cupAromaID: 9
+ *                 cupQuality: 85
+ *                 overalGreenQuality: "Excellent"
+ *                 overalRoastQuality: "Very Good"
+ *                 overalCupQuality: "Outstanding"
+ *                 OutturnID: 12345
+ *                 CuppedBy: 101
+ *                 ConfirmedBy: 202
+ *                 EffectiveDate: "2024-01-15"
+ *                 OutturnMark: "A+"
+ *                 FinalComments: "Exceptional aroma and balance."
+ *                 Serial: "Q123456789"
+ *                 greenDefects:
+ *                   - GreenDefectsID: 1
+ *                     QualityParamsID: 12
+ *                     OutturnMark: "B"
+ *                 roastDefects:
+ *                   - RoastDefectsID: 1
+ *                     QualityParamsID: 22
+ *                     OutturnMark: "A"
+ *                 taints:
+ *                   - TaintID: 1
+ *                     QualityParamsID: 35
+ *                     OutturnMark: "C"
  *       404:
  *         description: Outturn quality not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Outturn quality not found"
  */
+
 app.delete('/outturnquality/:id', outturnQuality.deleteOutturnQuality);
 
 /**
