@@ -52,7 +52,7 @@ async function getOutturnQualityByGrade(req, res) {
     if (rows.length === 0) {
       return res.status(404).json('GRN Outturn records not found');
     } else {
-      return res.status(200).json(rows); // Return the records in JSON format
+      return res.status(200).json(rows[0]); // Return the records in JSON format
     }
     
     
