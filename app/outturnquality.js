@@ -3,14 +3,50 @@ const pool = require('./connection');
 // Get all outturn quality records
 async function getAllOutturnQuality(req, res) {
   try {
-    
+    // Fetch all records from the outturnquality table
     const [rows] = await pool.query('SELECT * FROM outturnquality');
-    
-    res.status(200).json(rows);
+
+    // Array to hold the final combined results
+    const results = [];
+
+    for (const row of rows) {
+      const OutturnID = row.OutturnQualityID;
+
+      // Fetch related data from subtables
+      const [greenDefects] = await pool.query(
+        'SELECT * FROM t_outturn_quality_greendefects WHERE OutturnQualityID = ?',
+        [OutturnID]
+      );
+
+      const [roastDefects] = await pool.query(
+        'SELECT * FROM t_outturn_quality_roastdefects WHERE OutturnQualityID = ?',
+        [OutturnID]
+      );
+
+      const [taints] = await pool.query(
+        'SELECT * FROM t_outturn_quality_taint WHERE OutturnQualityID = ?',
+        [OutturnID]
+      );
+
+      // Combine the main record with subtable data
+      const combinedData = {
+        ...row,
+        greenDefects,
+        roastDefects,
+        taints,
+      };
+
+      results.push(combinedData);
+    }
+
+    // Respond with the final combined data
+    return res.status(200).json(results);
   } catch (error) {
-    res.status(500).send(error);
+    console.error('Error fetching outturn qualities:', error.message);
+    return res.status(500).json({ error: 'Failed to retrieve outturn qualities' });
   }
 }
+
 
 // Get an outturn quality record by ID
 async function getOutturnQualityById(req, res) {
