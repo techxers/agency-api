@@ -34,35 +34,67 @@ async function getOutturnQualityById(req, res) {
 
 async function getOutturnQualityByGrade(req, res) {
   const { outturnNo, seasonID, gradeID } = req.params;
-  console.log('----------- outturnNo---'+ outturnNo +  'seasonID---'+ seasonID +  'gradeID---'+ gradeID);
+
+  console.log('----------- outturnNo---' + outturnNo + ' seasonID---' + seasonID + ' gradeID---' + gradeID);
 
   try {
-    let rows; // Use let to allow reassignment
+    // Fetch the main record
+    const [result] = await pool.query(
+      'SELECT * FROM grn_outturns WHERE OutturnNo = ? AND SeasonID = ? AND GradeID = ?',
+      [outturnNo, seasonID, gradeID]
+    );
 
-    // Check if gradeID is provided or not
- 
-      console.log('-----------with grade-------------------gradeID------' + gradeID);
-
-      // Query when gradeID is provided
-      const [result] = await pool.query('SELECT * FROM grn_outturns WHERE OutturnNo = ? AND SeasonID = ? AND GradeID = ?', [outturnNo, seasonID, gradeID]);
-      
-      // Ensure result is an array and assign it to rows
-      rows = Array.isArray(result) ? result : [];
- // Check if any records were found
-    if (rows.length === 0) {
-      return res.status(404).json('GRN Outturn records not found');
-    } else {
-      return res.status(200).json(rows[0]); // Return the records in JSON format
+    if (result.length === 0) {
+      return res.status(404).json({ error: 'GRN Outturn records not found' });
     }
-    
-    
 
-   
+    const mainRecord = result[0];
+    const OutturnQualityID = mainRecord.grnOutturnID;
+    console.log('----------- grn outturn ---' +  OutturnQualityID);
+    if (!OutturnQualityID) {
+      return res.status(200).json({ ...mainRecord, greenDefects: [], roastDefects: [], taints: [] });
+    }
+
+    const [oc] = await pool.query(
+      'SELECT * FROM outturnquality WHERE OutturnID = ?',
+      [OutturnQualityID]
+    );
+    const outturnQuality = oc[0];
+    const OutturnID = outturnQuality.OutturnQualityID;
+    console.log('----------- Outturn Quality ID ---' +  OutturnID);
+
+    // Fetch data from related subtables
+    const [greenDefects] = await pool.query(
+      'SELECT * FROM t_outturn_quality_greendefects WHERE OutturnQualityID = ?',
+      [OutturnID]
+    );
+
+    const [roastDefects] = await pool.query(
+      'SELECT * FROM t_outturn_quality_roastdefects WHERE OutturnQualityID = ?',
+      [OutturnID]
+    );
+
+    const [taints] = await pool.query(
+      'SELECT * FROM t_outturn_quality_taint WHERE OutturnQualityID = ?',
+      [OutturnID]
+    );
+
+    // Combine the main record with subtable data
+    const response = {
+      ...outturnQuality,
+      greenDefects,
+      roastDefects,
+      taints,
+    };
+
+    return res.status(200).json(response);
   } catch (error) {
     console.error('Error retrieving GRN Outturn:', error.message);
     return res.status(500).json({ error: 'Failed to retrieve the GRN Outturn' });
   }
 }
+
+
 async function getOutturnQualityBySeason(req, res) {
   const { outturnNo, seasonID  } = req.params;
   console.log('----------- outturnNo---'+ outturnNo +  'seasonID---'+ seasonID );
