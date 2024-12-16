@@ -117,6 +117,9 @@ async function getOutturnQualityByGrade(req, res) {
 
     // Combine the main record with subtable data
     const response = {
+      outturnNo,
+      seasonID,
+      gradeID,
       ...outturnQuality,
       greenDefects,
       roastDefects,
